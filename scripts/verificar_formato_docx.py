@@ -6,7 +6,7 @@ uso:
 
 revisa (sin abrir word): papel a4, margenes de 2,5 cm, arial 12 en todo, interlineado 1,5, texto justificado, titulos con estilos de encabezado en negro y
 negrita y con numeracion, indice automatico, numero de pagina, tablas dentro del ancho util y con fila de encabezado, imagenes dentro del ancho util y sin
-deformar. con --portada tambien comprueba que la portada trae los textos institucionales, el titulo y los cinco integrantes.
+deformar. con --portada tambien comprueba que la portada trae los textos institucionales, el titulo y los seis integrantes.
 no sustituye la revision visual de todas las paginas: eso se hace aparte y se anota.
 codigo de salida: 0 si todo cumple, 1 si algo no cumple, 2 si el archivo no se puede leer.
 """
@@ -28,7 +28,7 @@ ANCHO_UTIL_EMU = 5760000  # 16 cm
 TEXTOS_PORTADA = ['Universidad Tecnológica de Panamá', 'Facultad de Ingeniería de Sistemas Computacionales', 'Licenciatura en Ingeniería de Sistemas y Computación',
                   'Lenguajes Formales, Autómatas y Compiladores', 'Grupo 1IL-143', 'Segundo Semestre 2026',
                   'BootSim DSL: Simulación del sistema de arranque de una computadora mediante un lenguaje específico de dominio',
-                  'Richard Smith', 'Víctor Sánchez', 'Juan González', 'Jorge González', 'Alexandra Esteves']
+                  'Richard Smith', 'Víctor Sánchez', 'Juan González', 'Jorge González', 'Alexandra Esteves', 'Marc Chavarría']
 
 
 def q(etiqueta):
@@ -229,7 +229,7 @@ def verificar(ruta, exigir_portada=False):
             antes_del_indice.append(texto_de(p))
         portada = '\n'.join(antes_del_indice)
         faltan = [t for t in TEXTOS_PORTADA if t not in portada]
-        anotar(not faltan, 'la portada trae los textos institucionales, el titulo y los cinco integrantes', f'faltan: {faltan}' if faltan else 'ok')
+        anotar(not faltan, 'la portada trae los textos institucionales, el titulo y los seis integrantes', f'faltan: {faltan}' if faltan else 'ok')
         dibujos = sum(1 for p in cuerpo.iter(q('p')) if p.find('.//w:drawing', NS) is not None)
         anotar(dibujos >= 2, 'la portada tiene al menos dos imagenes (los logos de la UTP y de la FISC)', f'{dibujos} dibujos en el documento')
     return resultados
@@ -266,7 +266,7 @@ CABECERA = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
 NSW = 'xmlns:w="%s"' % W
 
 
-def construir_docx(ruta, correcto):
+def construir_docx(ruta, correcto, portada=()):
     tam, linea, margen, color, jc = ('24', '360', '1417', '000000', 'both') if correcto else ('22', '259', '1134', '2F5496', 'left')
     estilos = (f'{CABECERA}<w:styles {NSW}><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:sz w:val="{tam}"/></w:rPr></w:rPrDefault></w:docDefaults>'
                f'<w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:pPr><w:spacing w:line="{linea}" w:lineRule="auto"/><w:jc w:val="{jc}"/></w:pPr></w:style>'
@@ -274,7 +274,7 @@ def construir_docx(ruta, correcto):
                f'<w:rPr><w:b/><w:color w:val="{color}"/><w:sz w:val="{tam}"/></w:rPr></w:style></w:styles>')
     largo = 'Este es un parrafo largo de ejemplo para comprobar que el texto del cuerpo esta justificado y usa la fuente y el interlineado correctos del formato.'
     toc = '<w:p><w:r><w:fldChar w:fldCharType="begin"/></w:r><w:r><w:instrText xml:space="preserve"> TOC \\o "1-3" \\h \\z \\u </w:instrText></w:r><w:r><w:fldChar w:fldCharType="end"/></w:r></w:p>' if correcto else ''
-    documento = (f'{CABECERA}<w:document {NSW}><w:body>{toc}<w:p><w:pPr><w:pStyle w:val="Heading1"/></w:pPr><w:r><w:t>Introduccion</w:t></w:r></w:p>'
+    documento = (f'{CABECERA}<w:document {NSW}><w:body>{''.join(f'<w:p><w:r><w:t>{t}</w:t></w:r></w:p>' for t in portada)}{toc}<w:p><w:pPr><w:pStyle w:val="Heading1"/></w:pPr><w:r><w:t>Introduccion</w:t></w:r></w:p>'
                  f'<w:p><w:r><w:t>{largo}</w:t></w:r></w:p><w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="{margen}" w:right="{margen}" w:bottom="{margen}" w:left="{margen}"/></w:sectPr></w:body></w:document>')
     pie = f'{CABECERA}<w:ftr {NSW}><w:p><w:fldSimple w:instr=" PAGE "><w:r><w:t>1</w:t></w:r></w:fldSimple></w:p></w:ftr>' if correcto else f'{CABECERA}<w:ftr {NSW}><w:p/></w:ftr>'
     with zipfile.ZipFile(ruta, 'w') as z:
@@ -294,8 +294,17 @@ def autoprueba():
     detectadas = [e for e in esperadas if any(e in l and '[FALLA]' in l for l in texto_mal.split('\n'))]
     print(f'docx correcto construido a mano: {fallas_bien} comprobaciones que fallan (se esperaba 0)')
     print(f'docx incorrecto (Arial 11, interlineado 1,08, margenes de 2 cm, titulo azul, sin indice ni numero de pagina): {fallas_mal} fallan; detectadas {len(detectadas)} de {len(esperadas)}')
-    bien_ok = fallas_bien == 0 and len(detectadas) == len(esperadas)
-    print('AUTOPRUEBA:', 'el verificador distingue un documento correcto de uno incorrecto' if bien_ok else 'EL VERIFICADOR NO FUNCIONA COMO SE ESPERA')
+    # portada: con los seis nombres cumple el texto; con solo cinco (sin Marc Chavarria) debe fallar y nombrar al que falta
+    con_seis, con_cinco = os.path.join(carpeta, 'portada_seis.docx'), os.path.join(carpeta, 'portada_cinco.docx')
+    construir_docx(con_seis, True, TEXTOS_PORTADA)
+    construir_docx(con_cinco, True, [t for t in TEXTOS_PORTADA if t != 'Marc Chavarría'])
+    clave = 'la portada trae los textos institucionales'
+    r_seis = [r for r in verificar(con_seis, True) if clave in r[1]][0]
+    r_cinco = [r for r in verificar(con_cinco, True) if clave in r[1]][0]
+    portada_ok = r_seis[0] and (not r_cinco[0]) and 'Marc Chavarría' in r_cinco[2]
+    print(f'portada con los seis integrantes: {"cumple" if r_seis[0] else "FALLA"}; portada con cinco (sin Marc Chavarría): {"no la detecta" if r_cinco[0] else "falla y dice " + r_cinco[2]}')
+    bien_ok = fallas_bien == 0 and len(detectadas) == len(esperadas) and portada_ok
+    print('AUTOPRUEBA:', 'el verificador distingue un documento correcto de uno incorrecto y una portada de seis de una de cinco' if bien_ok else 'EL VERIFICADOR NO FUNCIONA COMO SE ESPERA')
     return 0 if bien_ok else 1
 
 

@@ -1,0 +1,44 @@
+auditoria del equipo de seis integrantes (marc chavarria incluido)
+
+a) documentos vigentes: si listan a los cinco originales, deben nombrar tambien a marc chavarria
+  [ok] README.md: lista a los integrantes e incluye a Marc Chavarria
+  [ok] CLAUDE.md: lista a los integrantes e incluye a Marc Chavarria
+  [ok] PROMPT_INICIAL_CLAUDE.txt: menciona a Marc Chavarria
+  [ok] .claude/skills/bootsim-lfac/SKILL.md: lista a los integrantes e incluye a Marc Chavarria
+  [ok] .claude/skills/bootsim-lfac/references/FORMATO_WORD.md: lista a los integrantes e incluye a Marc Chavarria
+  [ok] .claude/skills/bootsim-lfac/references/PUBLICACION.md: menciona a Marc Chavarria
+  [ok] .claude/skills/bootsim-lfac/references/FASES.md: lista a los integrantes e incluye a Marc Chavarria
+  [sin lista de integrantes] .claude/skills/bootsim-lfac/references/RUBRICA.md
+  [sin lista de integrantes] .claude/skills/bootsim-lfac/references/ESTILO.md
+  [ok] docs/EQUIPO_Y_ROLES.md: lista a los integrantes e incluye a Marc Chavarria
+  [ok] docs/INDICE_APROBADO.md: lista a los integrantes e incluye a Marc Chavarria
+  [ok] docs/anexos/ANEXO_C_PLAN.md: lista a los integrantes e incluye a Marc Chavarria
+  [ok] docs/anexos/ANEXO_C_ESPECIFICACION_TECNICA.md: lista a los integrantes e incluye a Marc Chavarria
+  [ok] docs/capitulos/F09_notas_pruebas.md: menciona a Marc Chavarria
+  [ok] reflexiones/INSTRUCCIONES_PERSONALES.md: lista a los integrantes e incluye a Marc Chavarria
+  [sin lista de integrantes] scripts/empaquetar.py
+  [ok] scripts/verificar_formato_docx.py: lista a los integrantes e incluye a Marc Chavarria
+  [ok] control/plan.json: lista a los integrantes e incluye a Marc Chavarria
+
+b) frases de "cinco" que no estan marcadas como historicas (revisar: o se cambian a seis o se marcan)
+  [ok] ninguna frase de cinco integrantes sin marcar
+
+c) documentos de entrega en word
+  [pendiente, no existe todavia] informe_tecnico.docx: se genera en F10; debe incluir a los seis
+  [pendiente, no existe todavia] bitacora_ddr.docx: se genera en F11; debe incluir a los seis
+  [pendiente, no existe todavia] declaracion_ia.docx: se genera en F11; debe incluir a los seis
+  [PENDIENTE DE REGENERAR] docs/anexos/ANEXO_C_PLAN.docx: es un documento anterior a la incorporacion de Marc y no lo nombra; se regenera en F10 (se regenera con el formato nuevo)
+
+d) reflexiones individuales (seis, una por estudiante, escritas por cada persona: no las crea la IA)
+  [ok] reflexiones/INSTRUCCIONES_PERSONALES.md preve los seis archivos esperados
+  [pendiente de la persona] reflexiones/Richard_Smith.docx
+  [pendiente de la persona] reflexiones/Victor_Sanchez.docx
+  [pendiente de la persona] reflexiones/Juan_Gonzalez.docx
+  [pendiente de la persona] reflexiones/Jorge_Gonzalez.docx
+  [pendiente de la persona] reflexiones/Alexandra_Esteves.docx
+  [pendiente de la persona] reflexiones/Marc_Chavarria.docx
+
+e) registros historicos (se conservan sin cambios): docs/BITACORA_EN_CURSO.md, docs/anexos/historial/, docs/anexos/REVISION_TECNICA_F03.md, docs/REVISION_HUMANA_F03.md, evidencias/
+
+problemas encontrados: 0
+RESULTADO: Marc Chavarria figura en todos los documentos revisados
