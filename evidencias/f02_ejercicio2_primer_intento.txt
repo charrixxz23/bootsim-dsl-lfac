@@ -1,0 +1,31 @@
+# evidencia f02: primer intento del ejercicio 2 (con herencia entre clases). python 3.12.10, ply 3.11
+
+## $ timeout 20 python ej2_primer_intento_herencia.py A
+WARNING: C:\Users\ADMIN003\Downloads\BootSimDSL\docs\anexos\scaffold\ej2_primer_intento_herencia.py:59: Function p_si redefined. Previously defined on line 44
+WARNING: C:\Users\ADMIN003\Downloads\BootSimDSL\docs\anexos\scaffold\ej2_primer_intento_herencia.py:68: Function p_si redefined. Previously defined on line 44
+WARNING: C:\Users\ADMIN003\Downloads\BootSimDSL\docs\anexos\scaffold\ej2_primer_intento_herencia.py:72: Function p_si_sino redefined. Previously defined on line 48
+Generating LALR tables
+WARNING: 1 shift/reduce conflict
+fuente : IF a THEN IF b THEN x = 1 ELSE x = 2
+arbol  : ('si', 'a', ('si', 'b', ('asigna', 'x', 1), ('asigna', 'x', 2)), None)
+[codigo de salida: 0]
+
+## $ timeout 20 python ej2_primer_intento_herencia.py B
+WARNING: C:\Users\ADMIN003\Downloads\BootSimDSL\docs\anexos\scaffold\ej2_primer_intento_herencia.py:59: Function p_si redefined. Previously defined on line 44
+WARNING: C:\Users\ADMIN003\Downloads\BootSimDSL\docs\anexos\scaffold\ej2_primer_intento_herencia.py:68: Function p_si redefined. Previously defined on line 44
+WARNING: C:\Users\ADMIN003\Downloads\BootSimDSL\docs\anexos\scaffold\ej2_primer_intento_herencia.py:72: Function p_si_sino redefined. Previously defined on line 48
+Generating LALR tables
+fuente : IF a THEN IF b THEN x = 1 ELSE x = 2
+arbol  : ('si', 'a', ('si', 'b', ('asigna', 'x', 1), ('asigna', 'x', 2)), None)
+[codigo de salida: 0]
+
+## $ timeout 20 python ej2_primer_intento_herencia.py C
+WARNING: C:\Users\ADMIN003\Downloads\BootSimDSL\docs\anexos\scaffold\ej2_primer_intento_herencia.py:59: Function p_si redefined. Previously defined on line 44
+WARNING: C:\Users\ADMIN003\Downloads\BootSimDSL\docs\anexos\scaffold\ej2_primer_intento_herencia.py:68: Function p_si redefined. Previously defined on line 44
+WARNING: C:\Users\ADMIN003\Downloads\BootSimDSL\docs\anexos\scaffold\ej2_primer_intento_herencia.py:72: Function p_si_sino redefined. Previously defined on line 48
+Generating LALR tables
+fuente : IF a THEN IF b THEN x = 1 ELSE x = 2 ENDIF ENDIF
+arbol  : ('si', 'a', ('si', 'b', ('asigna', 'x', 1), ('asigna', 'x', 2)), None)
+fuente : IF a THEN IF b THEN x = 1 ENDIF ELSE x = 2 ENDIF
+arbol  : ('si', 'a', ('si', 'b', ('asigna', 'x', 1), None), ('asigna', 'x', 2))
+[codigo de salida: 0]

@@ -1,0 +1,104 @@
+# evidencia f03 (revision humana): diez ejemplos por lexico/sintaxis, semantica y simulacion. ply 3.11, python 3.12.10, 2026-11-21
+# $ python comprobar_plan.py
+--- invalido_1_lexico.dsl
+    [lexico] linea 2, columna 13: caracter inesperado '@'
+    [lexico] linea 3, columna 13: cadena sin cerrar
+    [sintactico] linea 4, columna 1: token inesperado 'SHOW_STATUS' (SHOW_STATUS)
+    VEREDICTO: RECHAZADO en el analisis lexico/sintactico; la semantica y la simulacion NO se ejecutan
+--- invalido_2_sintactico_falta_puntoycoma.dsl
+    [sintactico] linea 2, columna 1: token inesperado 'CHECK_CPU' (CHECK_CPU)
+    [sintactico] linea 3, columna 11: token inesperado ';' (PUNTOYCOMA)
+    VEREDICTO: RECHAZADO en el analisis lexico/sintactico; la semantica y la simulacion NO se ejecutan
+--- invalido_3_sintactico_if_sin_endif.dsl
+    [sintactico] linea 5, columna 1: fin de archivo inesperado (falta cerrar un IF, REPEAT, BEGIN o una sentencia)
+    VEREDICTO: RECHAZADO en el analisis lexico/sintactico; la semantica y la simulacion NO se ejecutan
+--- invalido_4_semantico_variable.dsl
+    [semantico] linea 2, columna 11: variable 'memoria_total' usada sin asignar
+    VEREDICTO: RECHAZADO por la semantica; la simulacion NO se ejecuta
+--- invalido_5_semantico_orden_y_limite.dsl
+    [semantico] linea 1, columna 1: LOAD_KERNEL fuera de orden: el arranque esta en APAGADO y se necesitaba GESTOR_CARGADO
+    [semantico] linea 3, columna 1: CHECK_RAM 4096 fuera del rango 0..1024
+    [semantico] linea 4, columna 1: RUN_POST sin lecturas previas de cpu, disco
+    VEREDICTO: RECHAZADO por la semantica; la simulacion NO se ejecuta
+--- valido_1_secuencia_basica.dsl
+    [linea 2] POWER_ON -> ok -> ENCENDIDO
+    [linea 3] CHECK_CPU 4 -> ok -> ENCENDIDO
+    [linea 4] CHECK_RAM 16 -> ok -> ENCENDIDO
+    [linea 5] CHECK_DISK 512 GPT -> ok -> ENCENDIDO
+    [linea 6] RUN_POST -> ok -> POST_OK
+    [linea 7] SELECT_BOOT DISK -> ok -> DISPOSITIVO_ELEGIDO
+    [linea 8] LOAD_BOOTLOADER GRUB -> ok -> GESTOR_CARGADO
+    [linea 9] LOAD_KERNEL linux-6.1 True -> ok -> KERNEL_CARGADO
+    [linea 10] START_OS -> ok -> SO_ACTIVO
+    [linea 11] SHOW_STATUS -> estado=SO_ACTIVO datos={'cpu': 4, 'ram': 16, 'disco': 512, 'esquema': 'GPT', 'firmware': 'UEFI', 'initramfs': True}
+    simulacion: pasos=10, errores simulados=0, comandos rechazados=0
+    VEREDICTO: ACEPTADO; estado final SO_ACTIVO
+--- valido_2_variables_y_expresiones.dsl
+    [linea 5] POWER_ON -> ok -> ENCENDIDO
+    [linea 6] CHECK_CPU 8 -> ok -> ENCENDIDO
+    [linea 7] CHECK_RAM 12 -> ok -> ENCENDIDO
+    [linea 8] CHECK_DISK 256 MBR -> ok -> ENCENDIDO
+    [linea 9] SHOW_STATUS -> estado=ENCENDIDO datos={'cpu': 8, 'ram': 12, 'disco': 256, 'esquema': 'MBR', 'firmware': 'UEFI', 'initramfs': None}
+    simulacion: pasos=8, errores simulados=0, comandos rechazados=0
+    VEREDICTO: ACEPTADO; estado final ENCENDIDO
+--- valido_3_if_else_firmware.dsl
+    [linea 2] POWER_ON -> ok -> ENCENDIDO
+    [linea 6] SET_FIRMWARE BIOS -> ok -> ENCENDIDO
+    [linea 8] CHECK_CPU 2 -> ok -> ENCENDIDO
+    [linea 9] CHECK_RAM 4 -> ok -> ENCENDIDO
+    [linea 10] CHECK_DISK 120 MBR -> ok -> ENCENDIDO
+    [linea 11] RUN_POST -> ok -> POST_OK
+    [linea 12] SHOW_STATUS -> estado=POST_OK datos={'cpu': 2, 'ram': 4, 'disco': 120, 'esquema': 'MBR', 'firmware': 'BIOS', 'initramfs': None}
+    simulacion: pasos=9, errores simulados=0, comandos rechazados=0
+    VEREDICTO: ACEPTADO; estado final POST_OK
+--- valido_4_repeat_y_bloque.dsl
+    [linea 1] POWER_ON -> ok -> ENCENDIDO
+    [linea 3] CHECK_CPU 8 -> ok -> ENCENDIDO
+    [linea 4] CHECK_RAM 32 -> ok -> ENCENDIDO
+    [linea 5] CHECK_DISK 1000 GPT -> ok -> ENCENDIDO
+    [linea 8] SHOW_STATUS -> estado=ENCENDIDO datos={'cpu': 8, 'ram': 32, 'disco': 1000, 'esquema': 'GPT', 'firmware': 'UEFI', 'initramfs': None}
+    [linea 8] SHOW_STATUS -> estado=ENCENDIDO datos={'cpu': 8, 'ram': 32, 'disco': 1000, 'esquema': 'GPT', 'firmware': 'UEFI', 'initramfs': None}
+    [linea 8] SHOW_STATUS -> estado=ENCENDIDO datos={'cpu': 8, 'ram': 32, 'disco': 1000, 'esquema': 'GPT', 'firmware': 'UEFI', 'initramfs': None}
+    [linea 8] SHOW_STATUS -> estado=ENCENDIDO datos={'cpu': 8, 'ram': 32, 'disco': 1000, 'esquema': 'GPT', 'firmware': 'UEFI', 'initramfs': None}
+    simulacion: pasos=9, errores simulados=0, comandos rechazados=0
+    VEREDICTO: ACEPTADO; estado final ENCENDIDO
+--- valido_5_kernel_panic_y_reinicio.dsl
+    [linea 2] POWER_ON -> ok -> ENCENDIDO
+    [linea 3] CHECK_CPU 2 -> ok -> ENCENDIDO
+    [linea 4] CHECK_RAM 4 -> ok -> ENCENDIDO
+    [linea 5] CHECK_DISK 64 GPT -> ok -> ENCENDIDO
+    [linea 6] RUN_POST -> ok -> POST_OK
+    [linea 7] SELECT_BOOT DISK -> ok -> DISPOSITIVO_ELEGIDO
+    [linea 8] LOAD_BOOTLOADER GRUB -> ok -> GESTOR_CARGADO
+    [linea 9] LOAD_KERNEL linux-roto False -> ok -> KERNEL_CARGADO
+    [linea 10] START_OS -> ERROR SIMULADO KERNEL_PANIC: no se pudo montar el sistema de archivos raiz (kernel sin initramfs)
+    [linea 11] SHOW_STATUS -> estado=KERNEL_PANIC datos={'cpu': 2, 'ram': 4, 'disco': 64, 'esquema': 'GPT', 'firmware': 'UEFI', 'initramfs': False}
+    [linea 12] RESET_SYSTEM -> reinicio simulado: estado=APAGADO
+    simulacion: pasos=11, errores simulados=1, comandos rechazados=0
+    VEREDICTO: ACEPTADO; estado final APAGADO
+
+== resumen: lo que el sistema completo decidio de cada archivo
+   (un archivo invalido que el parser reconoce no cuenta como aceptado si la semantica lo rechaza)
+RESULTADO: todos los validos aceptados y todos los invalidos rechazados
+[codigo de salida: 0]
+
+# $ python mostrar_precedencia.py
+2 + 3 * 4          -> ('+', 2, ('*', 3, 4))
+10 - 4 - 3         -> ('-', ('-', 10, 4), 3)
+8 / 4 / 2          -> ('/', ('/', 8, 4), 2)
+-2 * 3             -> ('*', ('neg', 2), 3)
+(2 + 3) * 4        -> ('*', ('+', 2, 3), 4)
+NOT a AND b OR c   -> ('OR', ('AND', ('NOT', ('var', 'a')), ('var', 'b')), ('var', 'c'))
+a OR b AND c       -> ('OR', ('var', 'a'), ('AND', ('var', 'b'), ('var', 'c')))
+NOT x > 3          -> ('NOT', ('>', ('var', 'x'), 3))
+a == b != c        -> ('!=', ('==', ('var', 'a'), ('var', 'b')), ('var', 'c'))
+a < b == c < d     -> ('==', ('<', ('var', 'a'), ('var', 'b')), ('<', ('var', 'c'), ('var', 'd')))
+a < b < c          -> error sintactico en la columna 7: token inesperado '<' (MENOR)
+1 < 2 < 3          -> error sintactico en la columna 7: token inesperado '<' (MENOR)
+a == NOT b         -> ('==', ('var', 'a'), ('NOT', ('var', 'b')))
+1 + NOT x          -> ('+', 1, ('NOT', ('var', 'x')))
+NOT NOT a          -> ('NOT', ('NOT', ('var', 'a')))
+a == NOT b == c    -> ('==', ('var', 'a'), ('NOT', ('==', ('var', 'b'), ('var', 'c'))))
+
+# lineas con la palabra conflict en salida_ply/parser_borrador.out: 0
+# lineas Rule: 50 (incluye la regla 0 que agrega ply); estados lalr: 94

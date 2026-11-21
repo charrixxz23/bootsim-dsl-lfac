@@ -1,0 +1,15 @@
+evidencia f09: codificacion de la salida de BootSim en CMD por una tuberia (2026-11-21 13:47)
+se ejecuta cmd con una pagina de codigos (chcp) y se mira que bytes salen por la tuberia (| more). el entorno se limpia de PYTHONIOENCODING y PYTHONUTF8 para
+ver el comportamiento por defecto. python escribe la i con tilde de "linea": byte 0xA1 en las paginas 850 y 437, 0xED en cp1252, 0xC3 0xAD en utf-8.
+
+1) un programa de python cualquiera (evidencias/f09_codif.py: imprime la codificacion de su salida y la i con tilde), por tuberia, SIN la correccion de f09:
+   chcp 850: cp1252 b'\xed'   (la consola espera 0xA1 y recibe 0xED: las tildes salen rotas)
+   chcp 437: cp1252 b'\xed'   (la consola espera 0xA1 y recibe 0xED: las tildes salen rotas)
+
+2) main.py de BootSim, por tuberia, CON la correccion (codificacion_de_la_consola en codigo/main.py):
+   chcp 850: bytes de "[línea 3]" -> b'[l\xa1nea 3'   decodificado como cp850: '[línea 3'
+   chcp 437: bytes de "[línea 3]" -> b'[l\xa1nea 3'   decodificado como cp437: '[línea 3'
+   chcp 65001: bytes de "[línea 3]" -> b'[l\xc3\xadnea '   decodificado como utf-8: '[línea '
+
+3) si la persona fuerza UTF-8 con PYTHONIOENCODING (como hacia la sesion de trabajo de la IA), BootSim lo respeta y no cambia nada:
+   chcp 850 con PYTHONIOENCODING=utf-8: b'[l\xc3\xadnea ' (utf-8 leido en una consola 850 se ve roto: es lo que la persona pidio)

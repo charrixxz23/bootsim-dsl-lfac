@@ -1,0 +1,38 @@
+$ python codigo/main.py pruebas/validos/valido_05.dsl
+[codigo de salida 0]
+--- salida estandar ---
+BootSim DSL | archivo: pruebas/validos/valido_05.dsl
+
+=== avisos (no impiden simular) ===
+[aviso S5] línea 10, columna 1: se prevé que la simulación termine en ERROR_ARRANQUE: el firmware BIOS y el esquema GPT no son compatibles en este simulador
+[aviso A2] línea 11, columna 1: LOAD_KERNEL será rechazado en la simulación: el sistema está en ERROR_ARRANQUE; solo se aceptan SHOW_STATUS y RESET_SYSTEM; RESET_SYSTEM permite volver a empezar
+
+=== simulación ===
+[línea 3] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+[línea 4] SET_FIRMWARE BIOS -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 5] CHECK_CPU 4 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 6] CHECK_RAM 8 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 7] CHECK_DISK 256 GPT -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 8] RUN_POST -> ok (ENCENDIDO -> POST_OK)
+[línea 9] SELECT_BOOT DISK -> ok (POST_OK -> DISPOSITIVO_ELEGIDO)
+[línea 10] LOAD_BOOTLOADER GRUB -> ERROR SIMULADO (ERROR_ARRANQUE): el firmware BIOS y el esquema GPT no son compatibles en este simulador
+[línea 11] LOAD_KERNEL "linux-6.1" TRUE -> RECHAZADO: el sistema está en ERROR_ARRANQUE; solo se aceptan SHOW_STATUS y RESET_SYSTEM
+[línea 12] SHOW_STATUS -> estado=ERROR_ARRANQUE | firmware=BIOS | cpu=4 | ram=8 GB | disco=256 GB GPT | initramfs=sin cargar
+[línea 13] RESET_SYSTEM -> reinicio simulado: estado=APAGADO
+[línea 14] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+[línea 15] CHECK_CPU 4 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 16] CHECK_RAM 8 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 17] CHECK_DISK 256 GPT -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 18] RUN_POST -> ok (ENCENDIDO -> POST_OK)
+[línea 19] SELECT_BOOT DISK -> ok (POST_OK -> DISPOSITIVO_ELEGIDO)
+[línea 20] LOAD_BOOTLOADER GRUB -> ok (DISPOSITIVO_ELEGIDO -> GESTOR_CARGADO)
+[línea 21] LOAD_KERNEL "linux-6.1" TRUE -> ok (GESTOR_CARGADO -> KERNEL_CARGADO)
+[línea 22] START_OS -> ok (KERNEL_CARGADO -> SO_ACTIVO)
+[línea 23] SHOW_STATUS -> estado=SO_ACTIVO | firmware=UEFI | cpu=4 | ram=8 GB | disco=256 GB GPT | initramfs=sí
+
+=== resumen ===
+estado final: SO_ACTIVO
+pasos ejecutados: 22; fallos de arranque simulados: 1; comandos rechazados: 1
+
+PROGRAMA CORRECTO: hubo 1 fallo(s) de arranque simulado(s), pero el equipo terminó en un estado normal.
+--- salida de error ---

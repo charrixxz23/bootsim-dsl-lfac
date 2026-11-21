@@ -1,0 +1,40 @@
+# evidencia f02 ejercicio 2: else colgante. python 3.12.10, ply 3.11. fecha 2026-11-21
+
+## $ timeout 20 python ej2_else_colgante.py A
+Generating LALR tables
+WARNING: 1 shift/reduce conflict
+fuente : IF a THEN IF b THEN x = 1 ELSE x = 2
+arbol  : ('si', 'a', ('si', 'b', ('asigna', 'x', 1), ('asigna', 'x', 2)), None)
+[codigo de salida: 0]
+
+## $ timeout 20 python ej2_else_colgante.py B
+Generating LALR tables
+fuente : IF a THEN IF b THEN x = 1 ELSE x = 2
+arbol  : ('si', 'a', ('si', 'b', ('asigna', 'x', 1), ('asigna', 'x', 2)), None)
+[codigo de salida: 0]
+
+## $ timeout 20 python ej2_else_colgante.py C
+Generating LALR tables
+fuente : IF a THEN IF b THEN x = 1 ELSE x = 2 ENDIF ENDIF
+arbol  : ('si', 'a', ('si', 'b', ('asigna', 'x', 1), ('asigna', 'x', 2)), None)
+fuente : IF a THEN IF b THEN x = 1 ENDIF ELSE x = 2 ENDIF
+arbol  : ('si', 'a', ('si', 'b', ('asigna', 'x', 1), None), ('asigna', 'x', 2))
+[codigo de salida: 0]
+
+## conflictos en los archivos parser.out generados por ply (lineas con la palabra conflict)
+parser_A.out: 3
+parser_B.out: 0
+parser_C.out: 0
+
+## estado 8 de parser_A.out (donde ply detecta el conflicto)
+state 8
+
+    (2) sentencia -> IF ID THEN sentencia .
+    (3) sentencia -> IF ID THEN sentencia . ELSE sentencia
+
+  ! shift/reduce conflict for ELSE resolved as shift
+    $end            reduce using rule 2 (sentencia -> IF ID THEN sentencia .)
+    ELSE            shift and go to state 9
+
+  ! ELSE            [ reduce using rule 2 (sentencia -> IF ID THEN sentencia .) ]
+

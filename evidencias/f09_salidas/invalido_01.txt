@@ -1,0 +1,10 @@
+$ python codigo/main.py pruebas/invalidos/invalido_01.dsl
+[codigo de salida 1]
+--- salida estandar ---
+BootSim DSL | archivo: pruebas/invalidos/invalido_01.dsl
+
+=== errores de análisis ===
+[léxico] línea 3, columna 13: carácter inesperado '@': no forma parte del lenguaje
+
+RECHAZADO: el programa tiene errores, así que no se simuló nada.
+--- salida de error ---

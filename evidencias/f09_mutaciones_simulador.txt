@@ -1,0 +1,32 @@
+evidencia f09: mutaciones del simulador y de main.py con el criterio reforzado: solo cuenta como detectada una mutacion si falla al menos una prueba de forma explicita (2026-11-21 13:51)
+[detectada] REPEAT ejecuta una vuelta de mas | probar_simulador.py: 13 fallos
+[detectada] el limite de pasos deja ejecutar un paso de mas (> en vez de >=) | probar_simulador.py: 6 fallos
+[detectada] el limite de pasos sube a 100 000 | probar_simulador.py: 1 fallos
+[detectada] el IF no cuenta como paso | probar_simulador.py: 8 fallos
+[detectada] BEGIN/END cuenta como un paso | probar_simulador.py: 5 fallos
+[detectada] el IF elige la rama contraria | probar_simulador.py: 9 fallos
+[detectada] RESET_SYSTEM borra las variables del programa | probar_simulador.py: 7 fallos
+[detectada] no se cuentan los fallos simulados | probar_simulador.py: 12 fallos
+[detectada] no se cuentan los comandos rechazados | probar_simulador.py: 7 fallos
+[detectada] procesar simula el arbol aunque haya errores semanticos | probar_simulador.py: 16 fallos
+[detectada] la division entre cero no se detecta al correr | probar_simulador.py: 7 fallos
+[detectada] las variables se arrastran de una ejecucion a la siguiente | probar_simulador.py: 16 fallos
+[detectada] los eventos se arrastran de una ejecucion a la siguiente | probar_simulador.py: 24 fallos
+[detectada] el simulador modifica el arbol (invierte la rama ejecutada) | probar_simulador.py: 4 fallos
+[detectada] REPEAT no revisa el rango al correr | probar_simulador.py: 4 fallos
+[detectada] CHECK_CPU y compania no revisan sus limites al correr | probar_simulador.py: 6 fallos
+[detectada] SHOW_STATUS no muestra los datos de la maquina | probar_simulador.py: 22 fallos
+[detectada] un error de ejecucion no detiene la simulacion | probar_simulador.py: 6 fallos
+[detectada] main no protege la salida de caracteres que la consola no sabe dibujar | probar_simulador.py: 4 fallos
+[detectada] main deja la salida por tuberias en la pagina ANSI (tildes rotas con | more en CMD) | probar_simulador.py: 3 fallos
+[detectada] main no lee el BOM de utf-8 | probar_simulador.py: 4 fallos
+[detectada] main devuelve 0 cuando el arranque simulado termina en error | probar_simulador.py: 7 fallos
+[detectada] main usa el codigo 1 para los argumentos incorrectos | probar_simulador.py: 7 fallos
+[detectada] --debug no muestra los tokens | probar_simulador.py: 7 fallos
+[detectada] main deja pasar un archivo inexistente como error interno | probar_simulador.py: 4 fallos
+[detectada] main acepta un archivo vacio | probar_simulador.py: 5 fallos
+[detectada] main simula aunque el analisis haya rechazado el programa | probar_simulador.py: 12 fallos
+
+mutaciones: 27; sin detectar: 0
+RESULTADO: todas las mutaciones fueron detectadas
+[codigo de salida 0]

@@ -1,0 +1,157 @@
+$ python codigo/main.py pruebas/validos/valido_05.dsl --debug
+[codigo de salida 0]
+--- salida estandar ---
+BootSim DSL | archivo: pruebas/validos/valido_05.dsl
+
+=== tokens ===
+línea:col  token            valor
+2:1        SET              'SET'
+2:5        ID               'memoria'
+2:13       ASIGNA           '='
+2:15       ENTERO           8
+2:16       PUNTOYCOMA       ';'
+3:1        POWER_ON         'POWER_ON'
+3:9        PUNTOYCOMA       ';'
+4:1        SET_FIRMWARE     'SET_FIRMWARE'
+4:14       BIOS             'BIOS'
+4:18       PUNTOYCOMA       ';'
+5:1        CHECK_CPU        'CHECK_CPU'
+5:11       ENTERO           4
+5:12       PUNTOYCOMA       ';'
+6:1        CHECK_RAM        'CHECK_RAM'
+6:11       ID               'memoria'
+6:18       PUNTOYCOMA       ';'
+7:1        CHECK_DISK       'CHECK_DISK'
+7:12       ENTERO           256
+7:16       GPT              'GPT'
+7:19       PUNTOYCOMA       ';'
+8:1        RUN_POST         'RUN_POST'
+8:9        PUNTOYCOMA       ';'
+9:1        SELECT_BOOT      'SELECT_BOOT'
+9:13       DISK             'DISK'
+9:17       PUNTOYCOMA       ';'
+10:1       LOAD_BOOTLOADER  'LOAD_BOOTLOADER'
+10:17      GRUB             'GRUB'
+10:21      PUNTOYCOMA       ';'
+11:1       LOAD_KERNEL      'LOAD_KERNEL'
+11:13      CADENA           'linux-6.1'
+11:25      TRUE             'TRUE'
+11:29      PUNTOYCOMA       ';'
+12:1       SHOW_STATUS      'SHOW_STATUS'
+12:12      PUNTOYCOMA       ';'
+13:1       RESET_SYSTEM     'RESET_SYSTEM'
+13:13      PUNTOYCOMA       ';'
+14:1       POWER_ON         'POWER_ON'
+14:9       PUNTOYCOMA       ';'
+15:1       CHECK_CPU        'CHECK_CPU'
+15:11      ENTERO           4
+15:12      PUNTOYCOMA       ';'
+16:1       CHECK_RAM        'CHECK_RAM'
+16:11      ID               'memoria'
+16:18      PUNTOYCOMA       ';'
+17:1       CHECK_DISK       'CHECK_DISK'
+17:12      ENTERO           256
+17:16      GPT              'GPT'
+17:19      PUNTOYCOMA       ';'
+18:1       RUN_POST         'RUN_POST'
+18:9       PUNTOYCOMA       ';'
+19:1       SELECT_BOOT      'SELECT_BOOT'
+19:13      DISK             'DISK'
+19:17      PUNTOYCOMA       ';'
+20:1       LOAD_BOOTLOADER  'LOAD_BOOTLOADER'
+20:17      GRUB             'GRUB'
+20:21      PUNTOYCOMA       ';'
+21:1       LOAD_KERNEL      'LOAD_KERNEL'
+21:13      CADENA           'linux-6.1'
+21:25      TRUE             'TRUE'
+21:29      PUNTOYCOMA       ';'
+22:1       START_OS         'START_OS'
+22:9       PUNTOYCOMA       ';'
+23:1       SHOW_STATUS      'SHOW_STATUS'
+23:12      PUNTOYCOMA       ';'
+
+=== árbol sintáctico ===
+Programa  [1:1]
+  Asignar nombre=memoria  [2:1]
+    Literal entero 8  [2:15]
+  Comando POWER_ON  [3:1]
+  Comando SET_FIRMWARE  [4:1]
+    Opcion BIOS  [4:14]
+  Comando CHECK_CPU  [5:1]
+    Literal entero 4  [5:11]
+  Comando CHECK_RAM  [6:1]
+    Variable memoria  [6:11]
+  Comando CHECK_DISK  [7:1]
+    Literal entero 256  [7:12]
+    Opcion GPT  [7:16]
+  Comando RUN_POST  [8:1]
+  Comando SELECT_BOOT  [9:1]
+    Opcion DISK  [9:13]
+  Comando LOAD_BOOTLOADER  [10:1]
+    Opcion GRUB  [10:17]
+  Comando LOAD_KERNEL  [11:1]
+    Literal cadena 'linux-6.1'  [11:13]
+    Literal booleano TRUE  [11:25]
+  Comando SHOW_STATUS  [12:1]
+  Comando RESET_SYSTEM  [13:1]
+  Comando POWER_ON  [14:1]
+  Comando CHECK_CPU  [15:1]
+    Literal entero 4  [15:11]
+  Comando CHECK_RAM  [16:1]
+    Variable memoria  [16:11]
+  Comando CHECK_DISK  [17:1]
+    Literal entero 256  [17:12]
+    Opcion GPT  [17:16]
+  Comando RUN_POST  [18:1]
+  Comando SELECT_BOOT  [19:1]
+    Opcion DISK  [19:13]
+  Comando LOAD_BOOTLOADER  [20:1]
+    Opcion GRUB  [20:17]
+  Comando LOAD_KERNEL  [21:1]
+    Literal cadena 'linux-6.1'  [21:13]
+    Literal booleano TRUE  [21:25]
+  Comando START_OS  [22:1]
+  Comando SHOW_STATUS  [23:1]
+
+=== análisis semántico ===
+[aviso S5] línea 10, columna 1: se prevé que la simulación termine en ERROR_ARRANQUE: el firmware BIOS y el esquema GPT no son compatibles en este simulador
+[aviso A2] línea 11, columna 1: LOAD_KERNEL será rechazado en la simulación: el sistema está en ERROR_ARRANQUE; solo se aceptan SHOW_STATUS y RESET_SYSTEM; RESET_SYSTEM permite volver a empezar
+variable         tipo       valor
+memoria          entero     8
+pasos mínimos de ejecución: 22; etapa al final (sin fallos): SO_ACTIVO
+
+=== simulación ===
+[línea 3] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+[línea 4] SET_FIRMWARE BIOS -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 5] CHECK_CPU 4 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 6] CHECK_RAM 8 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 7] CHECK_DISK 256 GPT -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 8] RUN_POST -> ok (ENCENDIDO -> POST_OK)
+[línea 9] SELECT_BOOT DISK -> ok (POST_OK -> DISPOSITIVO_ELEGIDO)
+[línea 10] LOAD_BOOTLOADER GRUB -> ERROR SIMULADO (ERROR_ARRANQUE): el firmware BIOS y el esquema GPT no son compatibles en este simulador
+[línea 11] LOAD_KERNEL "linux-6.1" TRUE -> RECHAZADO: el sistema está en ERROR_ARRANQUE; solo se aceptan SHOW_STATUS y RESET_SYSTEM
+[línea 12] SHOW_STATUS -> estado=ERROR_ARRANQUE | firmware=BIOS | cpu=4 | ram=8 GB | disco=256 GB GPT | initramfs=sin cargar
+[línea 13] RESET_SYSTEM -> reinicio simulado: estado=APAGADO
+[línea 14] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+[línea 15] CHECK_CPU 4 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 16] CHECK_RAM 8 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 17] CHECK_DISK 256 GPT -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 18] RUN_POST -> ok (ENCENDIDO -> POST_OK)
+[línea 19] SELECT_BOOT DISK -> ok (POST_OK -> DISPOSITIVO_ELEGIDO)
+[línea 20] LOAD_BOOTLOADER GRUB -> ok (DISPOSITIVO_ELEGIDO -> GESTOR_CARGADO)
+[línea 21] LOAD_KERNEL "linux-6.1" TRUE -> ok (GESTOR_CARGADO -> KERNEL_CARGADO)
+[línea 22] START_OS -> ok (KERNEL_CARGADO -> SO_ACTIVO)
+[línea 23] SHOW_STATUS -> estado=SO_ACTIVO | firmware=UEFI | cpu=4 | ram=8 GB | disco=256 GB GPT | initramfs=sí
+
+=== traza del control de flujo ===
+(el programa no usa IF ni REPEAT)
+
+=== variables al terminar ===
+memoria = 8
+
+=== resumen ===
+estado final: SO_ACTIVO
+pasos ejecutados: 22; fallos de arranque simulados: 1; comandos rechazados: 1
+
+PROGRAMA CORRECTO: hubo 1 fallo(s) de arranque simulado(s), pero el equipo terminó en un estado normal.
+--- salida de error ---

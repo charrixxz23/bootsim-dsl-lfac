@@ -1,0 +1,349 @@
+evidencia f07: salida real de python codigo/probar_semantica.py (2026-11-21 12:38)
+las pruebas las diseno la IA; no son verificacion independiente hecha por estudiantes.
+
+
+== 1. los cinco ejemplos validos y los cinco invalidos de f03, con el parser definitivo
+  [ok] valido_1_secuencia_basica.dsl: aceptado, 10 pasos minimos y etapa final SO_ACTIVO
+  [ok] valido_2_variables_y_expresiones.dsl: aceptado, 8 pasos minimos y etapa final ENCENDIDO
+  [ok] valido_3_if_else_firmware.dsl: aceptado, 9 pasos minimos y etapa final POST_OK
+  [ok] valido_4_repeat_y_bloque.dsl: aceptado, 9 pasos minimos y etapa final ENCENDIDO
+  [ok] valido_5_kernel_panic_y_reinicio.dsl: aceptado, 11 pasos minimos y etapa final APAGADO
+  [ok] valido_2: la tabla de simbolos tiene nucleos=8, memoria=12 y alcanza=TRUE (calculado a mano)
+  [ok] valido_5: un solo aviso, A1 en 10:1 (se preve KERNEL_PANIC); el programa se acepta igual
+  [ok] los otros cuatro validos no tienen avisos
+  [ok] invalido_1_lexico.dsl: rechazado antes de la semantica (no hay arbol), sin resultado semantico y sin programa
+  [ok] invalido_2_sintactico_falta_puntoycoma.dsl: rechazado antes de la semantica (no hay arbol), sin resultado semantico y sin programa
+  [ok] invalido_3_sintactico_if_sin_endif.dsl: rechazado antes de la semantica (no hay arbol), sin resultado semantico y sin programa
+  [ok] invalido_4: el parser lo acepta y la semantica lo rechaza con un S1 en 2:11 sobre memoria_total
+  [ok] invalido_5: tres errores: S2 (1:1 orden), S3 (3:1 limite 4096) y S2 (4:1 RUN_POST sin lecturas)
+
+== 2. S1: variables usadas antes de asignarse
+  [ok] SET y = x + 1; : S1 en 1:9 (una vez)
+  [ok] la misma variable usada tres veces da un solo error (sin cascada)
+  [ok] asignada despues: el primer uso es el error, el segundo ya no
+  [ok] SET a = a + 1; usa a antes de tener valor
+  [ok] variable desconocida en la condicion de un IF
+  [ok] variable desconocida como argumento de un comando
+  [ok] en una rama que no se ejecuta tambien se detecta
+  [ok] la variable que solo asigna la rama que no corre no existe despues del IF
+  [ok] una variable asignada en la rama que corre existe despues
+  [ok] el mensaje sugiere como arreglarlo
+  [ok] una variable asignada antes y usada en un REPEAT conserva su existencia
+
+== 3. S4: tipos (y que bool no se confunda con int)
+  [ok] 1 + TRUE: un error S4 que dice 'el lado derecho es booleano'
+  [ok] TRUE + 1: un error S4 que dice 'el lado izquierdo es booleano'
+  [ok] TRUE + FALSE: un error S4 que dice 'el lado izquierdo es booleano y el lado derecho es booleano'
+  [ok] "a" + 1: un error S4 que dice 'el lado izquierdo es cadena'
+  [ok] NOT 1: un error S4 que dice "'NOT' espera un valor booleano"
+  [ok] - TRUE: un error S4 que dice "'-' espera un valor entero"
+  [ok] TRUE < 1: un error S4 que dice 'solo opera con valores enteros'
+  [ok] 1 < "a": un error S4 que dice 'el lado derecho es cadena'
+  [ok] 1 == TRUE: un error S4 que dice 'tipos distintos (entero y booleano)'
+  [ok] TRUE == 1: un error S4 que dice 'tipos distintos (booleano y entero)'
+  [ok] FALSE == 0: un error S4 que dice 'tipos distintos (booleano y entero)'
+  [ok] "a" == 1: un error S4 que dice 'tipos distintos (cadena y entero)'
+  [ok] 1 AND 2: un error S4 que dice 'solo opera con valores booleanos'
+  [ok] TRUE AND 1: un error S4 que dice 'el lado derecho es entero'
+  [ok] 1 OR TRUE: un error S4 que dice 'el lado izquierdo es entero'
+  [ok] (1 < 2) + 1: un error S4 que dice 'el lado izquierdo es booleano'
+  [ok] 1 + NOT TRUE: un error S4 que dice 'el lado derecho es booleano'
+  [ok] 1 == 1: es correcto
+  [ok] TRUE == TRUE: es correcto
+  [ok] "a" == "a": es correcto
+  [ok] (1 < 2) == TRUE: es correcto
+  [ok] NOT (1 < 2): es correcto
+  [ok] NOT TRUE == FALSE: es correcto
+  [ok] 1 + 2 < 3 AND TRUE: es correcto
+  [ok] - (2): es correcto
+  [ok] FALSE != TRUE: es correcto
+  [ok] una variable booleana no se puede sumar: SET b = TRUE; SET n = b + 1;
+  [ok] un booleano y un entero guardados en variables no se comparan
+  [ok] un argumento booleano donde se pide un entero: CHECK_CPU TRUE;
+  [ok] un resultado de comparacion donde se pide un entero: CHECK_RAM 1 == 1;
+  [ok] REPEAT TRUE TIMES (booleano como cantidad)
+  [ok] condicion de IF entera y de texto
+  [ok] LOAD_KERNEL con un entero donde va el booleano
+  [ok] NOT frente a comparacion: NOT x > 2 es NOT (x > 2), booleano correcto
+  [ok] b == NOT b es una igualdad entre booleanos
+  [ok] una variable no cambia de tipo: SET v = 1; SET v = TRUE;
+  [ok] tras ese error la variable conserva su tipo y no hay mas errores en cascada
+  [ok] un error de tipos dentro de una expresion grande se informa una sola vez
+  [ok] un valor entero reasignado con otro entero es correcto
+  [ok] valor de 2 + 3 * 4 - 10 / 3 = 11 (int)
+  [ok] valor de -7 / 2 = -3 (int)
+  [ok] valor de 7 / -2 = -3 (int)
+  [ok] valor de 10 - 2 - 3 * 2 = 2 (int)
+  [ok] valor de NOT (1 < 2) OR 3 == 3 AND 2 >= 1 = True (bool)
+  [ok] valor de 1 + 2 < 3 * 4 == TRUE = True (bool)
+  [ok] valor de - (2 + 3) * 4 = -20 (int)
+  [ok] valor de - - 2 = 2 (int)
+  [ok] valor de 2 * - 3 = -6 (int)
+  [ok] valor de NOT NOT TRUE = True (bool)
+  [ok] valor de (1 + 2) * (3 - 4) / 5 = 0 (int)
+  [ok] valor de 8 / 2 / 2 * 3 = 6 (int)
+  [ok] valor de 2 * (3 + 4) - 5 * (6 - 7) = 19 (int)
+  [ok] valor de 1 - - 1 = 2 (int)
+  [ok] valor de 100 / 7 / 2 = 7 (int)
+  [ok] valor de 0 - 7 / 2 = -3 (int)
+  [ok] valor de TRUE AND FALSE OR TRUE = True (bool)
+  [ok] valor de NOT FALSE == TRUE = True (bool)
+  [ok] valor de (1 < 2) == (2 < 3) = True (bool)
+  [ok] valor de 1 + (2 * (3 + (4 - (5 * 6)))) = -45 (int)
+
+== 4. S6: division entre cero (solo cuando se puede determinar)
+  [ok] SET a = 1 / 0; : S6 en el operador (1:11)
+  [ok] el divisor sale de una variable conocida
+  [ok] el divisor es una expresion que vale cero
+  [ok] la division por cero dentro de otra division da un solo error
+  [ok] 0 / 5 es correcto (cero como dividendo)
+  [ok] un divisor que vale -1 o 1 es correcto
+  [ok] un divisor desconocido (la variable cambia dentro de un REPEAT) no se rechaza: solo se sabra al simular
+  [ok] division entera que trunca hacia cero: -7 / 2 = -3 y 7 / -2 = -3
+  [ok] la division por cero se detecta aunque este en una rama que no se ejecuta
+
+== 5. S7: argumentos obligatorios (con arboles armados a mano, que el parser nunca produce)
+  [ok] CHECK_CPU sin argumentos: un error con 'necesita 1 argumento'
+  [ok] CHECK_RAM con dos argumentos: un error con 'necesita 1 argumento'
+  [ok] CHECK_DISK con un solo argumento: un error con 'necesita 2 argumento'
+  [ok] CHECK_DISK sin el esquema (un entero en su lugar): un error con 'debe ser MBR o GPT'
+  [ok] SET_FIRMWARE con una opcion que no es de firmware: un error con 'debe ser BIOS o UEFI'
+  [ok] SELECT_BOOT con BIOS: un error con 'DISK o USB o NETWORK'
+  [ok] LOAD_BOOTLOADER con otro gestor: un error con 'debe ser GRUB'
+  [ok] LOAD_KERNEL con el nombre vacio: un error con 'no esté vacío'
+  [ok] LOAD_KERNEL sin el booleano: un error con 'necesita 2 argumento'
+  [ok] POWER_ON con un argumento: un error con 'necesita 0 argumento'
+  [ok] un comando que no existe: un error con 'no es un comando de BootSim'
+  [ok] una opcion donde se pide un entero: un error con 'no la opción GPT'
+  [ok] una opcion usada como valor en SET: un error con 'no se puede usar como valor'
+  [ok] un literal entero cuyo valor es True (bool no es int): un error con 'literal inconsistente'
+  [ok] un literal booleano cuyo valor es 1: un error con 'literal inconsistente'
+  [ok] un operador binario inventado: un error con 'no es un operador de BootSim'
+  [ok] un operador unario inventado: un error con 'no es un operador unario'
+  [ok] una sentencia Invalida (programa con errores de sintaxis): un error con 'sentencia inválida'
+  [ok] los argumentos correctos de los 12 comandos no dan error de argumentos
+  [ok] la tabla de argumentos cubre los 12 comandos
+  [ok] analizar_semantica rechaza algo que no sea un Programa (un texto)
+
+== 6. S3: limites de CPU, RAM, disco y REPEAT (valores en el borde)
+  [ok] CHECK_CPU 0: S3 con el valor y el rango en el mensaje
+  [ok] CHECK_CPU 1: correcto
+  [ok] CHECK_CPU 64: correcto
+  [ok] CHECK_CPU 65: S3 con el valor y el rango en el mensaje
+  [ok] CHECK_RAM -1: S3 con el valor y el rango en el mensaje
+  [ok] CHECK_RAM 0: correcto
+  [ok] CHECK_RAM 1024: correcto
+  [ok] CHECK_RAM 1025: S3 con el valor y el rango en el mensaje
+  [ok] CHECK_DISK -1: S3 con el valor y el rango en el mensaje
+  [ok] CHECK_DISK 0: correcto
+  [ok] CHECK_DISK 16384: correcto
+  [ok] CHECK_DISK 16385: S3 con el valor y el rango en el mensaje
+  [ok] REPEAT -1: S3 (0 a 1000)
+  [ok] REPEAT 0: correcto
+  [ok] REPEAT 1000: correcto
+  [ok] REPEAT 1001: S3 (0 a 1000)
+  [ok] limite calculado con una expresion: SET gb = 4 * 1024; CHECK_RAM gb; da S3 con 4096
+  [ok] un limite que no se puede calcular (variable cambiada en un REPEAT) no se rechaza
+  [ok] el limite se revisa tambien en una rama que no corre
+  [ok] un error de limite no impide seguir revisando el orden: la lectura cuenta y RUN_POST solo reclama las demas
+
+== 7. S2: orden de las etapas y requisitos de RUN_POST
+  [ok] la secuencia completa es correcta
+  [ok] CHECK_CPU 1; sin POWER_ON antes: un S2 en 1:1
+  [ok] CHECK_RAM 1; sin POWER_ON antes: un S2 en 1:1
+  [ok] CHECK_DISK 1 MBR; sin POWER_ON antes: un S2 en 1:1
+  [ok] SET_FIRMWARE BIOS; sin POWER_ON antes: un S2 en 1:1
+  [ok] RUN_POST; sin POWER_ON antes: un S2 en 1:1
+  [ok] SELECT_BOOT DISK; sin POWER_ON antes: un S2 en 1:1
+  [ok] LOAD_BOOTLOADER GRUB; sin POWER_ON antes: un S2 en 1:1
+  [ok] LOAD_KERNEL "k" TRUE; sin POWER_ON antes: un S2 en 1:1
+  [ok] START_OS; sin POWER_ON antes: un S2 en 1:1
+  [ok] el mensaje sugiere lo que si se puede usar (POWER_ON en el estado APAGADO)
+  [ok] POWER_ON dos veces: el segundo es el error (1:11)
+  [ok] CHECK_CPU despues de RUN_POST esta fuera de orden
+  [ok] SET_FIRMWARE despues de RUN_POST esta fuera de orden (el firmware se elige antes del POST)
+  [ok] RUN_POST sin CHECK_CPU: S2 que nombra el comando faltante
+  [ok] RUN_POST sin CHECK_RAM: S2 que nombra el comando faltante
+  [ok] RUN_POST sin CHECK_DISK: S2 que nombra el comando faltante
+  [ok] RUN_POST sin ninguna lectura: nombra los tres comandos
+  [ok] las lecturas en otro orden y repetidas son correctas
+  [ok] despues de START_OS solo se aceptan SHOW_STATUS y RESET_SYSTEM
+  [ok] un segundo START_OS esta fuera de orden
+  [ok] RESET_SYSTEM tras 0 comandos del arranque vuelve a APAGADO: despues se puede hacer POWER_ON
+  [ok] RESET_SYSTEM tras 1 comandos del arranque vuelve a APAGADO: despues se puede hacer POWER_ON
+  [ok] RESET_SYSTEM tras 2 comandos del arranque vuelve a APAGADO: despues se puede hacer POWER_ON
+  [ok] RESET_SYSTEM tras 3 comandos del arranque vuelve a APAGADO: despues se puede hacer POWER_ON
+  [ok] RESET_SYSTEM tras 4 comandos del arranque vuelve a APAGADO: despues se puede hacer POWER_ON
+  [ok] RESET_SYSTEM tras 5 comandos del arranque vuelve a APAGADO: despues se puede hacer POWER_ON
+  [ok] RESET_SYSTEM tras 6 comandos del arranque vuelve a APAGADO: despues se puede hacer POWER_ON
+  [ok] RESET_SYSTEM tras 7 comandos del arranque vuelve a APAGADO: despues se puede hacer POWER_ON
+  [ok] RESET_SYSTEM tras 8 comandos del arranque vuelve a APAGADO: despues se puede hacer POWER_ON
+  [ok] RESET_SYSTEM tras 9 comandos del arranque vuelve a APAGADO: despues se puede hacer POWER_ON
+  [ok] SHOW_STATUS tras 0 comandos del arranque es correcto y la etapa sigue siendo APAGADO
+  [ok] SHOW_STATUS tras 1 comandos del arranque es correcto y la etapa sigue siendo ENCENDIDO
+  [ok] SHOW_STATUS tras 2 comandos del arranque es correcto y la etapa sigue siendo ENCENDIDO
+  [ok] SHOW_STATUS tras 3 comandos del arranque es correcto y la etapa sigue siendo ENCENDIDO
+  [ok] SHOW_STATUS tras 4 comandos del arranque es correcto y la etapa sigue siendo ENCENDIDO
+  [ok] SHOW_STATUS tras 5 comandos del arranque es correcto y la etapa sigue siendo POST_OK
+  [ok] SHOW_STATUS tras 6 comandos del arranque es correcto y la etapa sigue siendo DISPOSITIVO_ELEGIDO
+  [ok] SHOW_STATUS tras 7 comandos del arranque es correcto y la etapa sigue siendo GESTOR_CARGADO
+  [ok] SHOW_STATUS tras 8 comandos del arranque es correcto y la etapa sigue siendo KERNEL_CARGADO
+  [ok] SHOW_STATUS tras 9 comandos del arranque es correcto y la etapa sigue siendo SO_ACTIVO
+  [ok] RESET_SYSTEM borra las lecturas: RUN_POST despues del reinicio las vuelve a pedir
+  [ok] un error de orden no se repite en cascada: LOAD_KERNEL antes de POWER_ON, y despues todo bien
+  [ok] estados de error no existen para la semantica: tras RUN_POST con RAM 0 el orden sigue su curso (se avisa, no se rechaza)
+
+== 8. compatibilidad educativa de firmware y esquema (S5, solo aviso)
+  [ok] firmware SET_FIRMWARE BIOS; con disco GPT: aviso S5 y se acepta
+  [ok] firmware UEFI (el de fabrica) con disco MBR: aviso S5 y se acepta
+  [ok] firmware SET_FIRMWARE BIOS; con disco MBR: sin aviso
+  [ok] firmware UEFI (el de fabrica) con disco GPT: sin aviso
+  [ok] firmware SET_FIRMWARE UEFI; con disco GPT: sin aviso
+  [ok] firmware SET_FIRMWARE BIOS; SET_FIRMWARE UEFI; con disco GPT: sin aviso
+  [ok] tras el ERROR_ARRANQUE previsto, LOAD_KERNEL y START_OS reciben un aviso A2 (seran rechazados); RESET_SYSTEM no
+  [ok] el aviso S5 nombra el firmware y el esquema
+
+== 9. avisos por fallos previsibles (no rechazan el programa)
+  [ok] RAM 0: A1 en RUN_POST (ERROR_POST) y A2 en SELECT_BOOT; el programa se acepta
+  [ok] con SHOW_STATUS y RESET_SYSTEM tras el fallo no hay mas avisos y el arranque nuevo es correcto
+  [ok] SELECT_BOOT USB: A1 (ERROR_ARRANQUE) y despues A2
+  [ok] SELECT_BOOT DISK con un disco de 0 GB: A1
+  [ok] sin fallos no hay avisos
+  [ok] un valor que no se puede calcular no genera avisos inventados
+  [ok] el estado previsto al final queda en el resultado (KERNEL_PANIC para valido_5 antes del reinicio)
+  [ok] un fallo previsto en la rama que se ejecuta avisa; en la rama que no corre no
+  [ok] los avisos tienen el formato [aviso A1] línea L, columna C
+
+== 10. IF: condiciones, ramas que no se ejecutan y combinacion de estados
+  [ok] condicion verdadera: el estado lo fija la rama THEN, y se acepta
+  [ok] condicion falsa conocida: la rama que avanza una etapa no cuenta; la etapa final sigue APAGADO
+  [ok] rama que no corre con error de tipos: se detecta (S4)
+  [ok] rama que no corre con variable sin asignar: se detecta (S1)
+  [ok] rama que no corre con argumento del tipo equivocado: se detecta (S4)
+  [ok] rama que no corre con IF anidado con error: se detecta (S4)
+  [ok] rama que no corre con division entre cero: se detecta (S6)
+  [ok] rama que no corre con limite: se detecta (S3)
+  [ok] rama que no corre con REPEAT fuera de rango: se detecta (S3)
+  [ok] el orden NO se revisa en la rama que no corre (POWER_ON dos veces)
+  [ok] una variable asignada y usada dentro de la misma rama que no corre es correcta
+  [ok] la condicion no booleana se rechaza (S4) y la condicion con NOT sobre una comparacion es correcta
+  [ok] IF anidados con condiciones conocidas: solo cuenta el camino que se ejecuta
+  [ok] condicion que no se puede calcular y ramas que dejan etapas distintas: S2 (regla conservadora de f03)
+  [ok] condicion incierta con las dos ramas en la misma etapa: correcto
+  [ok] condicion incierta: una variable nueva solo en una rama no existe despues (S1)
+  [ok] condicion incierta: la misma variable con tipos distintos en cada rama (S4)
+  [ok] condicion incierta: la misma variable con el mismo valor en las dos ramas conserva el valor
+  [ok] condicion incierta: con valores distintos el valor queda sin calcular
+  [ok] el estado al final de un IF incierto con ramas iguales sigue la rama
+  [ok] las lecturas tras un IF incierto son las de las dos ramas
+
+== 11. REPEAT: cuerpo, estado de arranque y variables
+  [ok] REPEAT 0: el cuerpo no corre pero se revisa (tipos)
+  [ok] REPEAT 0: se revisa en variables y el orden no se mira
+  [ok] REPEAT 0: no cambia la etapa
+  [ok] REPEAT 1: el cuerpo corre una vez
+  [ok] REPEAT 2 con un cuerpo que no se puede repetir (POWER_ON): S2 con la marca de repeticion
+  [ok] el mismo error de la primera vuelta no se repite en la segunda
+  [ok] un cuerpo que no altera la etapa se repite sin problema
+  [ok] un cuerpo que vuelve a la etapa de partida se puede repetir: POWER_ON; RESET_SYSTEM; x3
+  [ok] RESET_SYSTEM; POWER_ON; repetido termina en ENCENDIDO
+  [ok] CHECK_CPU repetido sin POWER_ON: el error esta en la primera vuelta y no lleva la marca
+  [ok] las variables que asigna el cuerpo quedan sin valor calculado tras el bucle
+  [ok] una variable asignada solo dentro del bucle existe despues, con su tipo y sin valor
+  [ok] cantidad de repeticiones que no se puede calcular: se revisa el cuerpo dos veces (segunda vuelta con marca)
+  [ok] REPEAT con un IF y un bloque dentro: se revisan igual
+  [ok] BEGIN/END usa las mismas variables y la misma etapa que su entorno
+  [ok] un bloque dentro de un IF que no corre tampoco deja huellas
+
+== 12. S8: limite global de 10 000 pasos de ejecucion
+  [ok] 'SHOW_STATUS;': 1 pasos como minimo (cada sentencia ejecutada cuenta 1; BEGIN no cuenta)
+  [ok] 'POWER_ON; SHOW_STATUS;': 2 pasos como minimo (cada sentencia ejecutada cuenta 1; BEGIN no cuenta)
+  [ok] 'BEGIN SHOW_STATUS; END': 1 pasos como minimo (cada sentencia ejecutada cuenta 1; BEGIN no cuenta)
+  [ok] 'REPEAT 3 TIMES SHOW_STATUS; ENDREPEAT': 4 pasos como minimo (cada sentencia ejecutada cuenta 1; BEGIN no cuenta)
+  [ok] 'SET x = 1; IF x > 0 THEN SHOW_STATUS; ELSE POWER_ON; ENDIF': 3 pasos como minimo (cada sentencia ejecutada cuenta 1; BEGIN no cuenta)
+  [ok] 'REPEAT 2 TIMES REPEAT 3 TIMES SET a = 1; ENDREPEAT ENDREPEAT': 9 pasos como minimo (cada sentencia ejecutada cuenta 1; BEGIN no cuenta)
+  [ok] 'REPEAT 0 TIMES SHOW_STATUS; ENDREPEAT': 1 pasos como minimo (cada sentencia ejecutada cuenta 1; BEGIN no cuenta)
+  [ok] 'IF FALSE THEN REPEAT 500 TIMES SHOW_STATUS; ENDREPEAT ENDIF': 1 pasos como minimo (cada sentencia ejecutada cuenta 1; BEGIN no cuenta)
+  [ok] 'REPEAT 1000 TIMES SHOW_STATUS; ENDREPEAT': 1001 pasos como minimo (cada sentencia ejecutada cuenta 1; BEGIN no cuenta)
+  [ok] REPEAT 1000 TIMES REPEAT 1000 TIMES ...: S8 en el REPEAT de afuera (1:1), una sola vez
+  [ok] exactamente 10 000 pasos se acepta
+  [ok] 10 001 pasos se rechaza con S8
+  [ok] una cantidad que no se puede calcular no suma pasos (no se rechaza por una suposicion)
+  [ok] un IF incierto cuenta solo la rama mas corta
+  [ok] el aviso de pasos no depende de que el programa tenga otros errores: se informa junto con ellos
+  [ok] el limite de pasos esta en un solo lugar: reglas_arranque.MAX_PASOS = 10000
+
+== 13. RESET_SYSTEM conserva las variables; SHOW_STATUS no cambia nada
+  [ok] las variables del programa sobreviven a RESET_SYSTEM (n sigue valiendo 8)
+  [ok] SHOW_STATUS no cambia variables ni etapa
+  [ok] RESET_SYSTEM estando apagado es correcto y SHOW_STATUS antes de POWER_ON tambien
+  [ok] instrucciones despues de un fallo previsto: solo avisos, nunca errores
+
+== 14. independencia: sin arrastrar variables, estados ni errores entre analisis
+  [ok] analizar no modifica el arbol (se compara con una copia profunda)
+  [ok] analizar dos veces el mismo arbol da el mismo resultado, en objetos distintos
+  [ok] modificar un resultado no afecta a los siguientes
+  [ok] un programa no hereda variables del anterior (a no existe)
+  [ok] un programa no hereda la etapa del anterior (empieza APAGADO)
+  [ok] un programa no hereda errores del anterior
+  [ok] los resultados de dos textos analizados alternadamente no se mezclan
+  [ok] validar_texto repetido: resultados iguales
+  [ok] la tabla de simbolos del resultado es una copia: cambiar otro analisis no la altera
+  [ok] esta fase no importa el simulador (los resultados no comparten estado con el)
+
+== 15. un programa con errores nunca se acepta ni entrega un arbol para simular
+  [ok] error lexico: no aceptado, sin semantica, sin programa
+  [ok] error sintactico: no aceptado, sin semantica, sin programa
+  [ok] error semantico: el parser acepta, la semantica rechaza; programa es None
+  [ok] solo avisos: se acepta y entrega el Programa para el simulador
+  [ok] cadena sin cerrar (error lexico recuperado): no se acepta aunque el parser arme un arbol
+  [ok] el formato de los errores semanticos es [semántico regla] línea L, columna C: mensaje
+
+== 16. varios errores en un mismo programa, sin cascadas
+  [ok] seis lineas con cinco errores distintos, en orden y con su posicion
+  [ok] cada error explica el problema en palabras sencillas (no esta vacio ni es un codigo)
+  [ok] los mismos errores en una segunda ejecucion con otro texto delante no cambian de posicion
+  [ok] un error de variable dentro de un REPEAT no se repite en la segunda vuelta
+
+== 16b. reglas_arranque: la maquina de estados por separado (resultados de f03)
+  [ok] arranque completo: todos OK y estado final SO_ACTIVO
+  [ok] LOAD_KERNEL justo despues de POWER_ON: rechazado, el estado sigue ENCENDIDO
+  [ok] RUN_POST sin lecturas: ERROR_POST y dice cuales faltan
+  [ok] RAM 0: ERROR_POST y el siguiente comando se rechaza porque el sistema esta en error
+  [ok] SELECT_BOOT USB: ERROR_ARRANQUE
+  [ok] un disco de 0 GB: ERROR_ARRANQUE al elegir DISK
+  [ok] BIOS con disco GPT: ERROR_ARRANQUE al cargar el gestor
+  [ok] BIOS con MBR: compatible
+  [ok] UEFI con GPT: compatible
+  [ok] UEFI con MBR: ERROR_ARRANQUE
+  [ok] BIOS con GPT: ERROR_ARRANQUE
+  [ok] sin initramfs: KERNEL_PANIC, POWER_ON rechazado, RESET_SYSTEM vuelve a APAGADO y se puede encender otra vez
+  [ok] RESET_SYSTEM deja los datos como al principio (firmware UEFI otra vez)
+  [ok] aplicar_comando no modifica los datos que recibe
+  [ok] SHOW_STATUS no cambia el estado en ninguno de los 10 estados
+  [ok] RESET_SYSTEM lleva a APAGADO desde los 10 estados
+  [ok] hay 7 estados normales, 3 de error y 12 comandos (10 con transicion y 2 libres)
+  [ok] limites y parejas del anexo c
+
+== 16c. los avisos coinciden con una ejecucion concreta del arranque (programas de arranque al azar)
+  [ok] 3000 programas de arranque al azar (2287 con fallos previsibles y 713 sin ellos): los avisos son exactamente los fallos de la ejecucion concreta
+  [ok] todos esos programas se aceptan: un fallo previsible no los rechaza
+  [ok] el azar produjo suficientes casos con y sin fallos
+
+== 17. programas al azar: sin excepciones y con las reglas de aceptacion
+  [ok] 4000 programas (la mitad rotos; 27 aceptados, 1801 con errores semanticos, 0 con avisos): ninguna excepcion
+  [ok] sin errores semanticos y sin errores de sintaxis se acepta; con errores nunca; todo diagnostico trae linea, columna y mensaje
+  [ok] el resultado es determinista: analizar dos veces da lo mismo
+  [ok] el azar produjo casos aceptados y casos con errores (los avisos se prueban en la seccion 16c)
+  [ok] 3000 arboles armados al azar, incluso absurdos (tipos y operadores raros): ninguna excepcion
+
+== 18. arquitectura: patron visitante y linea de comandos
+  [ok] el analizador hereda de Visitante y tiene un metodo por cada uno de los 12 tipos de nodo
+  [ok] python codigo/semantica.py con un programa valido con aviso: codigo 0, muestra el aviso y ACEPTADO
+  [ok] con errores semanticos: codigo 1, tres lineas [semántico ...] y RECHAZADO
+  [ok] con errores de sintaxis: codigo 1, muestra [sintáctico] y no hay analisis semantico
+  [ok] sin argumentos: uso y codigo 2
+
+pruebas ejecutadas: 302; con resultado distinto del esperado: 0
+RESULTADO: todas las pruebas dieron lo esperado
+[codigo de salida 0]

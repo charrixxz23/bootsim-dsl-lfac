@@ -1,0 +1,166 @@
+# evidencia f05: lexer definitivo (codigo/lexer.py). python 3.12.10, ply 3.11, 2026-11-21
+# el numero de reservadas se comprueba contra docs/anexos/plan_prototipo/gramatica.ebnf (35 palabras en mayuscula).
+
+# $ python codigo/probar_lexer.py
+
+== 1. especificacion: tokens y palabras reservadas
+  [ok] hay 35 palabras reservadas
+  [ok] los grupos suman 12 + 10 + 5 + 8
+  [ok] las reservadas son exactamente las palabras en mayuscula de gramatica.ebnf
+  [ok] la lista tokens es igual a la del lexer borrador de f03
+  [ok] la lista tokens no repite nombres
+  [ok] cada reservada se reconoce como su propio tipo
+  [ok] en minusculas, ninguna reservada lo es (todas son ID)
+  [ok] con solo la inicial en mayuscula, ninguna reservada lo es (todas son ID)
+  [ok] POWER_ONE es un identificador y no una reservada con algo pegado
+  [ok] SETX es un identificador y no una reservada con algo pegado
+  [ok] IFF es un identificador y no una reservada con algo pegado
+  [ok] ENDIF2 es un identificador y no una reservada con algo pegado
+  [ok] SET_FIRMWARE2 es un identificador y no una reservada con algo pegado
+  [ok] _SET es un identificador y no una reservada con algo pegado
+  [ok] xTRUE es un identificador y no una reservada con algo pegado
+  [ok] ANDROID es un identificador y no una reservada con algo pegado
+  [ok] ORDEN es un identificador y no una reservada con algo pegado
+  [ok] TIMES2 es un identificador y no una reservada con algo pegado
+  [ok] BIOS_ es un identificador y no una reservada con algo pegado
+  [ok] SET_FIRMWARE es un solo token, no SET y otra cosa
+  [ok] SET FIRMWARE (con espacio) son SET e ID
+
+== 2. identificadores, numeros, cadenas y booleanos
+  [ok] identificadores validos
+  [ok] enteros: 0, 7, 007 y uno muy grande
+  [ok] el valor de un entero es un int de python
+  [ok] 1abc son dos tokens: ENTERO e ID (el parser lo rechazara)
+  [ok] cadena: el valor no lleva las comillas
+  [ok] cadena vacia
+  [ok] una cadena puede contener # y //
+  [ok] una cadena conserva los espacios internos
+  [ok] TRUE y FALSE son tipos propios
+
+== 3. operadores y simbolos
+  [ok] todos los simbolos de una vez
+  [ok] a==b, a=b, a<=b, a<b, a!=b sin espacios
+  [ok] === son IGUAL y ASIGNA (lee lo mas largo primero)
+  [ok] <> son MENOR y MAYOR
+  [ok] => son ASIGNA y MAYOR
+  [ok] -- no existe: son dos MENOS
+  [ok] a-b y a- -b
+  [ok] MULT (*) no se confunde con la reservada TIMES
+
+== 4. comentarios y division
+  [ok] 8 / 2 y 8/2 son una division
+  [ok] 8 // 2 es un numero y un comentario
+  [ok] 8 / 2 // resto: division y comentario
+  [ok] a //b: el comentario empieza donde empieza //
+  [ok] a / b # c: division y comentario con #
+  [ok] /// es un comentario
+  [ok] / / son dos divisiones
+  [ok] un archivo de solo comentarios no da tokens ni errores
+  [ok] comentario al final del archivo sin salto de linea
+  [ok] unas comillas sin cerrar dentro de un comentario no son error
+  [ok] una division despues de un comentario de la linea anterior
+
+== 5. errores lexicos
+  [ok] un solo @ : un error en la columna 1 y ningun token
+  [ok] POWER_ON @; informa la columna 10 y sigue con el ;
+  [ok] varios errores en una linea: columnas 1, 3 y 5
+  [ok] el analisis no se detiene: @ POWER_ON $ ;
+  [ok] el error dice el tipo en el formato acordado
+  [ok] ayuda para ! suelto: menciona NOT
+  [ok] ! seguido de = si es DISTINTO
+  [ok] ayuda para &: menciona AND
+  [ok] ayuda para |: menciona OR
+  [ok] ayuda para comilla simple: menciona comillas dobles
+  [ok] ayuda para llaves: menciona BEGIN
+  [ok] ayuda para coma: argumentos con espacios
+  [ok] 3.5: entero, error en el punto y entero
+  [ok] camión: ID, error en la ó (columna 5) e ID
+  [ok] espacio especial (no separable): error en la columna 10
+  [ok] marca BOM al inicio: error en 1:1 y el primer token queda en la columna 2
+  [ok] caracter de control (nulo) es un error y no tumba el analisis
+
+== 5b. cadenas sin cerrar
+  [ok] "abc sin cerrar al final del archivo: error en 1:1 y una CADENA igual
+  [ok] SET s = "abc; : se conserva el ; y el error esta en la columna 9
+  [ok] la linea siguiente a una cadena sin cerrar se analiza normal
+  [ok] una sola comilla: CADENA vacia y error
+  [ok] "a" "b : la primera cierra bien, la segunda no (error en la columna 5)
+  [ok] el ; seguido de espacios tambien se conserva
+  [ok] si tras el ; hay algo que no es un espacio ignorado (aqui un espacio especial), todo es parte de la cadena
+  [ok] dentro de una cadena sin cerrar, # y // ya no son comentario
+  [ok] el mensaje explica el problema
+  [ok] un error no se repite: 2 cadenas abiertas en lineas distintas dan 2 errores
+
+== 5c. limite de errores
+  [ok] 60 caracteres malos: se informan 50 y un aviso final (51 en total)
+  [ok] el aviso final dice que se deja de analizar
+  [ok] tras el limite ya no se producen tokens
+  [ok] el limite no queda activo en el analisis siguiente
+
+== 6. lineas y columnas
+  [ok] lineas en blanco: CHECK_CPU 4; en la linea 4
+  [ok] saltos de linea de windows (CRLF)
+  [ok] un tabulador cuenta como una columna; dos espacios, dos
+  [ok] error despues de un tabulador: columna 2
+  [ok] error tras tres lineas en blanco: linea 4, columna 1
+  [ok] ultimo token del archivo sin salto de linea
+  [ok] token despues de un comentario con CRLF
+  [ok] posicion de una cadena y del ; que le sigue
+  [ok] entrada vacia
+  [ok] solo espacios, tabuladores y saltos de linea
+  [ok] el siguiente error cuenta las lineas de una cadena anterior
+
+== 7. usar el lexer muchas veces
+  [ok] el mismo texto da el mismo resultado dos veces
+  [ok] tras un texto con errores, un texto bueno no trae errores
+  [ok] la cuenta de lineas vuelve a 1 en cada analisis
+  [ok] dos lexers a la vez no se mezclan (tokens)
+  [ok] dos lexers a la vez no se mezclan (errores)
+  [ok] un lexer nuevo nace sin errores aunque otro ya tenga
+
+== 8. visualizacion para --debug
+  [ok] la tabla tiene encabezado y una fila por token
+  [ok] la primera fila muestra posicion, tipo y valor
+  [ok] el entero se muestra sin comillas y la cadena con comillas
+
+== 9. importacion y uso desde otro lugar
+  [ok] se importa desde otra carpeta y exporta tokens y crear_lexer
+  [ok] python codigo/lexer.py con un programa valido: codigo de salida 0 y tabla de tokens
+  [ok] python codigo/lexer.py con errores: codigo de salida 1 y mensajes [léxico]
+  [ok] sin argumentos muestra el uso y sale con codigo 2
+
+pruebas ejecutadas: 104; con resultado distinto del esperado: 0
+RESULTADO: todas las pruebas dieron lo esperado
+[codigo de salida: 0]
+
+# $ python codigo/lexer.py docs/anexos/plan_prototipo/ejemplos/valido_1_secuencia_basica.dsl   (los primeros 14 renglones)
+línea:col  token            valor
+2:1        POWER_ON         'POWER_ON'
+2:9        PUNTOYCOMA       ';'
+3:1        CHECK_CPU        'CHECK_CPU'
+3:11       ENTERO           4
+3:12       PUNTOYCOMA       ';'
+4:1        CHECK_RAM        'CHECK_RAM'
+4:11       ENTERO           16
+4:13       PUNTOYCOMA       ';'
+5:1        CHECK_DISK       'CHECK_DISK'
+5:12       ENTERO           512
+5:16       GPT              'GPT'
+5:19       PUNTOYCOMA       ';'
+6:1        RUN_POST         'RUN_POST'
+
+# $ python codigo/lexer.py docs/anexos/plan_prototipo/ejemplos/invalido_1_lexico.dsl
+línea:col  token            valor
+1:1        POWER_ON         'POWER_ON'
+1:9        PUNTOYCOMA       ';'
+2:1        CHECK_RAM        'CHECK_RAM'
+2:11       ENTERO           8
+2:14       PUNTOYCOMA       ';'
+3:1        LOAD_KERNEL      'LOAD_KERNEL'
+3:13       CADENA           'linux-6.1 TRUE'
+3:28       PUNTOYCOMA       ';'
+4:1        SHOW_STATUS      'SHOW_STATUS'
+4:12       PUNTOYCOMA       ';'
+[léxico] línea 2, columna 13: carácter inesperado '@': no forma parte del lenguaje
+[léxico] línea 3, columna 13: cadena sin cerrar: falta la comilla de cierre (") antes del fin de la línea; se supone que la cadena termina antes del ';'
+[codigo de salida: 1]

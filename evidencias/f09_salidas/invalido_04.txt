@@ -1,0 +1,11 @@
+$ python codigo/main.py pruebas/invalidos/invalido_04.dsl
+[codigo de salida 1]
+--- salida estandar ---
+BootSim DSL | archivo: pruebas/invalidos/invalido_04.dsl
+
+=== errores de análisis ===
+[semántico S1] línea 2, columna 13: la variable 'nucleos' se usa antes de asignarle un valor (use SET nucleos = ...; antes)
+[semántico S4] línea 3, columna 16: '+' solo opera con valores enteros: el lado derecho es booleano
+
+RECHAZADO: el programa tiene errores, así que no se simuló nada.
+--- salida de error ---

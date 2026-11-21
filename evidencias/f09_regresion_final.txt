@@ -1,0 +1,58 @@
+evidencia f09 (corrida final del cierre): regresiones de f05, f06, f07 y f08 despues de los ultimos retoques de comentarios (2026-11-21 13:55)
+no reemplaza a evidencias/f09_regresion.txt (corrida anterior, tambien en verde)
+
+$ python codigo/probar_lexer.py   (ultimas lineas)
+  [ok] sin argumentos muestra el uso y sale con codigo 2
+
+pruebas ejecutadas: 104; con resultado distinto del esperado: 0
+RESULTADO: todas las pruebas dieron lo esperado
+[codigo de salida 0]
+
+$ python codigo/comparar_lexer_borrador.py   (ultimas lineas)
+  [igual] valido_5_kernel_panic_y_reinicio.dsl: mismo árbol, 0 errores sintácticos, 0 léxicos
+
+diferencias inesperadas en total: 0
+RESULTADO: el lexer definitivo coincide con el borrador salvo en lo previsto
+[codigo de salida 0]
+
+$ python codigo/probar_parser.py   (ultimas lineas)
+  [ok] comprobar_gramatica.py: gramatica coherente con la ebnf, sin advertencias ni conflictos de ply
+
+pruebas ejecutadas: 145; con resultado distinto del esperado: 0
+RESULTADO: todas las pruebas dieron lo esperado
+[codigo de salida 0]
+
+$ python codigo/comparar_parser_borrador.py   (ultimas lineas)
+  programas rotos con al menos un error sintactico: 13968
+
+diferencias inesperadas en total: 0
+RESULTADO: el parser definitivo coincide con el borrador (arboles y posiciones de errores)
+[codigo de salida 0]
+
+$ python codigo/probar_semantica.py   (ultimas lineas)
+  [ok] ninguna llamada de esta suite a validar_texto lanzo una excepcion inesperada (por ejemplo ZeroDivisionError): una excepcion no cuenta como prueba superada
+
+pruebas ejecutadas: 305; con resultado distinto del esperado: 0
+RESULTADO: todas las pruebas dieron lo esperado
+[codigo de salida 0]
+
+$ python codigo/comparar_semantica_borrador.py   (ultimas lineas)
+  [igual] valido_5_kernel_panic_y_reinicio.dsl
+
+casos: 48; iguales: 47; con diferencia explicada: 1; inesperadas: 0
+RESULTADO: todas las diferencias tienen explicacion
+[codigo de salida 0]
+
+$ python codigo/probar_simulador.py   (ultimas lineas)
+  [ok] ninguna simulacion de esta suite lanzo una excepcion inesperada de python: una excepcion no cuenta como prueba superada
+
+pruebas ejecutadas: 174; con resultado distinto del esperado: 0
+RESULTADO: todas las pruebas dieron lo esperado
+[codigo de salida 0]
+
+$ python codigo/comparar_simulador_borrador.py   (ultimas lineas)
+totales: 6048 programas; ambos: 1926; rechazan los dos: 4121; solo borrador: 1; solo definitivo: 0
+iguales: 5993; diferencias explicadas: 54 (limite de componente comprobado al correr (el borrador de f03 lo dejaba pasar: por ejemplo CHECK_CPU -2)); 1 (el borrador acepta y corta a los 10 000 pasos; el definitivo lo rechaza antes (regla S8 de f07))
+diferencias inesperadas en total: 0
+RESULTADO: el simulador definitivo coincide con el del borrador en todo lo que los dos aceptan, salvo las diferencias explicadas
+[codigo de salida 0]

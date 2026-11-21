@@ -1,0 +1,34 @@
+# evidencia f05: comparacion del lexer definitivo con el lexer provisional de f03. python 3.12.10, ply 3.11, 2026-11-21
+# $ python codigo/comparar_lexer_borrador.py
+== 1. los diez programas de ejemplo del plan
+  [esperada] invalido_1_lexico.dsl: 10 tokens y 2 errores léxicos (borrador: 8 y 2)
+  [igual] invalido_2_sintactico_falta_puntoycoma.dsl: 8 tokens y 0 errores léxicos (borrador: 8 y 0)
+  [igual] invalido_3_sintactico_if_sin_endif.dsl: 12 tokens y 0 errores léxicos (borrador: 12 y 0)
+  [igual] invalido_4_semantico_variable.dsl: 7 tokens y 0 errores léxicos (borrador: 7 y 0)
+  [igual] invalido_5_semantico_orden_y_limite.dsl: 11 tokens y 0 errores léxicos (borrador: 11 y 0)
+  [igual] valido_1_secuencia_basica.dsl: 28 tokens y 0 errores léxicos (borrador: 28 y 0)
+  [igual] valido_2_variables_y_expresiones.dsl: 44 tokens y 0 errores léxicos (borrador: 44 y 0)
+  [igual] valido_3_if_else_firmware.dsl: 34 tokens y 0 errores léxicos (borrador: 34 y 0)
+  [igual] valido_4_repeat_y_bloque.dsl: 22 tokens y 0 errores léxicos (borrador: 22 y 0)
+  [igual] valido_5_kernel_panic_y_reinicio.dsl: 30 tokens y 0 errores léxicos (borrador: 30 y 0)
+
+== 2. lineas al azar
+  lineas comparadas: 20000; iguales: 17460; con diferencia esperada (cadena sin cerrar): 2540; con diferencia inesperada: 0
+
+== 3. el parser provisional con cada lexer
+  [esperada] invalido_1_lexico.dsl: errores léxicos [(2, 13), (3, 13)] / [(2, 13), (3, 13)]; sintácticos del borrador 1 y del definitivo 1
+      borrador:   [(4, 1)]
+      definitivo: [(3, 28)]
+  [igual] invalido_2_sintactico_falta_puntoycoma.dsl: mismo árbol, 2 errores sintácticos, 0 léxicos
+  [igual] invalido_3_sintactico_if_sin_endif.dsl: mismo árbol, 1 errores sintácticos, 0 léxicos
+  [igual] invalido_4_semantico_variable.dsl: mismo árbol, 0 errores sintácticos, 0 léxicos
+  [igual] invalido_5_semantico_orden_y_limite.dsl: mismo árbol, 0 errores sintácticos, 0 léxicos
+  [igual] valido_1_secuencia_basica.dsl: mismo árbol, 0 errores sintácticos, 0 léxicos
+  [igual] valido_2_variables_y_expresiones.dsl: mismo árbol, 0 errores sintácticos, 0 léxicos
+  [igual] valido_3_if_else_firmware.dsl: mismo árbol, 0 errores sintácticos, 0 léxicos
+  [igual] valido_4_repeat_y_bloque.dsl: mismo árbol, 0 errores sintácticos, 0 léxicos
+  [igual] valido_5_kernel_panic_y_reinicio.dsl: mismo árbol, 0 errores sintácticos, 0 léxicos
+
+diferencias inesperadas en total: 0
+RESULTADO: el lexer definitivo coincide con el borrador salvo en lo previsto
+[codigo de salida: 0]

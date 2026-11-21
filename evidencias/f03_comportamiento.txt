@@ -1,0 +1,174 @@
+# evidencia f03: comportamiento de if, repeat, reset_system, estados de error, limites, ramas que no corren y regla de no simular con errores. ply 3.11, python 3.12.10, 2026-11-21
+# $ python comprobar_comportamiento.py
+ 1. [ok] if: condicion verdadera ejecuta solo la rama THEN
+    [linea 2] POWER_ON -> ok -> ENCENDIDO
+    [linea 4] SET_FIRMWARE UEFI -> ok -> ENCENDIDO
+    [linea 8] SHOW_STATUS -> estado=ENCENDIDO datos={'cpu': None, 'ram': None, 'disco': None, 'esquema': None, 'firmware': 'UEFI', 'initramfs': None}
+    simulacion: pasos=5, errores simulados=0, comandos rechazados=0
+    VEREDICTO: ACEPTADO; estado final ENCENDIDO
+ 2. [ok] if: condicion falsa ejecuta solo la rama ELSE
+    [linea 2] POWER_ON -> ok -> ENCENDIDO
+    [linea 6] SET_FIRMWARE BIOS -> ok -> ENCENDIDO
+    [linea 8] SHOW_STATUS -> estado=ENCENDIDO datos={'cpu': None, 'ram': None, 'disco': None, 'esquema': None, 'firmware': 'BIOS', 'initramfs': None}
+    simulacion: pasos=5, errores simulados=0, comandos rechazados=0
+    VEREDICTO: ACEPTADO; estado final ENCENDIDO
+ 3. [ok] if sin else con condicion conocida y falsa: la rama no se ejecuta y no cambia el estado
+    [linea 5] SHOW_STATUS -> estado=APAGADO datos={'cpu': None, 'ram': None, 'disco': None, 'esquema': None, 'firmware': 'UEFI', 'initramfs': None}
+    simulacion: pasos=3, errores simulados=0, comandos rechazados=0
+    VEREDICTO: ACEPTADO; estado final APAGADO
+ 4. [ok] if sin else con condicion que la semantica no puede calcular: regla conservadora, se rechaza
+    [semantico] linea 5, columna 1: las dos ramas del IF dejan el arranque en etapas distintas (ENCENDIDO y APAGADO)
+    VEREDICTO: RECHAZADO por la semantica; la simulacion NO se ejecuta
+ 5. [ok] if con condicion conocida: la rama que no se ejecuta aun se revisa en tipos y rangos
+    [semantico] linea 3, columna 3: CHECK_RAM 4096 fuera del rango 0..1024
+    VEREDICTO: RECHAZADO por la semantica; la simulacion NO se ejecuta
+ 6. [ok] if con condicion conocida verdadera: la variable asignada en la rama que corre existe despues
+    simulacion: pasos=3, errores simulados=0, comandos rechazados=0
+    VEREDICTO: ACEPTADO; estado final APAGADO
+ 7. [ok] if sin else con condicion incierta que asigna una variable usada despues: rechazado
+    [semantico] linea 8, columna 9: variable 'y' usada sin asignar
+    VEREDICTO: RECHAZADO por la semantica; la simulacion NO se ejecuta
+ 8. [ok] rama que no corre (THEN con condicion falsa): un error de tipos dentro de ella se detecta igual
+    [semantico] linea 2, columna 13: '+' espera enteros y recibio entero y booleano
+    VEREDICTO: RECHAZADO por la semantica; la simulacion NO se ejecuta
+ 9. [ok] rama que no corre (ELSE con condicion verdadera): una variable no asignada dentro de ella se detecta igual
+    [semantico] linea 5, columna 11: variable 'zeta' usada sin asignar
+    VEREDICTO: RECHAZADO por la semantica; la simulacion NO se ejecuta
+10. [ok] rama que no corre: una variable asignada dentro de ella y usada dentro de ella es valida
+    [linea 5] POWER_ON -> ok -> ENCENDIDO
+    simulacion: pasos=2, errores simulados=0, comandos rechazados=0
+    VEREDICTO: ACEPTADO; estado final ENCENDIDO
+11. [ok] rama que no corre: la variable que solo ella asigna no existe despues del IF
+    [semantico] linea 4, columna 9: variable 'q' usada sin asignar
+    VEREDICTO: RECHAZADO por la semantica; la simulacion NO se ejecuta
+12. [ok] rama que no corre: el tipo del argumento de un comando se revisa
+    [semantico] linea 3, columna 3: CHECK_CPU espera un entero y recibio booleano
+    VEREDICTO: RECHAZADO por la semantica; la simulacion NO se ejecuta
+13. [ok] rama que no corre con otro IF dentro: el error anidado se detecta
+    [semantico] linea 3, columna 17: '+' espera enteros y recibio cadena y entero
+    VEREDICTO: RECHAZADO por la semantica; la simulacion NO se ejecuta
+14. [ok] if incierto: la misma variable con tipos distintos en las dos ramas se rechaza
+    [semantico] linea 5, columna 1: la variable 'y' recibe tipos distintos en las dos ramas del IF (entero y booleano)
+    VEREDICTO: RECHAZADO por la semantica; la simulacion NO se ejecuta
+15. [ok] if con dos ramas validas: se simula solo una pero las dos se revisaron
+    [linea 2] POWER_ON -> ok -> ENCENDIDO
+    [linea 4] CHECK_RAM 16 -> ok -> ENCENDIDO
+    simulacion: pasos=4, errores simulados=0, comandos rechazados=0
+    VEREDICTO: ACEPTADO; estado final ENCENDIDO
+16. [ok] repeat 0: un error de tipos dentro del cuerpo se detecta aunque no corra
+    [semantico] linea 2, columna 13: '+' espera enteros y recibio entero y booleano
+    VEREDICTO: RECHAZADO por la semantica; la simulacion NO se ejecuta
+17. [ok] repeat 0: una variable no asignada dentro del cuerpo se detecta aunque no corra
+    [semantico] linea 2, columna 11: variable 'nada' usada sin asignar
+    VEREDICTO: RECHAZADO por la semantica; la simulacion NO se ejecuta
+18. [ok] if con condicion entera: rechazado por tipos
+    [semantico] linea 1, columna 1: la condicion del IF debe ser booleana y es entero
+    VEREDICTO: RECHAZADO por la semantica; la simulacion NO se ejecuta
+19. [ok] repeat 3: el cuerpo corre tres veces
+    [linea 2] SHOW_STATUS -> estado=APAGADO datos={'cpu': None, 'ram': None, 'disco': None, 'esquema': None, 'firmware': 'UEFI', 'initramfs': None}
+    [linea 2] SHOW_STATUS -> estado=APAGADO datos={'cpu': None, 'ram': None, 'disco': None, 'esquema': None, 'firmware': 'UEFI', 'initramfs': None}
+    [linea 2] SHOW_STATUS -> estado=APAGADO datos={'cpu': None, 'ram': None, 'disco': None, 'esquema': None, 'firmware': 'UEFI', 'initramfs': None}
+    simulacion: pasos=4, errores simulados=0, comandos rechazados=0
+    VEREDICTO: ACEPTADO; estado final APAGADO
+20. [ok] repeat 0: el cuerpo no corre y se revisa en tipos y variables, pero no en orden
+    [linea 4] SHOW_STATUS -> estado=APAGADO datos={'cpu': None, 'ram': None, 'disco': None, 'esquema': None, 'firmware': 'UEFI', 'initramfs': None}
+    simulacion: pasos=2, errores simulados=0, comandos rechazados=0
+    VEREDICTO: ACEPTADO; estado final APAGADO
+21. [ok] repeat 1: el cuerpo corre una vez
+    [linea 2] POWER_ON -> ok -> ENCENDIDO
+    [linea 4] SHOW_STATUS -> estado=ENCENDIDO datos={'cpu': None, 'ram': None, 'disco': None, 'esquema': None, 'firmware': 'UEFI', 'initramfs': None}
+    simulacion: pasos=3, errores simulados=0, comandos rechazados=0
+    VEREDICTO: ACEPTADO; estado final ENCENDIDO
+22. [ok] repeat 1001: fuera del tope de 1000
+    [semantico] linea 1, columna 1: REPEAT 1001 fuera del rango 0..1000
+    VEREDICTO: RECHAZADO por la semantica; la simulacion NO se ejecuta
+23. [ok] repeat negativo calculado
+    [semantico] linea 1, columna 1: REPEAT -1 fuera del rango 0..1000
+    VEREDICTO: RECHAZADO por la semantica; la simulacion NO se ejecuta
+24. [ok] repeat 2 con un cuerpo que no se puede repetir (POWER_ON dos veces)
+    [semantico] linea 2, columna 3: POWER_ON fuera de orden: el arranque esta en ENCENDIDO y se necesitaba APAGADO (al repetir el cuerpo del REPEAT)
+    VEREDICTO: RECHAZADO por la semantica; la simulacion NO se ejecuta
+25. [ok] repeat anidado 1000 x 1000: la ejecucion se corta por el limite de pasos
+    simulacion: pasos=10001, errores simulados=0, comandos rechazados=0
+    VEREDICTO: ACEPTADO por el analisis, pero la ejecucion se detuvo: linea 4: se supero el limite de 10000 pasos de ejecucion
+26. [ok] reset_system a mitad del arranque: borra lecturas, conserva variables y permite empezar de nuevo
+    [linea 2] POWER_ON -> ok -> ENCENDIDO
+    [linea 2] CHECK_CPU 2 -> ok -> ENCENDIDO
+    [linea 2] CHECK_RAM 8 -> ok -> ENCENDIDO
+    [linea 2] CHECK_DISK 100 GPT -> ok -> ENCENDIDO
+    [linea 3] RESET_SYSTEM -> reinicio simulado: estado=APAGADO
+    [linea 4] SHOW_STATUS -> estado=APAGADO datos={'cpu': None, 'ram': None, 'disco': None, 'esquema': None, 'firmware': 'UEFI', 'initramfs': None}
+    [linea 5] POWER_ON -> ok -> ENCENDIDO
+    [linea 5] CHECK_CPU 2 -> ok -> ENCENDIDO
+    [linea 5] CHECK_RAM 8 -> ok -> ENCENDIDO
+    [linea 5] CHECK_DISK 100 GPT -> ok -> ENCENDIDO
+    [linea 5] RUN_POST -> ok -> POST_OK
+    [linea 6] SHOW_STATUS -> estado=POST_OK datos={'cpu': 2, 'ram': 8, 'disco': 100, 'esquema': 'GPT', 'firmware': 'UEFI', 'initramfs': None}
+    simulacion: pasos=13, errores simulados=0, comandos rechazados=0
+    VEREDICTO: ACEPTADO; estado final POST_OK
+27. [ok] reset_system estando apagado es valido
+    [linea 1] RESET_SYSTEM -> reinicio simulado: estado=APAGADO
+    [linea 2] POWER_ON -> ok -> ENCENDIDO
+    simulacion: pasos=2, errores simulados=0, comandos rechazados=0
+    VEREDICTO: ACEPTADO; estado final ENCENDIDO
+28. [ok] error de post (ram = 0): los comandos siguientes se rechazan y reset_system permite recuperarse
+    simulacion: pasos=17, errores simulados=1, comandos rechazados=1
+    VEREDICTO: ACEPTADO; estado final SO_ACTIVO
+29. [ok] arranque desde usb: error_arranque
+    [linea 1] POWER_ON -> ok -> ENCENDIDO
+    [linea 1] CHECK_CPU 2 -> ok -> ENCENDIDO
+    [linea 1] CHECK_RAM 8 -> ok -> ENCENDIDO
+    [linea 1] CHECK_DISK 64 GPT -> ok -> ENCENDIDO
+    [linea 1] RUN_POST -> ok -> POST_OK
+    [linea 2] SELECT_BOOT USB -> ERROR SIMULADO ERROR_ARRANQUE: no hay medio de arranque en USB
+    simulacion: pasos=6, errores simulados=1, comandos rechazados=0
+    VEREDICTO: ACEPTADO; el arranque simulado termino en el estado de error ERROR_ARRANQUE
+30. [ok] bios con disco gpt: error_arranque al cargar el gestor, el kernel se rechaza
+    [linea 1] POWER_ON -> ok -> ENCENDIDO
+    [linea 1] SET_FIRMWARE BIOS -> ok -> ENCENDIDO
+    [linea 1] CHECK_CPU 2 -> ok -> ENCENDIDO
+    [linea 1] CHECK_RAM 8 -> ok -> ENCENDIDO
+    [linea 1] CHECK_DISK 64 GPT -> ok -> ENCENDIDO
+    [linea 1] RUN_POST -> ok -> POST_OK
+    [linea 1] SELECT_BOOT DISK -> ok -> DISPOSITIVO_ELEGIDO
+    [linea 2] LOAD_BOOTLOADER GRUB -> ERROR SIMULADO ERROR_ARRANQUE: firmware BIOS y esquema GPT no son compatibles en este simulador
+    [linea 3] LOAD_KERNEL linux True -> RECHAZADO LOAD_KERNEL: el sistema esta en ERROR_ARRANQUE; solo SHOW_STATUS o RESET_SYSTEM
+    simulacion: pasos=9, errores simulados=1, comandos rechazados=1
+    VEREDICTO: ACEPTADO; el arranque simulado termino en el estado de error ERROR_ARRANQUE
+31. [ok] kernel sin initramfs: kernel_panic y programa que termina en estado de error
+    [linea 1] POWER_ON -> ok -> ENCENDIDO
+    [linea 1] CHECK_CPU 2 -> ok -> ENCENDIDO
+    [linea 1] CHECK_RAM 8 -> ok -> ENCENDIDO
+    [linea 1] CHECK_DISK 64 GPT -> ok -> ENCENDIDO
+    [linea 1] RUN_POST -> ok -> POST_OK
+    [linea 1] SELECT_BOOT DISK -> ok -> DISPOSITIVO_ELEGIDO
+    [linea 1] LOAD_BOOTLOADER GRUB -> ok -> GESTOR_CARGADO
+    [linea 2] LOAD_KERNEL linux False -> ok -> KERNEL_CARGADO
+    [linea 3] START_OS -> ERROR SIMULADO KERNEL_PANIC: no se pudo montar el sistema de archivos raiz (kernel sin initramfs)
+    simulacion: pasos=9, errores simulados=1, comandos rechazados=0
+    VEREDICTO: ACEPTADO; el arranque simulado termino en el estado de error KERNEL_PANIC
+32. [ok] division por cero con variable conocida: rechazado
+    [semantico] linea 2, columna 11: division por cero
+    VEREDICTO: RECHAZADO por la semantica; la simulacion NO se ejecuta
+33. [ok] 1 + NOT x: la gramatica lo acepta y los tipos lo rechazan (suma de entero y booleano)
+    [semantico] linea 2, columna 11: '+' espera enteros y recibio entero y booleano
+    VEREDICTO: RECHAZADO por la semantica; la simulacion NO se ejecuta
+34. [ok] a == NOT b con booleanos: valido
+    simulacion: pasos=3, errores simulados=0, comandos rechazados=0
+    VEREDICTO: ACEPTADO; estado final APAGADO
+35. [ok] encadenar igualdades de booleanos: (a == b) == c es valido
+    simulacion: pasos=1, errores simulados=0, comandos rechazados=0
+    VEREDICTO: ACEPTADO; estado final APAGADO
+36. [ok] 1 < 2 < 3 nunca es valido por tipos: error sintactico
+    [sintactico] linea 1, columna 15: token inesperado '<' (MENOR)
+    VEREDICTO: RECHAZADO en el analisis lexico/sintactico; la semantica y la simulacion NO se ejecutan
+37. [ok] comparar cadena con entero: rechazado
+    [semantico] linea 1, columna 13: '==' compara tipos distintos (cadena y entero)
+    VEREDICTO: RECHAZADO por la semantica; la simulacion NO se ejecuta
+38. [ok] una variable no puede cambiar de tipo
+    [semantico] linea 2, columna 1: la variable 'v' era entero y ahora recibe booleano
+    VEREDICTO: RECHAZADO por la semantica; la simulacion NO se ejecuta
+
+escenarios: 38; con resultado distinto del esperado: 0
+RESULTADO: todos los escenarios dieron lo esperado
+[codigo de salida: 0]

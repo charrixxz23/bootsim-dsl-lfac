@@ -1,0 +1,23 @@
+# evidencia f03: pruebas negativas, para comprobar que las comparaciones SI detectan diferencias. 2026-11-21
+# se trabaja sobre una copia en una carpeta temporal; los archivos del proyecto no se tocan.
+
+## 1. se quita la alternativa NOT expr de gramatica.ebnf (copia)
+reglas ebnf: 8; producciones tras expandir la ebnf: 47
+producciones en parser_borrador.py (sin la regla de recuperacion): 48
+producciones de recuperacion de errores (no son parte del lenguaje): [('sentencia', ('error', 'PUNTOYCOMA'))]
+solo en la ebnf : ninguna
+solo en ply     : [('expr', ('NOT', 'expr'))]
+niveles de precedencia iguales en la ebnf y en ply: True
+RESULTADO: HAY DIFERENCIAS
+[codigo de salida: 1]
+
+## 2. se cambia en la copia el operador == a no asociativo en el analizador de referencia
+vocabulario: 16 simbolos
+secuencias exhaustivas de 1 a 4 simbolos: 69904; secuencias al azar de 5 a 9 (semilla 2026): 20000
+secuencias bien formadas generadas al azar (semilla 2026): 30000
+total comparadas: 119904; aceptadas por ply: 27342
+diferencias entre ply y el analizador de referencia: 420
+   - b == a == - a < NOT ( ( 1 <= - 1 == b < NOT - a ) > 1 OR NOT ( - NOT a + - 1 ) ) | ply: ('==', ('==', ('neg', ('var', 'b')), ('var', 'a')), ('<', ('neg', ('var', 'a')), ('NOT', ('OR', ('>', ('==', ('<=', 1, ('neg', 1)), ('<', ('var', 'b'), ('NOT', ('neg', ('var', 'a'))))), 1), ('NOT', ('neg', ('NOT', ('+', ('var', 'a'), ('neg', 1))))))))) | referencia: ERROR
+   NOT NOT a == - b != NOT a | ply: ('NOT', ('NOT', ('!=', ('==', ('var', 'a'), ('neg', ('var', 'b'))), ('NOT', ('var', 'a'))))) | referencia: ERROR
+   - a AND b == a != b | ply: ('AND', ('neg', ('var', 'a')), ('!=', ('==', ('var', 'b'), ('var', 'a')), ('var', 'b'))) | referencia: ERROR
+   - ( ( b == a != - a ) ) != a - b | ply: ('!=', ('neg', ('!=', ('==', ('var', 'b'), ('var', 'a')), ('neg', ('var', 'a')))), ('-', ('var', 'a'), ('var', 'b'))) | referencia: ERROR

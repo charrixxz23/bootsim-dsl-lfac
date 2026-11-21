@@ -1,0 +1,50 @@
+$ python codigo/main.py pruebas/invalidos/invalido_05.dsl --debug
+[codigo de salida 1]
+--- salida estandar ---
+BootSim DSL | archivo: pruebas/invalidos/invalido_05.dsl
+
+=== tokens ===
+línea:col  token            valor
+2:1        POWER_ON         'POWER_ON'
+2:9        PUNTOYCOMA       ';'
+3:1        CHECK_CPU        'CHECK_CPU'
+3:11       ENTERO           100
+3:14       PUNTOYCOMA       ';'
+4:1        CHECK_RAM        'CHECK_RAM'
+4:11       ENTERO           2048
+4:15       PUNTOYCOMA       ';'
+5:1        RUN_POST         'RUN_POST'
+5:9        PUNTOYCOMA       ';'
+6:1        LOAD_KERNEL      'LOAD_KERNEL'
+6:13       CADENA           'linux'
+6:21       TRUE             'TRUE'
+6:25       PUNTOYCOMA       ';'
+
+=== árbol sintáctico ===
+Programa  [1:1]
+  Comando POWER_ON  [2:1]
+  Comando CHECK_CPU  [3:1]
+    Literal entero 100  [3:11]
+  Comando CHECK_RAM  [4:1]
+    Literal entero 2048  [4:11]
+  Comando RUN_POST  [5:1]
+  Comando LOAD_KERNEL  [6:1]
+    Literal cadena 'linux'  [6:13]
+    Literal booleano TRUE  [6:21]
+
+=== análisis semántico ===
+[semántico S3] línea 3, columna 1: CHECK_CPU: 100 núcleos de CPU está fuera del rango permitido (1 a 64)
+[semántico S3] línea 4, columna 1: CHECK_RAM: 2048 GB de RAM está fuera del rango permitido (0 a 1024)
+[semántico S2] línea 5, columna 1: RUN_POST necesita antes CHECK_DISK
+[semántico S2] línea 6, columna 1: LOAD_KERNEL está fuera de orden: el arranque está en ENCENDIDO y LOAD_KERNEL se usa en GESTOR_CARGADO; en este punto se puede usar: CHECK_CPU, CHECK_RAM, CHECK_DISK, SET_FIRMWARE, RUN_POST, SHOW_STATUS, RESET_SYSTEM
+variable         tipo       valor
+pasos mínimos de ejecución: 5; etapa al final (sin fallos): ENCENDIDO
+
+=== errores de análisis ===
+[semántico S3] línea 3, columna 1: CHECK_CPU: 100 núcleos de CPU está fuera del rango permitido (1 a 64)
+[semántico S3] línea 4, columna 1: CHECK_RAM: 2048 GB de RAM está fuera del rango permitido (0 a 1024)
+[semántico S2] línea 5, columna 1: RUN_POST necesita antes CHECK_DISK
+[semántico S2] línea 6, columna 1: LOAD_KERNEL está fuera de orden: el arranque está en ENCENDIDO y LOAD_KERNEL se usa en GESTOR_CARGADO; en este punto se puede usar: CHECK_CPU, CHECK_RAM, CHECK_DISK, SET_FIRMWARE, RUN_POST, SHOW_STATUS, RESET_SYSTEM
+
+RECHAZADO: el programa tiene errores, así que no se simuló nada.
+--- salida de error ---

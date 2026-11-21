@@ -1,0 +1,58 @@
+evidencia f07: comparacion con el prototipo de f03 (2026-11-21 12:34)
+== los 38 escenarios del prototipo de f03
+  [igual] 1. if: condicion verdadera ejecuta solo la rama THEN
+  [igual] 2. if: condicion falsa ejecuta solo la rama ELSE
+  [igual] 3. if sin else con condicion conocida y falsa: la rama no se ejecuta y no cambia el estado
+  [igual] 4. if sin else con condicion que la semantica no puede calcular: regla conservadora, se rechaza
+  [igual] 5. if con condicion conocida: la rama que no se ejecuta aun se revisa en tipos y rangos
+  [igual] 6. if con condicion conocida verdadera: la variable asignada en la rama que corre existe despues
+  [igual] 7. if sin else con condicion incierta que asigna una variable usada despues: rechazado
+  [igual] 8. rama que no corre (THEN con condicion falsa): un error de tipos dentro de ella se detecta igual
+  [igual] 9. rama que no corre (ELSE con condicion verdadera): una variable no asignada dentro de ella se detecta igual
+  [igual] 10. rama que no corre: una variable asignada dentro de ella y usada dentro de ella es valida
+  [igual] 11. rama que no corre: la variable que solo ella asigna no existe despues del IF
+  [igual] 12. rama que no corre: el tipo del argumento de un comando se revisa
+  [igual] 13. rama que no corre con otro IF dentro: el error anidado se detecta
+  [igual] 14. if incierto: la misma variable con tipos distintos en las dos ramas se rechaza
+  [igual] 15. if con dos ramas validas: se simula solo una pero las dos se revisaron
+  [igual] 16. repeat 0: un error de tipos dentro del cuerpo se detecta aunque no corra
+  [igual] 17. repeat 0: una variable no asignada dentro del cuerpo se detecta aunque no corra
+  [igual] 18. if con condicion entera: rechazado por tipos
+  [igual] 19. repeat 3: el cuerpo corre tres veces
+  [igual] 20. repeat 0: el cuerpo no corre y se revisa en tipos y variables, pero no en orden
+  [igual] 21. repeat 1: el cuerpo corre una vez
+  [igual] 22. repeat 1001: fuera del tope de 1000
+  [igual] 23. repeat negativo calculado
+  [igual] 24. repeat 2 con un cuerpo que no se puede repetir (POWER_ON dos veces)
+  [explicada] 25. repeat anidado 1000 x 1000: la ejecucion se corta por el limite de pasos
+        veredicto: borrador aceptado / definitiva rechazado por la semantica
+        explicacion: cambio de diseño decidido en f07: el borrador de f03 dejaba pasar el programa y el simulador lo cortaba al llegar a 10 000 pasos; la semantica definitiva calcula una cota minima de pasos (1 000 000) y lo rechaza antes de ejecutar (regla S8). queda como decision pendiente del equipo
+  [igual] 26. reset_system a mitad del arranque: borra lecturas, conserva variables y permite empezar de nuevo
+  [igual] 27. reset_system estando apagado es valido
+  [igual] 28. error de post (ram = 0): los comandos siguientes se rechazan y reset_system permite recuperarse
+  [igual] 29. arranque desde usb: error_arranque
+  [igual] 30. bios con disco gpt: error_arranque al cargar el gestor, el kernel se rechaza
+  [igual] 31. kernel sin initramfs: kernel_panic y programa que termina en estado de error
+  [igual] 32. division por cero con variable conocida: rechazado
+  [igual] 33. 1 + NOT x: la gramatica lo acepta y los tipos lo rechazan (suma de entero y booleano)
+  [igual] 34. a == NOT b con booleanos: valido
+  [igual] 35. encadenar igualdades de booleanos: (a == b) == c es valido
+  [igual] 36. 1 < 2 < 3 nunca es valido por tipos: error sintactico
+  [igual] 37. comparar cadena con entero: rechazado
+  [igual] 38. una variable no puede cambiar de tipo
+
+== los diez programas de ejemplo
+  [igual] invalido_1_lexico.dsl
+  [igual] invalido_2_sintactico_falta_puntoycoma.dsl
+  [igual] invalido_3_sintactico_if_sin_endif.dsl
+  [igual] invalido_4_semantico_variable.dsl
+  [igual] invalido_5_semantico_orden_y_limite.dsl
+  [igual] valido_1_secuencia_basica.dsl
+  [igual] valido_2_variables_y_expresiones.dsl
+  [igual] valido_3_if_else_firmware.dsl
+  [igual] valido_4_repeat_y_bloque.dsl
+  [igual] valido_5_kernel_panic_y_reinicio.dsl
+
+casos: 48; iguales: 47; con diferencia explicada: 1; inesperadas: 0
+RESULTADO: todas las diferencias tienen explicacion
+[codigo de salida 0]

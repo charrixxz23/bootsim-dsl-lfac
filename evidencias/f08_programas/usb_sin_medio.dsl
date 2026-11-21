@@ -1,0 +1,9 @@
+# no hay medio de arranque en el dispositivo elegido
+POWER_ON;
+CHECK_CPU 4;
+CHECK_RAM 8;
+CHECK_DISK 256 GPT;
+RUN_POST;
+SELECT_BOOT USB;
+LOAD_BOOTLOADER GRUB;
+SHOW_STATUS;

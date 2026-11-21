@@ -1,0 +1,42 @@
+evidencia f08: estudio de condiciones inciertas, python codigo/estudiar_inciertas.py (2026-11-21 13:14)
+estudio de las condiciones inciertas (f08); la semantica es la de f07 sin cambios
+
+== IF incierto: THEN avanza una etapa y despues va SHOW_STATUS;
+las dos ramas dejan el arranque en etapas distintas (ENCENDIDO y POST_OK); la regla de f03 rechaza.
+  x=0, umbral=3: la semantica rechaza; al correr no hay orden ilegal -> rechazo innecesario (al correr todo era legal)
+  x=0, umbral=7: la semantica rechaza; al correr no hay orden ilegal -> rechazo innecesario (al correr todo era legal)
+  x=5, umbral=3: la semantica rechaza; al correr no hay orden ilegal -> rechazo innecesario (al correr todo era legal)
+  x=5, umbral=7: la semantica rechaza; al correr no hay orden ilegal -> rechazo innecesario (al correr todo era legal)
+  x=10, umbral=3: la semantica rechaza; al correr no hay orden ilegal -> rechazo innecesario (al correr todo era legal)
+  x=10, umbral=7: la semantica rechaza; al correr no hay orden ilegal -> rechazo innecesario (al correr todo era legal)
+  resumen: 0 rechazos justificados, 6 rechazos innecesarios, 0 aceptados
+
+== IF incierto: THEN avanza una etapa y despues va SELECT_BOOT DISK;
+las dos ramas dejan el arranque en etapas distintas (ENCENDIDO y POST_OK); la regla de f03 rechaza.
+  x=0, umbral=3: la semantica rechaza; al correr hay orden ilegal -> rechazo justificado (al correr habria un comando fuera de orden)
+  x=0, umbral=7: la semantica rechaza; al correr hay orden ilegal -> rechazo justificado (al correr habria un comando fuera de orden)
+  x=5, umbral=3: la semantica rechaza; al correr no hay orden ilegal -> rechazo innecesario (al correr todo era legal)
+  x=5, umbral=7: la semantica rechaza; al correr hay orden ilegal -> rechazo justificado (al correr habria un comando fuera de orden)
+  x=10, umbral=3: la semantica rechaza; al correr no hay orden ilegal -> rechazo innecesario (al correr todo era legal)
+  x=10, umbral=7: la semantica rechaza; al correr no hay orden ilegal -> rechazo innecesario (al correr todo era legal)
+  resumen: 3 rechazos justificados, 3 rechazos innecesarios, 0 aceptados
+
+== REPEAT incierto con un cuerpo que no se puede repetir (POWER_ON)
+la semantica revisa el cuerpo dos veces y la segunda falla; con n = 0 o 1 el programa en realidad es legal.
+  n=0: la semantica rechaza; al correr no hay orden ilegal -> rechazo innecesario (al correr todo era legal)
+  n=1: la semantica rechaza; al correr no hay orden ilegal -> rechazo innecesario (al correr todo era legal)
+  n=2: la semantica rechaza; al correr hay orden ilegal -> rechazo justificado (al correr habria un comando fuera de orden)
+  n=3: la semantica rechaza; al correr hay orden ilegal -> rechazo justificado (al correr habria un comando fuera de orden)
+  resumen: 2 rechazos justificados, 2 rechazos innecesarios, 0 aceptados
+
+== REPEAT incierto con un cuerpo que se puede repetir (CHECK_CPU)
+aqui no hay problema: se acepta y al correr todo es legal.
+  n=0: la semantica acepta; al correr no hay orden ilegal -> aceptado
+  n=1: la semantica acepta; al correr no hay orden ilegal -> aceptado
+  n=2: la semantica acepta; al correr no hay orden ilegal -> aceptado
+  n=3: la semantica acepta; al correr no hay orden ilegal -> aceptado
+  resumen: 0 rechazos justificados, 0 rechazos innecesarios, 4 aceptados
+
+lectura de los numeros: la regla evita problemas reales cuando lo que viene despues depende de la etapa, pero tambien rechaza programas que
+habrian corrido bien. se propone (sin aplicarlo) tratar la etapa como "desconocida" y avisar en vez de rechazar; queda para decision del equipo.
+[codigo de salida 0]

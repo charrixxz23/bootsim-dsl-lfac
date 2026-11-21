@@ -1,0 +1,5 @@
+﻿# evidencia f03: generacion del word del anexo c con scripts/generar_anexo_c_docx.ps1 (el numero de paginas lo da word). 2026-11-21
+# $ powershell -File scripts/generar_anexo_c_docx.ps1
+paginas segun word: 2 | palabras segun word: 963 | cuerpo 11 pt, tablas 9.5 pt, margen 2 cm, hoja a4
+docx: C:\Users\ADMIN003\Downloads\BootSimDSL\docs\anexos\ANEXO_C_PLAN.docx
+el texto termina en la pagina 2, a 588 pt del borde superior (la hoja mide 841.95 pt)

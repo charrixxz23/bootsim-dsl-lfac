@@ -1,0 +1,56 @@
+# evidencia f03: maquina de estados borrador. ply 3.11, python 3.12.10, 2026-11-21
+# $ python maquina_borrador.py
+== a. arranque completo correcto
+   POWER_ON         ()                           ok -> ENCENDIDO
+   CHECK_CPU        (4,)                         ok -> ENCENDIDO
+   CHECK_RAM        (16,)                        ok -> ENCENDIDO
+   CHECK_DISK       (512, 'GPT')                 ok -> ENCENDIDO
+   RUN_POST         ()                           ok -> POST_OK
+   SELECT_BOOT      ('DISK',)                    ok -> DISPOSITIVO_ELEGIDO
+   LOAD_BOOTLOADER  ('GRUB',)                    ok -> GESTOR_CARGADO
+   LOAD_KERNEL      ('linux-6.1', True)          ok -> KERNEL_CARGADO
+   START_OS         ()                           ok -> SO_ACTIVO
+== b. orden ilegal: kernel antes del post
+   POWER_ON         ()                           ok -> ENCENDIDO
+   LOAD_KERNEL      ('linux-6.1', True)          RECHAZADO LOAD_KERNEL: orden ilegal, estado ENCENDIDO y se necesitaba GESTOR_CARGADO
+== c. post sin lecturas de hardware
+   POWER_ON         ()                           ok -> ENCENDIDO
+   RUN_POST         ()                           ERROR SIMULADO ERROR_POST: faltan lecturas de ['cpu', 'ram', 'disco']
+== d. ram igual a cero (error de post)
+   POWER_ON         ()                           ok -> ENCENDIDO
+   CHECK_CPU        (2,)                         ok -> ENCENDIDO
+   CHECK_RAM        (0,)                         ok -> ENCENDIDO
+   CHECK_DISK       (64, 'GPT')                  ok -> ENCENDIDO
+   RUN_POST         ()                           ERROR SIMULADO ERROR_POST: no se detecta memoria ram (en un equipo real suenan pitidos)
+   SELECT_BOOT      ('DISK',)                    RECHAZADO SELECT_BOOT: el sistema esta en ERROR_POST; solo SHOW_STATUS o RESET_SYSTEM
+== e. arranque desde usb sin dispositivo
+   POWER_ON         ()                           ok -> ENCENDIDO
+   CHECK_CPU        (4,)                         ok -> ENCENDIDO
+   CHECK_RAM        (16,)                        ok -> ENCENDIDO
+   CHECK_DISK       (512, 'GPT')                 ok -> ENCENDIDO
+   RUN_POST         ()                           ok -> POST_OK
+   SELECT_BOOT      ('USB',)                     ERROR SIMULADO ERROR_ARRANQUE: no hay medio de arranque en USB
+== f. bios con disco gpt
+   POWER_ON         ()                           ok -> ENCENDIDO
+   SET_FIRMWARE     ('BIOS',)                    ok -> ENCENDIDO
+   CHECK_CPU        (2,)                         ok -> ENCENDIDO
+   CHECK_RAM        (8,)                         ok -> ENCENDIDO
+   CHECK_DISK       (100, 'GPT')                 ok -> ENCENDIDO
+   RUN_POST         ()                           ok -> POST_OK
+   SELECT_BOOT      ('DISK',)                    ok -> DISPOSITIVO_ELEGIDO
+   LOAD_BOOTLOADER  ('GRUB',)                    ERROR SIMULADO ERROR_ARRANQUE: firmware BIOS y esquema GPT no son compatibles en este simulador
+== g. kernel sin initramfs y reinicio
+   POWER_ON         ()                           ok -> ENCENDIDO
+   CHECK_CPU        (4,)                         ok -> ENCENDIDO
+   CHECK_RAM        (16,)                        ok -> ENCENDIDO
+   CHECK_DISK       (512, 'GPT')                 ok -> ENCENDIDO
+   RUN_POST         ()                           ok -> POST_OK
+   SELECT_BOOT      ('DISK',)                    ok -> DISPOSITIVO_ELEGIDO
+   LOAD_BOOTLOADER  ('GRUB',)                    ok -> GESTOR_CARGADO
+   LOAD_KERNEL      ('linux-roto', False)        ok -> KERNEL_CARGADO
+   START_OS         ()                           ERROR SIMULADO KERNEL_PANIC: no se pudo montar el sistema de archivos raiz (kernel sin initramfs)
+   SHOW_STATUS      ()                           estado=KERNEL_PANIC datos={'cpu': 4, 'ram': 16, 'disco': 512, 'esquema': 'GPT', 'firmware': 'UEFI', 'initramfs': False}
+   POWER_ON         ()                           RECHAZADO POWER_ON: el sistema esta en KERNEL_PANIC; solo SHOW_STATUS o RESET_SYSTEM
+   RESET_SYSTEM     ()                           reinicio simulado: estado=APAGADO
+   POWER_ON         ()                           ok -> ENCENDIDO
+[codigo de salida: 0]

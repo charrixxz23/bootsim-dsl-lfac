@@ -1,0 +1,51 @@
+$ python codigo/main.py pruebas/invalidos/invalido_04.dsl --debug
+[codigo de salida 1]
+--- salida estandar ---
+BootSim DSL | archivo: pruebas/invalidos/invalido_04.dsl
+
+=== tokens ===
+línea:col  token            valor
+2:1        SET              'SET'
+2:5        ID               'total'
+2:11       ASIGNA           '='
+2:13       ID               'nucleos'
+2:21       MAS              '+'
+2:23       ENTERO           1
+2:24       PUNTOYCOMA       ';'
+3:1        SET              'SET'
+3:5        ID               'mezcla'
+3:12       ASIGNA           '='
+3:14       ENTERO           3
+3:16       MAS              '+'
+3:18       TRUE             'TRUE'
+3:22       PUNTOYCOMA       ';'
+4:1        POWER_ON         'POWER_ON'
+4:9        PUNTOYCOMA       ';'
+
+=== árbol sintáctico ===
+Programa  [1:1]
+  Asignar nombre=total  [2:1]
+    BinOp +  [2:21]
+      Variable nucleos  [2:13]
+      Literal entero 1  [2:23]
+  Asignar nombre=mezcla  [3:1]
+    BinOp +  [3:16]
+      Literal entero 3  [3:14]
+      Literal booleano TRUE  [3:18]
+  Comando POWER_ON  [4:1]
+
+=== análisis semántico ===
+[semántico S1] línea 2, columna 13: la variable 'nucleos' se usa antes de asignarle un valor (use SET nucleos = ...; antes)
+[semántico S4] línea 3, columna 16: '+' solo opera con valores enteros: el lado derecho es booleano
+variable         tipo       valor
+mezcla           entero     (no calculable)
+nucleos          ?          (no calculable)
+total            entero     (no calculable)
+pasos mínimos de ejecución: 3; etapa al final (sin fallos): ENCENDIDO
+
+=== errores de análisis ===
+[semántico S1] línea 2, columna 13: la variable 'nucleos' se usa antes de asignarle un valor (use SET nucleos = ...; antes)
+[semántico S4] línea 3, columna 16: '+' solo opera con valores enteros: el lado derecho es booleano
+
+RECHAZADO: el programa tiene errores, así que no se simuló nada.
+--- salida de error ---

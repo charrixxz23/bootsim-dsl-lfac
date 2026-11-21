@@ -1,0 +1,19 @@
+evidencia f08: reproduccion del defecto de la primera version de codigo/run (2026-11-21 13:01)
+la primera version del lanzador (reconstruida aqui) elegia python3 si 'command -v python3' lo encontraba. en esta maquina Windows 'python3' es el acceso directo de la Tienda de Microsoft, que existe pero no ejecuta nada.
+la salida original de esa primera corrida no se guardo como archivo; esta es una reconstruccion que se ejecuto ahora.
+
+$ command -v python3
+/c/Users/ADMIN003/AppData/Local/Microsoft/WindowsApps/python3
+
+$ python3 -c "import sys"   (como lo prueba la version corregida)
+Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.
+[codigo de salida 49]
+
+$ cp main.py y ejecutar la primera version
+Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.
+[codigo de salida 49]
+
+$ sh codigo/run docs/anexos/plan_prototipo/ejemplos/valido_1_secuencia_basica.dsl   (version corregida, ultimas 2 lineas)
+
+PROGRAMA CORRECTO: la simulación terminó sin fallos de arranque.
+[codigo de salida 0]

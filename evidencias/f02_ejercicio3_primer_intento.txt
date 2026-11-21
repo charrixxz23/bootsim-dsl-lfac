@@ -1,0 +1,6 @@
+# reproduccion posterior (2026-11-21) de la primera version de la validacion corregida del ejercicio 3.
+# la salida original se vio en la terminal de la sesion y no se guardo; esta corrida repite el mismo codigo.
+# solo se muestra el contraejemplo a.
+== contraejemplo A (etapas en orden inverso)
+   base      : acepta
+   corregida : ['START_OS fuera de orden: se esperaba POWER_ON', 'LOAD_KERNEL fuera de orden: se esperaba nada mas', 'LOAD_BOOTLOADER fuera de orden: se esperaba nada mas', 'RUN_POST fuera de orden: se esperaba nada mas', 'POWER_ON fuera de orden: se esperaba nada mas']

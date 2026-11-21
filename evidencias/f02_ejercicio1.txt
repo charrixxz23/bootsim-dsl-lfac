@@ -1,0 +1,65 @@
+# evidencia f02 ejercicio 1: lexer defectuoso. python 3.12.10, ply 3.11. fecha 2026-11-21
+# cada script se corre con limite de 10 s (timeout 10); si hubiera bucle, el codigo de salida seria 124.
+
+## $ timeout 10 python ej1_defecto1_orden.py
+[('ID', 'SET'), ('ID', 'x'), ('NUM', 10), ('ID', 'IF'), ('ID', 'x'), ('ID', 'THEN'), ('ID', 'ENDIF')]
+[codigo de salida: 0]
+
+## $ timeout 10 python ej1_defecto2_sin_docstring.py
+ERROR: C:\Users\ADMIN003\Downloads\BootSimDSL\docs\anexos\scaffold\ej1_defecto2_sin_docstring.py:14: No regular expression defined for rule 't_NUM'
+Traceback (most recent call last):
+  File "C:\Users\ADMIN003\Downloads\BootSimDSL\docs\anexos\scaffold\ej1_defecto2_sin_docstring.py", line 23, in <module>
+    lexer = lex.lex()
+            ^^^^^^^^^
+  File "C:\Users\ADMIN003\AppData\Local\Temp\claude\fb74ee08b3ea7be3\79151490-6957-44ac-8fd5-05233efae7b4\scratchpad\f01\libs\ply\lex.py", line 909, in lex
+    raise SyntaxError("Can't build lexer")
+SyntaxError: Can't build lexer
+[codigo de salida: 1]
+
+## $ timeout 10 python ej1_defecto3_error_sin_skip.py
+caracter ilegal: '$'
+Traceback (most recent call last):
+  File "C:\Users\ADMIN003\Downloads\BootSimDSL\docs\anexos\scaffold\ej1_defecto3_error_sin_skip.py", line 26, in <module>
+    print([(t.type, t.value) for t in lexer])
+                                      ^^^^^
+  File "C:\Users\ADMIN003\AppData\Local\Temp\claude\fb74ee08b3ea7be3\79151490-6957-44ac-8fd5-05233efae7b4\scratchpad\f01\libs\ply\lex.py", line 419, in next
+    t = self.token()
+        ^^^^^^^^^^^^
+  File "C:\Users\ADMIN003\AppData\Local\Temp\claude\fb74ee08b3ea7be3\79151490-6957-44ac-8fd5-05233efae7b4\scratchpad\f01\libs\ply\lex.py", line 389, in token
+    raise LexError("Scanning error. Illegal character '%s'" % (lexdata[lexpos]), lexdata[lexpos:])
+ply.lex.LexError: Scanning error. Illegal character '$'
+[codigo de salida: 1]
+
+## $ timeout 10 python ej1_defecto4_nombre.py
+Traceback (most recent call last):
+  File "C:\Users\ADMIN003\Downloads\BootSimDSL\docs\anexos\scaffold\ej1_defecto4_nombre.py", line 26, in <module>
+    print([(t.type, t.value) for t in lexer])
+                                      ^^^^^
+  File "C:\Users\ADMIN003\AppData\Local\Temp\claude\fb74ee08b3ea7be3\79151490-6957-44ac-8fd5-05233efae7b4\scratchpad\f01\libs\ply\lex.py", line 419, in next
+    t = self.token()
+        ^^^^^^^^^^^^
+  File "C:\Users\ADMIN003\AppData\Local\Temp\claude\fb74ee08b3ea7be3\79151490-6957-44ac-8fd5-05233efae7b4\scratchpad\f01\libs\ply\lex.py", line 361, in token
+    raise LexError("%s:%d: Rule '%s' returned an unknown token type '%s'" % (
+ply.lex.LexError: C:\Users\ADMIN003\Downloads\BootSimDSL\docs\anexos\scaffold\ej1_defecto4_nombre.py:14: Rule 't_NUMERO' returned an unknown token type 'NUMERO'
+[codigo de salida: 1]
+
+## $ timeout 10 python ej1_lexer_corregido.py
+1 1 SET 'SET'
+1 5 ID 'x'
+1 7 ASIGNA '='
+1 9 NUM 10
+1 11 PUNTOYCOMA ';'
+2 1 IF 'IF'
+2 4 ID 'x'
+2 6 IGUAL '=='
+2 9 NUM 10
+2 12 THEN 'THEN'
+3 3 SET 'SET'
+3 7 ID 'y'
+3 9 ASIGNA '='
+3 11 NUM 5
+3 15 NUM 7
+3 16 PUNTOYCOMA ';'
+4 1 ENDIF 'ENDIF'
+error lexico en linea 3, columna 13: caracter '$'
+[codigo de salida: 0]

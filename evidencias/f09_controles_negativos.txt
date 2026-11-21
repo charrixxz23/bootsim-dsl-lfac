@@ -1,0 +1,20 @@
+evidencia f09: controles negativos del verificador de los diez programas (2026-11-21 13:46)
+nota: una primera corrida con una version anterior del verificador dejo 4 controles 'solo por caida' (el script se caia con ValueError al faltar un fragmento) y 1 sin detectar a nivel de terminal; se corrigio el verificador y esta es la corrida con el codigo final. la salida de esa primera corrida no se guardo como archivo.
+[detectado] invalido_01 sin el caracter raro (ya no tiene error lexico) | 10 comprobaciones fallan
+[detectado] invalido_02 completo (ya no es sintactico) | 10 comprobaciones fallan
+[detectado] invalido_03 con su ENDREPEAT (ya no es un error) | 9 comprobaciones fallan
+[detectado] invalido_04 con la variable declarada y los tipos bien (ya es valido) | 3 comprobaciones fallan
+[detectado] invalido_05 con CPU dentro del limite (cambia el error) | 2 comprobaciones fallan
+[detectado] valido_04 vacio | 13 comprobaciones fallan
+[detectado] valido_02 repetido (copia exacta de valido_01) | 8 comprobaciones fallan
+[detectado] un sexto archivo valido sobrante | 1 comprobaciones fallan
+[detectado] valido_05 sin RESET_SYSTEM (ya no se recupera) | 12 comprobaciones fallan
+[detectado] valido_01 con otro tamano de RAM (cambia el resultado esperado) | 1 comprobaciones fallan
+[detectado] codigo: main.py devuelve 0 cuando rechaza un programa | 7 comprobaciones fallan
+[equivalente, no cuenta] codigo: procesar() simula aunque haya errores semanticos | equivalente en terminal: main.py tiene su propia comprobacion y rechaza antes de mostrar la simulacion; esta alteracion la detecta probar_simulador.py (seccion 11)
+[detectado] codigo: el simulador no cuenta los fallos simulados | 1 comprobaciones fallan
+[detectado] codigo: la semantica no avisa del firmware incompatible | 2 comprobaciones fallan
+
+controles: 14; sin detectar: 0
+RESULTADO: el verificador protesta ante todas las alteraciones
+[codigo de salida 0]

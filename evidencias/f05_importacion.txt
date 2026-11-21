@@ -1,0 +1,109 @@
+# evidencia f05: el lexer se importa y se conecta a un parser de ply sin duplicar codigo. python 3.12.10, ply 3.11, 2026-11-21
+
+## 1. importacion desde otra carpeta
+importacion ok; tokens: 52 ; reservadas: 35
+nombres exportados para el parser: ['tokens', 'crear_lexer', 'tokenizar', 'formatear_tokens', 'formatear_error', 'RESERVADAS', 'ErrorLexico', 'TokenInfo']
+
+## 2. los 52 nombres de token (17 propios + 35 reservadas)
+['ID', 'ENTERO', 'CADENA', 'ASIGNA', 'IGUAL', 'DISTINTO', 'MENORIGUAL', 'MAYORIGUAL', 'MENOR', 'MAYOR', 'MAS', 'MENOS', 'MULT', 'DIV', 'PARENIZQ', 'PARENDER', 'PUNTOYCOMA', 'POWER_ON', 'CHECK_CPU', 'CHECK_RAM', 'CHECK_DISK', 'SET_FIRMWARE', 'RUN_POST', 'SELECT_BOOT', 'LOAD_BOOTLOADER', 'LOAD_KERNEL', 'START_OS', 'SHOW_STATUS', 'RESET_SYSTEM', 'SET', 'IF', 'THEN', 'ELSE', 'ENDIF', 'REPEAT', 'TIMES', 'ENDREPEAT', 'BEGIN', 'END', 'AND', 'OR', 'NOT', 'TRUE', 'FALSE', 'BIOS', 'UEFI', 'MBR', 'GPT', 'DISK', 'USB', 'NETWORK', 'GRUB']
+
+## 3. un parser minimo de ply que solo importa tokens y crear_lexer (codigo de la demostracion y salida)
+    # demostracion: un parser minimo de ply usa el lexer definitivo sin copiar nada (solo importa tokens y crear_lexer)
+    import sys
+    
+    sys.path.insert(0, r'C:\Users\ADMIN003\Downloads\BootSimDSL\codigo')
+    import ply.yacc as yacc
+    
+    from lexer import crear_lexer, tokens  # tokens lo necesita ply.yacc en este modulo
+    
+    
+    def p_programa(p):
+        """programa : lista"""
+        p[0] = p[1]
+    
+    
+    def p_lista_una(p):
+        """lista : comando PUNTOYCOMA"""
+        p[0] = [p[1]]
+    
+    
+    def p_lista_mas(p):
+        """lista : lista comando PUNTOYCOMA"""
+        p[0] = p[1] + [p[2]]
+    
+    
+    def p_comando(p):
+        """comando : POWER_ON
+                   | RUN_POST
+                   | SHOW_STATUS"""
+        p[0] = p[1]
+    
+    
+    def p_error(p):
+        print('error sintactico en', p)
+    
+    
+    analizador = yacc.yacc(debug=False, write_tables=False)
+    lexer = crear_lexer()
+    print('resultado:', analizador.parse('POWER_ON; # arranque\nRUN_POST; SHOW_STATUS;', lexer=lexer))
+    print('errores lexicos del lexer usado:', lexer.errores)
+    lexer2 = crear_lexer()
+    print('resultado con un @ :', analizador.parse('POWER_ON @;', lexer=lexer2))
+    print('errores lexicos del segundo lexer:', [(e.linea, e.columna, e.fragmento) for e in lexer2.errores])
+    print('errores lexicos del primero siguen igual:', lexer.errores)
+
+# $ python demo_yacc.py
+WARNING: Token 'AND' defined, but not used
+WARNING: Token 'ASIGNA' defined, but not used
+WARNING: Token 'BEGIN' defined, but not used
+WARNING: Token 'BIOS' defined, but not used
+WARNING: Token 'CADENA' defined, but not used
+WARNING: Token 'CHECK_CPU' defined, but not used
+WARNING: Token 'CHECK_DISK' defined, but not used
+WARNING: Token 'CHECK_RAM' defined, but not used
+WARNING: Token 'DISK' defined, but not used
+WARNING: Token 'DISTINTO' defined, but not used
+WARNING: Token 'DIV' defined, but not used
+WARNING: Token 'ELSE' defined, but not used
+WARNING: Token 'END' defined, but not used
+WARNING: Token 'ENDIF' defined, but not used
+WARNING: Token 'ENDREPEAT' defined, but not used
+WARNING: Token 'ENTERO' defined, but not used
+WARNING: Token 'FALSE' defined, but not used
+WARNING: Token 'GPT' defined, but not used
+WARNING: Token 'GRUB' defined, but not used
+WARNING: Token 'ID' defined, but not used
+WARNING: Token 'IF' defined, but not used
+WARNING: Token 'IGUAL' defined, but not used
+WARNING: Token 'LOAD_BOOTLOADER' defined, but not used
+WARNING: Token 'LOAD_KERNEL' defined, but not used
+WARNING: Token 'MAS' defined, but not used
+WARNING: Token 'MAYOR' defined, but not used
+WARNING: Token 'MAYORIGUAL' defined, but not used
+WARNING: Token 'MBR' defined, but not used
+WARNING: Token 'MENOR' defined, but not used
+WARNING: Token 'MENORIGUAL' defined, but not used
+WARNING: Token 'MENOS' defined, but not used
+WARNING: Token 'MULT' defined, but not used
+WARNING: Token 'NETWORK' defined, but not used
+WARNING: Token 'NOT' defined, but not used
+WARNING: Token 'OR' defined, but not used
+WARNING: Token 'PARENDER' defined, but not used
+WARNING: Token 'PARENIZQ' defined, but not used
+WARNING: Token 'REPEAT' defined, but not used
+WARNING: Token 'RESET_SYSTEM' defined, but not used
+WARNING: Token 'SELECT_BOOT' defined, but not used
+WARNING: Token 'SET' defined, but not used
+WARNING: Token 'SET_FIRMWARE' defined, but not used
+WARNING: Token 'START_OS' defined, but not used
+WARNING: Token 'THEN' defined, but not used
+WARNING: Token 'TIMES' defined, but not used
+WARNING: Token 'TRUE' defined, but not used
+WARNING: Token 'UEFI' defined, but not used
+WARNING: Token 'USB' defined, but not used
+WARNING: There are 48 unused tokens
+resultado: ['POWER_ON', 'RUN_POST', 'SHOW_STATUS']
+errores lexicos del lexer usado: []
+resultado con un @ : ['POWER_ON']
+errores lexicos del segundo lexer: [(1, 10, '@')]
+errores lexicos del primero siguen igual: []

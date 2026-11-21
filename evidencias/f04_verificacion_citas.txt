@@ -1,0 +1,112 @@
+# verificacion automatica de enlaces y citas. fecha: 2026-11-21T11:30:33-05:00
+# prueba: la cita aparece literalmente en el texto de la pagina bajada ese dia. NO prueba lectura humana.
+
+## enlaces
+[ok] W-POST: http 200 | https://en.wikipedia.org/wiki/Power-on_self-test
+[ok] W-BOOT: http 200 | https://en.wikipedia.org/wiki/Booting
+[ok] W-RV: http 200 | https://en.wikipedia.org/wiki/Reset_vector
+[ok] W-PG: http 200 | https://en.wikipedia.org/wiki/Power_good_signal
+[ok] W-ATX: http 200 | https://en.wikipedia.org/wiki/ATX
+[ok] W-BIOS: http 200 | https://en.wikipedia.org/wiki/BIOS
+[ok] W-UEFI: http 200 | https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface
+[ok] W-ESP: http 200 | https://en.wikipedia.org/wiki/EFI_system_partition
+[ok] W-MBR: http 200 | https://en.wikipedia.org/wiki/Master_boot_record
+[ok] W-GPT: http 200 | https://en.wikipedia.org/wiki/GUID_Partition_Table
+[ok] W-GRUB: http 200 | https://en.wikipedia.org/wiki/GNU_GRUB
+[ok] W-KP: http 200 | https://en.wikipedia.org/wiki/Kernel_panic
+[ok] A-BOOT: http 200 | https://wiki.archlinux.org/title/Arch_boot_process
+[ok] MS-FAQ: http 200 | https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/windows-and-gpt-faq | redirigido a https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/windows-and-gpt-faq?view=windows-11
+[ok] MS-MODO: http 200 | https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/boot-to-uefi-mode-or-legacy-bios-mode | redirigido a https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/boot-to-uefi-mode-or-legacy-bios-mode?view=windows-11
+[ok] K1: http 200 | https://docs.kernel.org/filesystems/ramfs-rootfs-initramfs.html
+[ok] G-BIOS: http 200 | https://www.gnu.org/software/grub/manual/grub/html_node/BIOS-installation.html
+[FALLO] UEFI-SPEC: http 403 | https://uefi.org/specs/UEFI/2.10/03_Boot_Manager.html | HTTP Error 403: Forbidden
+
+## citas
+[ok] c01 (W-POST): "A power-on self-test (POST) is a process performed by firmware or software routines immediately after a computer or other digital electronic device is powered on."
+[ok] c02 (W-POST): "POST routines are part of a computer's pre-boot sequence. If they complete successfully, the bootstrap loader code is invoked to load an operating system."
+[ok] c03 (W-POST): "In IBM PC compatible computers, the main duties of POST are handled by the BIOS or UEFI"
+[ok] c04 (W-POST): "The BIOS begins its POST when the CPU is reset. The first memory location the CPU tries to execute is known as the reset vector."
+[ok] c05 (W-POST): "initialize, size, and verify system main memory"
+[ok] c06 (W-POST): "identify, organize, and select which devices are available for booting"
+[ok] c07 (W-POST): "In earlier BIOSes, up to around the turn of the millennium, the POST would perform a thorough test of all devices, including a complete memory test."
+[ok] c08 (W-POST): "POST beep codes vary from manufacturer to manufacturer."
+[ok] c09 (W-POST): "The actual numeric codes for the possible stages and error conditions differ from one BIOS supplier to another."
+[ok] c10 (W-POST): "continuous beeping Motherboard does not detect a RAM module"
+[ok] c11 (W-BOOT): "This program runs a power-on self-test (POST) to check and initialize required devices such as main memory (DRAM), the PCI bus and the PCI devices (including running embedded option ROMs)."
+[ok] c12 (W-BOOT): "One of the most involved steps is setting up DRAM over SPD, further complicated by the fact that, at this point, memory is very limited."
+[ok] c13 (W-BOOT): "goes through a pre-configured list of non-volatile storage devices ("boot device sequence") until it finds one that is bootable."
+[ok] c14 (W-BOOT): "Once the BIOS has found a bootable device it loads the boot sector to linear address 7C00h"
+[ok] c15 (W-BOOT): "The boot sector code is the first-stage boot loader."
+[ok] c16 (W-BOOT): "must fit into the first 446 bytes of the Master Boot Record"
+[ok] c17 (W-RV): "the reset vector is the default location a central processing unit will go to find the first instruction it will execute after a reset."
+[ok] c18 (W-RV): "The reset vector for the Intel 80386 and later x86 processors is physical address FFFFFFF0h (16 bytes below 4 GB)."
+[ok] c19 (W-PG): "The ATX specification defines the Power-Good signal as a +5-volt (V) signal generated in the power supply when it has passed its internal self-tests and the outputs have stabilized."
+[ok] c20 (W-PG): "The signal is then sent to the motherboard, where it is received by the processor timer chip that controls the reset line to the processor."
+[ok] c21 (W-PG): "This normally takes between 0.1 and 0.5 seconds after the power supply is switched on."
+[ok] c22 (W-ATX): "When the line is connected to ground (by the motherboard), the power supply turns on."
+[ok] c23 (W-ATX): "+5 VSB (+5 V standby) supplies power even when the rest of the supply wire lines are off."
+[ok] c24 (W-ATX): "PWR_OK ("power good") is an output from the power supply that indicates that its output has stabilized and is ready for use."
+[ok] c25 (W-BIOS): "BIOS or the Basic Input/Output System is a type of firmware used to provide runtime services for operating systems and programs and to perform hardware initialization during the booting process (power-on startup)."
+[ok] c26 (W-BIOS): "On a computer using BIOS firmware, the firmware comes pre-installed on the computer's motherboard."
+[ok] c27 (W-BIOS): "The POST identifies, tests and initializes system devices such as the CPU, chipset, RAM, motherboard, video card, keyboard, mouse, hard disk drive, optical disc drive and other hardware, including integrated peripherals."
+[ok] c28 (W-BIOS): "The BIOS uses the boot devices set in Nonvolatile BIOS memory (CMOS)"
+[ok] c29 (W-BIOS): "The BIOS checks each device in order to see if it is bootable by attempting to load the first sector (boot sector). If the sector cannot be read, the BIOS proceeds to the next device."
+[ok] c30 (W-BIOS): "Intel phased out providing support for booting from the BIOS interface from 2020 to 2024 depending on the platform."
+[ok] c31 (W-UEFI): "Unlike the legacy PC BIOS, UEFI does not rely on boot sectors on the computer's data storage, defining instead a boot manager as part of the UEFI specification."
+[ok] c32 (W-UEFI): "When a computer is powered on, the boot manager checks the boot configuration and, based on its settings, then executes the specified OS boot loader or operating system kernel."
+[ok] c33 (W-UEFI): "The boot configuration is defined by variables stored in the computer's persistent NVRAM storage"
+[ok] c34 (W-UEFI): "UEFI executes independent programs known as UEFI applications, which are stored as files on the EFI system partition."
+[ok] c35 (W-UEFI): "UEFI-MBR capability is required by the UEFI specification"
+[ok] c36 (W-UEFI): "some UEFI firmware implementations immediately switch to BIOS-based CSM booting"
+[ok] c37 (W-UEFI): "handle early hardware initialization tasks such as main memory initialization (initialize memory controller and DRAM)"
+[ok] c38 (W-UEFI): "In this stage, boot devices are initialized, and the operating system boot loaders (such as Windows Boot Manager) are started."
+[ok] c39 (W-UEFI): "This is the first stage of the UEFI boot"
+[ok] c40 (W-UEFI): "the OS may set the BootOrder and Boot#### variables under the EFI_GLOBAL_VARIABLE namespace to influence the UEFI boot manager's future choices."
+[ok] c41 (W-UEFI): "the file path to the OS loader on an x86-64 system is \efi\boot\bootx64.efi"
+[ok] c42 (W-ESP): "When a computer is booted, UEFI firmware loads files stored on the ESP to start operating systems and various utilities."
+[ok] c43 (W-ESP): "The EFI system partition is formatted with a file system whose specification is based on the FAT file system"
+[ok] c44 (W-MBR): "The MBR consists of 512 or more bytes located in the first sector of the drive."
+[ok] c45 (W-GRUB): "The boot loader itself is split into multiple stages so that it fits in the MBR boot scheme."
+[ok] c46 (W-KP): "A kernel may also go into panic() if it is unable to locate a root file system."
+[ok] c47 (A-BOOT): "The firmware is the very first program that is executed once the system is switched on."
+[ok] c48 (A-BOOT): "UEFI does not launch any boot code from the Master Boot Record (MBR) whether it exists or not, instead booting relies on boot entries in the NVRAM."
+[ok] c49 (A-BOOT): "BIOS launches the first 440 bytes (the Master Boot Record bootstrap code area) of the first disk in the BIOS disk order."
+[ok] c50 (A-BOOT): "After POST, BIOS initializes the hardware required for booting (disk, keyboard controllers etc.)."
+[ok] c51 (A-BOOT): "the firmware looks for an EFI system partition on that disk and tries to find an EFI application in the fallback boot path \EFI\BOOT\BOOTx64.EFI"
+[ok] c52 (A-BOOT): "A boot loader is a piece of software started by the firmware"
+[ok] c53 (A-BOOT): "The UEFI specification has support for legacy BIOS booting with its Compatibility Support Module (CSM)."
+[ok] c54 (A-BOOT): "Intel is phasing out support for CSM, relying on the feature may not be feasible in the future."
+[ok] c55 (A-BOOT): "If Secure Boot is enabled, the boot process will verify authenticity of the EFI binary by signature."
+[ok] c56 (MS-MODO): "In general, install Windows using the newer UEFI mode, as it includes more security features than the legacy BIOS mode."
+[ok] c57 (MS-FAQ): "Windows does not support booting UEFI from MBR disks or 0xEF partitions."
+[ok] c58 (K1): "the kernel checks to see if rootfs contains a file "init", and if so it executes it as PID 1."
+[ok] c59 (G-BIOS): "it is possible to reserve a whole partition for GRUB, called the BIOS Boot Partition."
+[ok] c60 (A-BOOT): "It is responsible for loading the kernel with the wanted kernel parameters and any external initramfs images."
+[ok] c61 (W-BOOT): "Booting was first described in the 1950s as the "bootstrap technique""
+[ok] c62 (W-BOOT): "derives from the phrase to pull oneself up by one's bootstraps."
+[ok] c63 (W-BOOT): "All computing systems are state machines, and a reboot may be the only method to return to a designated initial state from an unintended, fault state."
+[ok] c64 (W-UEFI): "These are minimal PEI drivers that are responsible for initialization of hardware components, such as permanent memory, CPU, chipset and motherboard."
+[ok] c65 (W-BIOS): "the BIOS calls interrupt 19h to start boot processing."
+[ok] c66 (W-BIOS): "some BIOSes will also check for the boot sector signature 0x55 0xAA in the last two bytes of the sector"
+[ok] c67 (A-BOOT): "GPT on BIOS systems is possible, using either "hybrid booting" with Hybrid MBR, or the new GPT-only protocol."
+[ok] c68 (W-POST): "5 Processor failure"
+[ok] c69 (W-POST): "No beep Power supply, system board problem, disconnected CPU, or disconnected speaker"
+[ok] c70 (W-POST): "The original IBM BIOS made POST diagnostic information available by outputting a number to I/O port 0x80"
+[ok] c71 (MS-FAQ): "UEFI specifies booting from either GPT or MBR."
+[ok] c72 (A-BOOT): "Originally created for the IBM PC to handle hardware initialization and the boot process, it has been replaced progressively since 2010 by UEFI"
+[ok] c73 (W-UEFI): "This is the stage between boot device selection and hand-off to the OS."
+[ok] c74 (W-GPT): "It is part of the Unified Extensible Firmware Interface (UEFI) standard."
+[ok] c75 (W-BOOT): "if most software is loaded onto a computer by other software already running on the computer, some mechanism must exist to load the initial software onto the computer."
+[ok] c76 (W-PG): "Cheaper and/or lower quality power supplies do not follow the ATX specification of a separate monitoring circuit; they instead wire the power good output to one of the 5 V lines."
+[ok] c77 (W-BOOT): "This memory location typically contains a jump instruction that transfers execution to the location of the firmware (UEFI or BIOS) start-up program."
+[ok] c78 (W-POST): "verify CPU registers verify the integrity of the BIOS code itself verify some basic components like DMA, timer, interrupt controller"
+[ok] c79 (W-POST): "the mainframe- and minicomputer-inspired high-reliability features such as parity memory and the thorough memory test in every POST were dropped from most models."
+[ok] c80 (W-BOOT): "usually pointing to the firmware (UEFI or BIOS) entry point inside the ROM."
+[ok] c81 (W-UEFI): "It initializes a temporary memory (often CPU cache-as-RAM (CAR), or SoC on-chip boot processor)"
+[ok] c82 (W-UEFI): "With main memory now available, CPU, chipset, mainboard and other I/O devices are initialized in DXE and BDS."
+[ok] c83 (W-UEFI): "The UEFI hands off to the operating system (OS) after ExitBootServices() is executed."
+[ok] c84 (W-POST): "an interface card that shows port 0x80 output on a small display"
+[ok] c85 (K1): "All 2.6 Linux kernels contain a gzipped "cpio" format archive, which is extracted into rootfs when the kernel boots up."
+[ok] c86 (W-POST): "POST processes may set the initial state of the device and detect if any hardware components are non-functional."
+
+resumen: 18 enlaces; 86 citas; 86 encontradas literalmente; 0 con problema

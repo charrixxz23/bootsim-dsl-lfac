@@ -1,0 +1,27 @@
+$ python codigo/main.py pruebas/validos/valido_04.dsl
+[codigo de salida 0]
+--- salida estandar ---
+BootSim DSL | archivo: pruebas/validos/valido_04.dsl
+
+=== simulación ===
+[línea 2] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+[línea 5] CHECK_CPU 2 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 7] SHOW_STATUS -> estado=ENCENDIDO | firmware=UEFI | cpu=2 | ram=sin leer | disco=sin leer | initramfs=sin cargar
+[línea 7] SHOW_STATUS -> estado=ENCENDIDO | firmware=UEFI | cpu=2 | ram=sin leer | disco=sin leer | initramfs=sin cargar
+[línea 5] CHECK_CPU 2 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 7] SHOW_STATUS -> estado=ENCENDIDO | firmware=UEFI | cpu=2 | ram=sin leer | disco=sin leer | initramfs=sin cargar
+[línea 7] SHOW_STATUS -> estado=ENCENDIDO | firmware=UEFI | cpu=2 | ram=sin leer | disco=sin leer | initramfs=sin cargar
+[línea 5] CHECK_CPU 2 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 7] SHOW_STATUS -> estado=ENCENDIDO | firmware=UEFI | cpu=2 | ram=sin leer | disco=sin leer | initramfs=sin cargar
+[línea 7] SHOW_STATUS -> estado=ENCENDIDO | firmware=UEFI | cpu=2 | ram=sin leer | disco=sin leer | initramfs=sin cargar
+[línea 13] CHECK_RAM 8 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 14] CHECK_DISK 128 GPT -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 15] RUN_POST -> ok (ENCENDIDO -> POST_OK)
+[línea 16] SHOW_STATUS -> estado=POST_OK | firmware=UEFI | cpu=2 | ram=8 GB | disco=128 GB GPT | initramfs=sin cargar
+
+=== resumen ===
+estado final: POST_OK
+pasos ejecutados: 20; fallos de arranque simulados: 0; comandos rechazados: 0
+
+PROGRAMA CORRECTO: la simulación terminó sin fallos de arranque.
+--- salida de error ---

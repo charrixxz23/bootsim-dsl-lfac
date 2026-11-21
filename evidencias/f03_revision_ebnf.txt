@@ -1,0 +1,22 @@
+# evidencia f03: revision tecnica del ebnf. ply 3.11, python 3.12.10, 2026-11-21
+# $ python comparar_gramatica.py
+reglas ebnf: 8; producciones tras expandir la ebnf: 48
+producciones en parser_borrador.py (sin la regla de recuperacion): 48
+producciones de recuperacion de errores (no son parte del lenguaje): [('sentencia', ('error', 'PUNTOYCOMA'))]
+solo en la ebnf : ninguna
+solo en ply     : ninguna
+niveles de precedencia iguales en la ebnf y en ply: True
+RESULTADO: gramaticas equivalentes
+[codigo de salida: 0]
+
+# $ python comparar_expresiones.py
+vocabulario: 16 simbolos
+secuencias exhaustivas de 1 a 4 simbolos: 69904; secuencias al azar de 5 a 9 (semilla 2026): 20000
+secuencias bien formadas generadas al azar (semilla 2026): 30000
+total comparadas: 119904; aceptadas por ply: 27342
+diferencias entre ply y el analizador de referencia: 0
+RESULTADO: coinciden
+[codigo de salida: 0]
+
+# lineas con la palabra conflict en salida_ply/parser_borrador.out: 0
+# lineas Rule: 50 (incluye la regla 0 que agrega ply); estados lalr: 94

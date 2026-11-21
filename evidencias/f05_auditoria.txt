@@ -1,0 +1,6 @@
+# evidencia f05: auditoria. 2026-11-21
+# $ python scripts/gestor.py auditar (revisa los comentarios de codigo/*.py: minusculas y sin tildes)
+RESULTADO: 0 errores y 0 avisos
+[codigo de salida: 0]
+
+# revision aparte de los comentarios: archivos 4 (lexer.py y los tres archivos de pruebas); incumplimientos: 0

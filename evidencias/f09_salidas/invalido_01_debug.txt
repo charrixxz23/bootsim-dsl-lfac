@@ -1,0 +1,33 @@
+$ python codigo/main.py pruebas/invalidos/invalido_01.dsl --debug
+[codigo de salida 1]
+--- salida estandar ---
+BootSim DSL | archivo: pruebas/invalidos/invalido_01.dsl
+
+=== tokens ===
+línea:col  token            valor
+2:1        POWER_ON         'POWER_ON'
+2:9        PUNTOYCOMA       ';'
+3:1        CHECK_CPU        'CHECK_CPU'
+3:11       ENTERO           4
+3:14       PUNTOYCOMA       ';'
+4:1        CHECK_RAM        'CHECK_RAM'
+4:11       ENTERO           16
+4:13       PUNTOYCOMA       ';'
+
+=== árbol sintáctico ===
+Programa  [1:1]
+  Comando POWER_ON  [2:1]
+  Comando CHECK_CPU  [3:1]
+    Literal entero 4  [3:11]
+  Comando CHECK_RAM  [4:1]
+    Literal entero 16  [4:11]
+(árbol parcial: el programa tiene errores léxicos o sintácticos)
+
+=== análisis semántico ===
+(no se hizo: antes hay errores léxicos o sintácticos)
+
+=== errores de análisis ===
+[léxico] línea 3, columna 13: carácter inesperado '@': no forma parte del lenguaje
+
+RECHAZADO: el programa tiene errores, así que no se simuló nada.
+--- salida de error ---

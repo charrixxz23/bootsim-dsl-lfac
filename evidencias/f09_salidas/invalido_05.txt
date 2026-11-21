@@ -1,0 +1,13 @@
+$ python codigo/main.py pruebas/invalidos/invalido_05.dsl
+[codigo de salida 1]
+--- salida estandar ---
+BootSim DSL | archivo: pruebas/invalidos/invalido_05.dsl
+
+=== errores de análisis ===
+[semántico S3] línea 3, columna 1: CHECK_CPU: 100 núcleos de CPU está fuera del rango permitido (1 a 64)
+[semántico S3] línea 4, columna 1: CHECK_RAM: 2048 GB de RAM está fuera del rango permitido (0 a 1024)
+[semántico S2] línea 5, columna 1: RUN_POST necesita antes CHECK_DISK
+[semántico S2] línea 6, columna 1: LOAD_KERNEL está fuera de orden: el arranque está en ENCENDIDO y LOAD_KERNEL se usa en GESTOR_CARGADO; en este punto se puede usar: CHECK_CPU, CHECK_RAM, CHECK_DISK, SET_FIRMWARE, RUN_POST, SHOW_STATUS, RESET_SYSTEM
+
+RECHAZADO: el programa tiene errores, así que no se simuló nada.
+--- salida de error ---

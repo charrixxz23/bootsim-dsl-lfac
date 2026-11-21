@@ -1,0 +1,36 @@
+# evidencia f06: gramatica de ply frente a gramatica.ebnf. python 3.12.10, ply 3.11, 2026-11-21
+# $ python codigo/comprobar_gramatica.py --guardar-parser-out evidencias/f06_parser.out
+== 1. lo que informo ply al construir las tablas
+   mensajes del registro de ply: ['Generating LALR tables']
+   lineas de parser.out con la palabra conflict: 0
+   estados lalr: 94; lineas Rule: 50 (incluye la regla 0 que agrega ply)
+
+== 2. producciones frente a gramatica.ebnf
+   producciones de la ebnf (tras expandir): 48; producciones en parser.py (sin recuperacion): 48
+   producciones de recuperacion de errores (no son del lenguaje): [('sentencia', ('error', 'PUNTOYCOMA'))]
+   solo en la ebnf : ninguna
+   solo en parser  : ninguna
+
+== 3. precedencia y asociatividad
+   niveles: 8; iguales a los de la ebnf: True
+
+== 4. tokens
+   tokens del lexer: 52; tokens que ninguna regla usa: ninguno
+   simbolos en mayuscula usados por las reglas que el lexer no produce: ninguno
+
+parser.out guardado en evidencias/f06_parser.out (2883 lineas)
+
+RESULTADO: gramatica coherente con la ebnf, sin advertencias ni conflictos
+[codigo de salida: 0]
+
+# conflictos mencionados en parser.out (grep -i conflict): 0
+# producciones (lineas Rule): 50; estados: 94
+# primeras reglas de parser.out:
+Rule 0     S' -> programa
+Rule 1     programa -> lista_sentencias
+Rule 2     lista_sentencias -> sentencia
+Rule 3     lista_sentencias -> lista_sentencias sentencia
+Rule 4     sentencia -> comando PUNTOYCOMA
+Rule 5     sentencia -> SET ID ASIGNA expr PUNTOYCOMA
+Rule 6     sentencia -> IF expr THEN lista_sentencias ENDIF
+Rule 7     sentencia -> IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF

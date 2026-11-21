@@ -1,0 +1,161 @@
+$ python codigo/main.py pruebas/validos/valido_03.dsl --debug
+[codigo de salida 0]
+--- salida estandar ---
+BootSim DSL | archivo: pruebas/validos/valido_03.dsl
+
+=== tokens ===
+línea:col  token            valor
+2:1        SET              'SET'
+2:5        ID               'ram'
+2:9        ASIGNA           '='
+2:11       ENTERO           8
+2:12       PUNTOYCOMA       ';'
+3:1        SET              'SET'
+3:5        ID               'usa_uefi'
+3:14       ASIGNA           '='
+3:16       ID               'ram'
+3:20       MAYORIGUAL       '>='
+3:23       ENTERO           16
+3:25       PUNTOYCOMA       ';'
+4:1        POWER_ON         'POWER_ON'
+4:9        PUNTOYCOMA       ';'
+5:1        IF               'IF'
+5:4        ID               'usa_uefi'
+5:13       THEN             'THEN'
+6:3        BEGIN            'BEGIN'
+7:5        SET_FIRMWARE     'SET_FIRMWARE'
+7:18       UEFI             'UEFI'
+7:22       PUNTOYCOMA       ';'
+8:5        CHECK_DISK       'CHECK_DISK'
+8:16       ENTERO           512
+8:20       GPT              'GPT'
+8:23       PUNTOYCOMA       ';'
+9:3        END              'END'
+10:1       ELSE             'ELSE'
+11:3       BEGIN            'BEGIN'
+12:5       SET_FIRMWARE     'SET_FIRMWARE'
+12:18      BIOS             'BIOS'
+12:22      PUNTOYCOMA       ';'
+13:5       CHECK_DISK       'CHECK_DISK'
+13:16      ENTERO           512
+13:20      MBR              'MBR'
+13:23      PUNTOYCOMA       ';'
+14:5       IF               'IF'
+14:8       ID               'ram'
+14:12      MENOR            '<'
+14:14      ENTERO           4
+14:16      THEN             'THEN'
+15:7       CHECK_CPU        'CHECK_CPU'
+15:17      ENTERO           1
+15:18      PUNTOYCOMA       ';'
+16:5       ELSE             'ELSE'
+17:7       CHECK_CPU        'CHECK_CPU'
+17:17      ENTERO           4
+17:18      PUNTOYCOMA       ';'
+18:5       ENDIF            'ENDIF'
+19:3       END              'END'
+20:1       ENDIF            'ENDIF'
+21:1       CHECK_RAM        'CHECK_RAM'
+21:11      ID               'ram'
+21:14      PUNTOYCOMA       ';'
+22:1       RUN_POST         'RUN_POST'
+22:9       PUNTOYCOMA       ';'
+23:1       SELECT_BOOT      'SELECT_BOOT'
+23:13      DISK             'DISK'
+23:17      PUNTOYCOMA       ';'
+24:1       LOAD_BOOTLOADER  'LOAD_BOOTLOADER'
+24:17      GRUB             'GRUB'
+24:21      PUNTOYCOMA       ';'
+25:1       LOAD_KERNEL      'LOAD_KERNEL'
+25:13      CADENA           'linux-5.15'
+25:26      TRUE             'TRUE'
+25:30      PUNTOYCOMA       ';'
+26:1       START_OS         'START_OS'
+26:9       PUNTOYCOMA       ';'
+27:1       SHOW_STATUS      'SHOW_STATUS'
+27:12      PUNTOYCOMA       ';'
+
+=== árbol sintáctico ===
+Programa  [1:1]
+  Asignar nombre=ram  [2:1]
+    Literal entero 8  [2:11]
+  Asignar nombre=usa_uefi  [3:1]
+    BinOp >=  [3:20]
+      Variable ram  [3:16]
+      Literal entero 16  [3:23]
+  Comando POWER_ON  [4:1]
+  Si  [5:1]
+    condicion:
+      Variable usa_uefi  [5:4]
+    entonces:
+      Bloque  [6:3]
+        Comando SET_FIRMWARE  [7:5]
+          Opcion UEFI  [7:18]
+        Comando CHECK_DISK  [8:5]
+          Literal entero 512  [8:16]
+          Opcion GPT  [8:20]
+    sino:
+      Bloque  [11:3]
+        Comando SET_FIRMWARE  [12:5]
+          Opcion BIOS  [12:18]
+        Comando CHECK_DISK  [13:5]
+          Literal entero 512  [13:16]
+          Opcion MBR  [13:20]
+        Si  [14:5]
+          condicion:
+            BinOp <  [14:12]
+              Variable ram  [14:8]
+              Literal entero 4  [14:14]
+          entonces:
+            Comando CHECK_CPU  [15:7]
+              Literal entero 1  [15:17]
+          sino:
+            Comando CHECK_CPU  [17:7]
+              Literal entero 4  [17:17]
+  Comando CHECK_RAM  [21:1]
+    Variable ram  [21:11]
+  Comando RUN_POST  [22:1]
+  Comando SELECT_BOOT  [23:1]
+    Opcion DISK  [23:13]
+  Comando LOAD_BOOTLOADER  [24:1]
+    Opcion GRUB  [24:17]
+  Comando LOAD_KERNEL  [25:1]
+    Literal cadena 'linux-5.15'  [25:13]
+    Literal booleano TRUE  [25:26]
+  Comando START_OS  [26:1]
+  Comando SHOW_STATUS  [27:1]
+
+=== análisis semántico ===
+sin errores ni avisos
+variable         tipo       valor
+ram              entero     8
+usa_uefi         booleano   False
+pasos mínimos de ejecución: 15; etapa al final (sin fallos): SO_ACTIVO
+
+=== simulación ===
+[línea 4] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+[línea 12] SET_FIRMWARE BIOS -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 13] CHECK_DISK 512 MBR -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 17] CHECK_CPU 4 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 21] CHECK_RAM 8 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 22] RUN_POST -> ok (ENCENDIDO -> POST_OK)
+[línea 23] SELECT_BOOT DISK -> ok (POST_OK -> DISPOSITIVO_ELEGIDO)
+[línea 24] LOAD_BOOTLOADER GRUB -> ok (DISPOSITIVO_ELEGIDO -> GESTOR_CARGADO)
+[línea 25] LOAD_KERNEL "linux-5.15" TRUE -> ok (GESTOR_CARGADO -> KERNEL_CARGADO)
+[línea 26] START_OS -> ok (KERNEL_CARGADO -> SO_ACTIVO)
+[línea 27] SHOW_STATUS -> estado=SO_ACTIVO | firmware=BIOS | cpu=4 | ram=8 GB | disco=512 GB MBR | initramfs=sí
+
+=== traza del control de flujo ===
+[línea 5] IF: la condición vale FALSE, se ejecuta la rama ELSE
+[línea 14] IF: la condición vale FALSE, se ejecuta la rama ELSE
+
+=== variables al terminar ===
+ram = 8
+usa_uefi = FALSE
+
+=== resumen ===
+estado final: SO_ACTIVO
+pasos ejecutados: 15; fallos de arranque simulados: 0; comandos rechazados: 0
+
+PROGRAMA CORRECTO: la simulación terminó sin fallos de arranque.
+--- salida de error ---

@@ -1,0 +1,40 @@
+evidencia f07: ejemplos con la linea de comandos de semantica.py
+
+$ python codigo/semantica.py docs/anexos/plan_prototipo/ejemplos/valido_2_variables_y_expresiones.dsl
+variable         tipo       valor
+alcanza          booleano   True
+memoria          entero     12
+nucleos          entero     8
+pasos mínimos de ejecución: 8; etapa al final: ENCENDIDO
+ACEPTADO: se puede simular
+[codigo de salida 0]
+
+$ python codigo/semantica.py docs/anexos/plan_prototipo/ejemplos/valido_5_kernel_panic_y_reinicio.dsl
+[aviso A1] línea 10, columna 1: se prevé que la simulación termine en KERNEL_PANIC: no se pudo montar el sistema de archivos raíz (no hay initramfs)
+variable         tipo       valor
+pasos mínimos de ejecución: 11; etapa al final: APAGADO
+ACEPTADO: se puede simular
+[codigo de salida 0]
+
+$ python codigo/semantica.py docs/anexos/plan_prototipo/ejemplos/invalido_4_semantico_variable.dsl
+[semántico S1] línea 2, columna 11: la variable 'memoria_total' se usa antes de asignarle un valor (use SET memoria_total = ...; antes)
+variable         tipo       valor
+memoria_total    ?          (no calculable)
+pasos mínimos de ejecución: 3; etapa al final: ENCENDIDO
+RECHAZADO: no se simula
+[codigo de salida 1]
+
+$ python codigo/semantica.py docs/anexos/plan_prototipo/ejemplos/invalido_5_semantico_orden_y_limite.dsl
+[semántico S2] línea 1, columna 1: LOAD_KERNEL está fuera de orden: el arranque está en APAGADO y LOAD_KERNEL se usa en GESTOR_CARGADO; en este punto se puede usar: POWER_ON, SHOW_STATUS, RESET_SYSTEM
+[semántico S3] línea 3, columna 1: CHECK_RAM: 4096 GB de RAM está fuera del rango permitido (0 a 1024)
+[semántico S2] línea 4, columna 1: RUN_POST necesita antes CHECK_CPU, CHECK_DISK
+variable         tipo       valor
+pasos mínimos de ejecución: 4; etapa al final: ENCENDIDO
+RECHAZADO: no se simula
+[codigo de salida 1]
+
+$ python codigo/semantica.py docs/anexos/plan_prototipo/ejemplos/invalido_2_sintactico_falta_puntoycoma.dsl
+[sintáctico] línea 2, columna 1: la palabra 'CHECK_CPU' no corresponde en este lugar; se esperaba ';' al final de la sentencia anterior
+[sintáctico] línea 3, columna 11: el símbolo ';' no corresponde en este lugar; se esperaba un valor o una expresión (número, variable, cadena, TRUE, FALSE, paréntesis, "-" o NOT)
+RECHAZADO: no se simula
+[codigo de salida 1]

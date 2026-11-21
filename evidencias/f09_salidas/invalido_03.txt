@@ -1,0 +1,10 @@
+$ python codigo/main.py pruebas/invalidos/invalido_03.dsl
+[codigo de salida 1]
+--- salida estandar ---
+BootSim DSL | archivo: pruebas/invalidos/invalido_03.dsl
+
+=== errores de análisis ===
+[sintáctico] línea 6, columna 1: fin de archivo inesperado: falta ENDREPEAT para cerrar el REPEAT abierto en la línea 3, columna 1
+
+RECHAZADO: el programa tiene errores, así que no se simuló nada.
+--- salida de error ---

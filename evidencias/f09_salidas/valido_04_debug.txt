@@ -1,0 +1,114 @@
+$ python codigo/main.py pruebas/validos/valido_04.dsl --debug
+[codigo de salida 0]
+--- salida estandar ---
+BootSim DSL | archivo: pruebas/validos/valido_04.dsl
+
+=== tokens ===
+línea:col  token            valor
+2:1        POWER_ON         'POWER_ON'
+2:9        PUNTOYCOMA       ';'
+3:1        SET              'SET'
+3:5        ID               'vueltas'
+3:13       ASIGNA           '='
+3:15       ENTERO           3
+3:16       PUNTOYCOMA       ';'
+4:1        REPEAT           'REPEAT'
+4:8        ID               'vueltas'
+4:16       TIMES            'TIMES'
+5:3        CHECK_CPU        'CHECK_CPU'
+5:13       ENTERO           2
+5:14       PUNTOYCOMA       ';'
+6:3        REPEAT           'REPEAT'
+6:10       ENTERO           2
+6:12       TIMES            'TIMES'
+7:5        SHOW_STATUS      'SHOW_STATUS'
+7:16       PUNTOYCOMA       ';'
+8:3        ENDREPEAT        'ENDREPEAT'
+9:1        ENDREPEAT        'ENDREPEAT'
+10:1       REPEAT           'REPEAT'
+10:8       ENTERO           0
+10:10      TIMES            'TIMES'
+11:3       CHECK_RAM        'CHECK_RAM'
+11:13      ENTERO           1
+11:14      PUNTOYCOMA       ';'
+12:1       ENDREPEAT        'ENDREPEAT'
+13:1       CHECK_RAM        'CHECK_RAM'
+13:11      ENTERO           8
+13:12      PUNTOYCOMA       ';'
+14:1       CHECK_DISK       'CHECK_DISK'
+14:12      ENTERO           128
+14:16      GPT              'GPT'
+14:19      PUNTOYCOMA       ';'
+15:1       RUN_POST         'RUN_POST'
+15:9       PUNTOYCOMA       ';'
+16:1       SHOW_STATUS      'SHOW_STATUS'
+16:12      PUNTOYCOMA       ';'
+
+=== árbol sintáctico ===
+Programa  [1:1]
+  Comando POWER_ON  [2:1]
+  Asignar nombre=vueltas  [3:1]
+    Literal entero 3  [3:15]
+  Repetir  [4:1]
+    cantidad:
+      Variable vueltas  [4:8]
+    cuerpo:
+      Comando CHECK_CPU  [5:3]
+        Literal entero 2  [5:13]
+      Repetir  [6:3]
+        cantidad:
+          Literal entero 2  [6:10]
+        cuerpo:
+          Comando SHOW_STATUS  [7:5]
+  Repetir  [10:1]
+    cantidad:
+      Literal entero 0  [10:8]
+    cuerpo:
+      Comando CHECK_RAM  [11:3]
+        Literal entero 1  [11:13]
+  Comando CHECK_RAM  [13:1]
+    Literal entero 8  [13:11]
+  Comando CHECK_DISK  [14:1]
+    Literal entero 128  [14:12]
+    Opcion GPT  [14:16]
+  Comando RUN_POST  [15:1]
+  Comando SHOW_STATUS  [16:1]
+
+=== análisis semántico ===
+sin errores ni avisos
+variable         tipo       valor
+vueltas          entero     3
+pasos mínimos de ejecución: 20; etapa al final (sin fallos): POST_OK
+
+=== simulación ===
+[línea 2] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+[línea 5] CHECK_CPU 2 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 7] SHOW_STATUS -> estado=ENCENDIDO | firmware=UEFI | cpu=2 | ram=sin leer | disco=sin leer | initramfs=sin cargar
+[línea 7] SHOW_STATUS -> estado=ENCENDIDO | firmware=UEFI | cpu=2 | ram=sin leer | disco=sin leer | initramfs=sin cargar
+[línea 5] CHECK_CPU 2 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 7] SHOW_STATUS -> estado=ENCENDIDO | firmware=UEFI | cpu=2 | ram=sin leer | disco=sin leer | initramfs=sin cargar
+[línea 7] SHOW_STATUS -> estado=ENCENDIDO | firmware=UEFI | cpu=2 | ram=sin leer | disco=sin leer | initramfs=sin cargar
+[línea 5] CHECK_CPU 2 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 7] SHOW_STATUS -> estado=ENCENDIDO | firmware=UEFI | cpu=2 | ram=sin leer | disco=sin leer | initramfs=sin cargar
+[línea 7] SHOW_STATUS -> estado=ENCENDIDO | firmware=UEFI | cpu=2 | ram=sin leer | disco=sin leer | initramfs=sin cargar
+[línea 13] CHECK_RAM 8 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 14] CHECK_DISK 128 GPT -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 15] RUN_POST -> ok (ENCENDIDO -> POST_OK)
+[línea 16] SHOW_STATUS -> estado=POST_OK | firmware=UEFI | cpu=2 | ram=8 GB | disco=128 GB GPT | initramfs=sin cargar
+
+=== traza del control de flujo ===
+[línea 4] REPEAT: el cuerpo se ejecuta 3 vez/veces
+[línea 6] REPEAT: el cuerpo se ejecuta 2 vez/veces
+[línea 6] REPEAT: el cuerpo se ejecuta 2 vez/veces
+[línea 6] REPEAT: el cuerpo se ejecuta 2 vez/veces
+[línea 10] REPEAT: el cuerpo se ejecuta 0 vez/veces
+
+=== variables al terminar ===
+vueltas = 3
+
+=== resumen ===
+estado final: POST_OK
+pasos ejecutados: 20; fallos de arranque simulados: 0; comandos rechazados: 0
+
+PROGRAMA CORRECTO: la simulación terminó sin fallos de arranque.
+--- salida de error ---

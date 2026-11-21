@@ -1,0 +1,38 @@
+# evidencia f01: prueba real de las afirmaciones sobre ply (python 3.12.10, ply 3.11 instalado con pip --target)
+# fecha: 2026-11-21
+# script usado (copia exacta de prueba_ply.py):
+    import sys
+    sys.path.insert(0, 'libs')
+    import ply.lex as lex
+    
+    reservadas = {'IF': 'IF', 'THEN': 'THEN'}
+    tokens = ['ID', 'NUM', 'MAYOR', 'IGUAL', 'ASIGNA'] + list(reservadas.values())
+    
+    t_ASIGNA = r'='
+    t_IGUAL = r'=='          # cadena: ply la ordena por longitud, la mas larga primero
+    t_MAYOR = r'>'
+    t_ignore = ' \t'
+    
+    def t_ID(t):
+        r'[A-Za-z_][A-Za-z_0-9]*'
+        t.type = reservadas.get(t.value, 'ID')
+        return t
+    
+    def t_NUM(t):
+        r'\d+'
+        t.value = int(t.value)
+        return t
+    
+    def t_error(t):
+        print(f"error lexico: caracter {t.value[0]!r} en posicion {t.lexpos}")
+        t.lexer.skip(1)
+    
+    lexer = lex.lex()
+    for fuente in ['IF x == 10 THEN', 'x = 5 $ y']:
+        lexer.input(fuente)
+        print(fuente, '->', [(t.type, t.value) for t in lexer])
+
+# salida real:
+IF x == 10 THEN -> [('IF', 'IF'), ('ID', 'x'), ('IGUAL', '=='), ('NUM', 10), ('THEN', 'THEN')]
+error lexico: caracter '$' en posicion 6
+x = 5 $ y -> [('ID', 'x'), ('ASIGNA', '='), ('NUM', 5), ('ID', 'y')]

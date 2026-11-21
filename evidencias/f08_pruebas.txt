@@ -1,0 +1,212 @@
+evidencia f08: salida real de python codigo/probar_simulador.py (2026-11-21 13:12)
+las pruebas las diseno la IA; no son verificacion independiente hecha por estudiantes.
+
+
+== 1. arranque completo (los cinco ejemplos validos de f03, con calculo a mano)
+  [ok] valido_1: 10 pasos, 10 comandos, termina en SO_ACTIVO sin fallos ni rechazos
+  [ok] valido_1: la secuencia de estados es la del anexo c (calculada a mano)
+  [ok] valido_1: los comandos salen en las lineas 2 a 11 del archivo
+  [ok] valido_1: SHOW_STATUS final con todos los datos
+  [ok] valido_2: 8 pasos, termina en ENCENDIDO y las variables valen nucleos=8, memoria=12, alcanza=TRUE
+  [ok] valido_2: los argumentos calculados llegan a la maquina (cpu=8, ram=12)
+  [ok] valido_3: ram=4 no es mayor que 8: corre el ELSE (BIOS) y termina en POST_OK con 9 pasos
+  [ok] valido_4: 9 pasos (BEGIN no cuenta), REPEAT 2 * 2 da 4 SHOW_STATUS y termina en ENCENDIDO
+  [ok] valido_5: 11 pasos, un KERNEL_PANIC simulado en START_OS, SHOW_STATUS lo muestra y RESET_SYSTEM deja APAGADO
+
+== 2. fallos durante el POST y memoria RAM defectuosa
+  [ok] RAM 0: RUN_POST da ERROR_POST con el mensaje de la memoria, SELECT_BOOT se rechaza y 7 pasos
+  [ok] el rechazo dice por que: el sistema esta en ERROR_POST y solo se aceptan SHOW_STATUS y RESET_SYSTEM
+  [ok] SHOW_STATUS en ERROR_POST muestra la ram defectuosa (ram=0 GB)
+  [ok] es un programa valido: pasa la semantica (el fallo simulado no lo rechaza)
+  [ok] RUN_POST sin lecturas, simulado directamente: ERROR_POST y dice que faltan cpu, ram, disco
+  [ok] pero ese mismo programa completo se rechaza antes de simular (S2): la semantica lo ataja
+  [ok] RAM que vale 0 solo al correr (variable que cambia en un REPEAT): se acepta sin avisos y la simulacion termina en ERROR_POST con 8 pasos
+
+== 3. dispositivo de arranque no encontrado
+  [ok] SELECT_BOOT USB: ERROR_ARRANQUE (no hay medio) y LOAD_BOOTLOADER se rechaza
+  [ok] SELECT_BOOT NETWORK: ERROR_ARRANQUE (no hay medio) y LOAD_BOOTLOADER se rechaza
+  [ok] disco de 0 GB con SELECT_BOOT DISK: tambien ERROR_ARRANQUE
+  [ok] el estado ERROR_ARRANQUE solo deja pasar SHOW_STATUS y RESET_SYSTEM; despues del reinicio se arranca bien
+
+== 4. firmware y particiones incompatibles (S5 es aviso previo y fallo simulado a la vez)
+  [ok] BIOS con GPT: el programa se acepta, con un aviso S5 en LOAD_BOOTLOADER y dos A2 (kernel y START_OS seran rechazados)
+  [ok] la simulacion coincide con el aviso: ERROR_ARRANQUE en esa misma posicion, y LOAD_KERNEL y START_OS rechazados
+  [ok] el texto del aviso contiene el motivo exacto del fallo simulado (sin contradicciones)
+  [ok] el motivo nombra el firmware y el esquema
+  [ok] firmware SET_FIRMWARE BIOS; con MBR: compatible, llega a SO_ACTIVO
+  [ok] firmware de fabrica (UEFI) con GPT: compatible, llega a SO_ACTIVO
+  [ok] firmware SET_FIRMWARE UEFI; con GPT: compatible, llega a SO_ACTIVO
+  [ok] firmware de fabrica (UEFI) con MBR: ERROR_ARRANQUE
+  [ok] firmware SET_FIRMWARE UEFI; con MBR: ERROR_ARRANQUE
+  [ok] firmware SET_FIRMWARE BIOS; SET_FIRMWARE UEFI; con GPT: compatible, llega a SO_ACTIVO
+  [ok] firmware SET_FIRMWARE UEFI; SET_FIRMWARE BIOS; con GPT: ERROR_ARRANQUE
+  [ok] los avisos y los fallos concuerdan en todas las combinaciones (aviso S5 si y solo si hubo ERROR_ARRANQUE en LOAD_BOOTLOADER)
+
+== 5. carga del kernel: lo que el diseno de f03 permite que falle
+  [ok] si el gestor fallo, LOAD_KERNEL se rechaza (la carga del kernel no ocurre) y el equipo sigue en ERROR_ARRANQUE
+  [ok] kernel cargado sin initramfs: LOAD_KERNEL sale bien y el fallo aparece al arrancar (START_OS da KERNEL_PANIC)
+  [ok] en el diseno aprobado LOAD_KERNEL no tiene un fallo propio: queda como decision pendiente (ver notas)
+
+== 6. kernel panic
+  [ok] START_OS sin initramfs: KERNEL_PANIC con el motivo y SHOW_STATUS lo muestra con initramfs=no
+  [ok] en cada uno de los 3 estados de error, los 10 comandos con transicion se rechazan sin cambiar nada (30 casos)
+  [ok] en cada estado de error SHOW_STATUS y RESET_SYSTEM sí se aceptan y RESET deja APAGADO
+
+== 7. RESET_SYSTEM despues de un fallo (las variables se conservan)
+  [ok] fallo ERROR_POST, RESET_SYSTEM y un arranque nuevo: termina en SO_ACTIVO, n sigue valiendo 8 y se cuenta 1 fallo
+  [ok] fallo ERROR_ARRANQUE, RESET_SYSTEM y un arranque nuevo: termina en SO_ACTIVO, n sigue valiendo 8 y se cuenta 1 fallo
+  [ok] fallo KERNEL_PANIC, RESET_SYSTEM y un arranque nuevo: termina en SO_ACTIVO, n sigue valiendo 8 y se cuenta 1 fallo
+  [ok] RESET_SYSTEM borra la maquina (lecturas y firmware) pero no las variables
+  [ok] RESET_SYSTEM tambien devuelve el firmware de fabrica (UEFI)
+
+== 8. SHOW_STATUS en cada etapa del arranque
+  [ok] SHOW_STATUS tras 0 comandos: APAGADO, y no cambia nada
+  [ok] SHOW_STATUS tras 1 comandos: ENCENDIDO, y no cambia nada
+  [ok] SHOW_STATUS tras 2 comandos: ENCENDIDO, y no cambia nada
+  [ok] SHOW_STATUS tras 3 comandos: ENCENDIDO, y no cambia nada
+  [ok] SHOW_STATUS tras 4 comandos: ENCENDIDO, y no cambia nada
+  [ok] SHOW_STATUS tras 5 comandos: POST_OK, y no cambia nada
+  [ok] SHOW_STATUS tras 6 comandos: DISPOSITIVO_ELEGIDO, y no cambia nada
+  [ok] SHOW_STATUS tras 7 comandos: GESTOR_CARGADO, y no cambia nada
+  [ok] SHOW_STATUS tras 8 comandos: KERNEL_CARGADO, y no cambia nada
+  [ok] SHOW_STATUS tras 9 comandos: SO_ACTIVO, y no cambia nada
+  [ok] SHOW_STATUS repetido no altera los datos de la maquina
+
+== 9. IF y REPEAT con valores que cambian al ejecutar
+  [ok] IF con condicion que la semantica no puede calcular (x cambia en un REPEAT): se acepta y al correr x=3 elige THEN (cpu 8), 8 pasos
+  [ok] con otra condicion (x > 5) elige ELSE (cpu 1)
+  [ok] REPEAT con cantidad que solo se sabe al correr (n=3): 3 CHECK_CPU y 8 pasos
+  [ok] REPEAT cuyo cuerpo reinicia y enciende: termina en ENCENDIDO con 5 pasos
+  [ok] REPEAT 0: el cuerpo no se ejecuta (el equipo sigue APAGADO) y suma 2 pasos
+  [ok] REPEAT anidado 2 x 3: 9 pasos
+  [ok] IF dentro de REPEAT: la condicion cambia en cada vuelta; SHOW_STATUS sale en las vueltas 3 y 4 (2 eventos) y suman 13 pasos
+  [ok] IF anidado con BEGIN/END: ejecuta solo el camino verdadero (2 IF + POWER_ON + CHECK_CPU = 4 pasos; el BEGIN no cuenta)
+  [ok] la rama que no corre no deja huellas: ni variables ni comandos
+  [ok] expresiones al correr: 7 / 2 = 3, 0 - 7 / 2 = -3, (-7) / 2 = -3 (se trunca hacia cero; con piso daria -4) y TRUE == (3 > 2) es TRUE
+
+== 10. limite de 10 000 pasos y errores que solo se conocen corriendo
+  [ok] exactamente 10 000 pasos al correr (valores que la semantica no puede calcular): se acepta y se completa
+  [ok] un paso mas (38 * 264 + 6 = 10 038): el programa se acepta pero la ejecucion se detiene al intentar el paso 10 001 (que no se ejecuta) con un error de ejecucion
+  [ok] el paso que sobra es un SHOW_STATUS interno: el error lleva su linea y columna
+  [ok] hasta ahi se ejecutaron 9956 SHOW_STATUS: de los 10 000 pasos contados, 44 no son comandos (6 fijos y 38 REPEAT internos)
+  [ok] cuando la semantica ya sabe que sobrepasara el limite (S8) ni siquiera se simula
+  [ok] defensa en profundidad: si alguien simula ese arbol sin validar, el simulador igual se detiene al llegar a 10 000 pasos
+  [ok] division entre cero con un valor que solo se conoce al correr: error de ejecucion en el operador / (1:59)
+  [ok] REPEAT con cantidad fuera de rango solo conocida al correr (1500): error de ejecucion
+  [ok] CHECK_CPU 0 (fuera de 1 a 64) solo conocido al correr: error de ejecucion y la simulacion se detiene
+  [ok] despues de un error de ejecucion no se corre ninguna sentencia mas
+  [ok] un fallo simulado NO es un error de ejecucion: la ejecucion sigue y error_ejecucion queda vacio
+
+== 11. un programa con errores de analisis nunca llega al simulador
+  [ok] lexico (@): rechazado, sin simulacion
+  [ok] lexico (cadena sin cerrar): rechazado, sin simulacion
+  [ok] sintactico (falta ;): rechazado, sin simulacion
+  [ok] sintactico (IF sin ENDIF): rechazado, sin simulacion
+  [ok] vacio de sentencias (solo comentario): rechazado, sin simulacion
+  [ok] semantico S1: rechazado, sin simulacion
+  [ok] semantico S2: rechazado, sin simulacion
+  [ok] semantico S3: rechazado, sin simulacion
+  [ok] semantico S4: rechazado, sin simulacion
+  [ok] semantico S6: rechazado, sin simulacion
+  [ok] semantico S8: rechazado, sin simulacion
+  [ok] el simulador no se llamo ni una vez para esos 11 programas
+  [ok] invalido_1_lexico.dsl (ejemplo de f03): sin simulacion
+  [ok] invalido_2_sintactico_falta_puntoycoma.dsl (ejemplo de f03): sin simulacion
+  [ok] invalido_3_sintactico_if_sin_endif.dsl (ejemplo de f03): sin simulacion
+  [ok] invalido_4_semantico_variable.dsl (ejemplo de f03): sin simulacion
+  [ok] invalido_5_semantico_orden_y_limite.dsl (ejemplo de f03): sin simulacion
+  [ok] simular() rechaza algo que no sea un Programa
+  [ok] un arbol con una sentencia Invalida no se simula: error de ejecucion
+  [ok] solo avisos: sí se simula (los avisos no bloquean)
+
+== 12. ejecuciones consecutivas sin contaminacion
+  [ok] despues de arrancar y quedar en SO_ACTIVO con una variable, otro programa empieza APAGADO y sin variables
+  [ok] el primer resultado no cambio al correr el segundo
+  [ok] A, B, A, B, A: cada ejecucion da lo suyo
+  [ok] un fallo simulado de un programa no deja huellas en el siguiente
+  [ok] los resultados son objetos distintos que no comparten listas ni diccionarios
+  [ok] modificar un resultado no afecta a los siguientes
+  [ok] un Simulador nuevo siempre empieza limpio (APAGADO, sin variables, 0 pasos)
+  [ok] terminal: el mismo archivo ejecutado dos veces (con otro en medio) da exactamente la misma salida
+
+== 13. determinismo y no modificacion del arbol
+  [ok] los 10 ejemplos: dos ejecuciones en el mismo proceso dan resultados identicos
+  [ok] terminal: los 10 ejemplos dan la misma salida y el mismo codigo de salida en dos ejecuciones
+  [ok] simular no modifica el arbol (comparado con una copia profunda) en los 10 ejemplos
+  [ok] simular no modifica programas con ramas y cuerpos de varias sentencias (IF, REPEAT, BEGIN anidados): el arbol es igual a su copia y dos simulaciones seguidas del mismo arbol dan lo mismo
+  [ok] la tabla de variables es de cada ejecucion: dos simulaciones del mismo arbol no comparten diccionario
+
+== 14. terminal real: archivos, argumentos y codigos de salida
+  [ok] archivo valido (valido_1): codigo 0, "PROGRAMA CORRECTO", estado final SO_ACTIVO y sin traza de python
+  [ok] programa con error semantico: codigo 1, muestra el error y "no se simuló nada", sin seccion de simulacion
+  [ok] invalido_1_lexico.dsl: codigo 1, muestra [léxico] y no simula
+  [ok] invalido_2_sintactico_falta_puntoycoma.dsl: codigo 1, muestra [sintáctico] y no simula
+  [ok] programa correcto cuyo arranque falla (RAM 0, nombre de archivo con espacios y ñ): codigo 4 y lo explica
+  [ok] un panic seguido de RESET_SYSTEM: el equipo termina APAGADO, codigo 0 y el resumen cuenta 1 fallo simulado
+  [ok] limite de pasos al correr: codigo 5 y el mensaje [ejecución] con linea y columna
+  [ok] archivo inexistente: codigo 3 y mensaje sencillo por stderr, sin traza
+  [ok] una carpeta en lugar de un archivo: codigo 3
+  [ok] archivo vacio (0 bytes): codigo 3 y dice que esta vacio
+  [ok] archivo con solo espacios y saltos de linea: codigo 3
+  [ok] archivo con solo un comentario: es un error de analisis (programa vacio), codigo 1
+  [ok] archivo UTF-8 con BOM y saltos de linea de Windows (CRLF): se lee bien, codigo 0 y el comentario con acentos no molesta
+  [ok] archivo UTF-8 sin BOM: codigo 0
+  [ok] consola que no sabe dibujar tildes (ASCII): no se cae; las tildes salen como ?, codigo 4 y stderr vacio
+  [ok] archivo que no es UTF-8 (latin-1): codigo 3 y explica como guardarlo
+  [ok] sin argumentos: codigo 2 y explica que falta el archivo
+  [ok] opcion desconocida: codigo 2
+  [ok] dos archivos: codigo 2 y dice que solo se simula uno por vez
+  [ok] --help: codigo 0 y la ayuda lista --debug y los codigos de salida
+  [ok] -h: codigo 0 y la ayuda lista --debug y los codigos de salida
+  [ok] --help junto con un archivo muestra la ayuda y no simula
+
+== 15. --debug: tokens, arbol indentado, validaciones y simulacion
+  [ok] --debug (valido_5): salen las seis secciones, en ese orden
+  [ok] los tokens traen tipo, valor y posicion (por ejemplo POWER_ON en 2:1 y la cadena del kernel)
+  [ok] el arbol sale indentado: Programa en la raiz y los comandos con dos espacios de sangria y su posicion
+  [ok] las validaciones muestran el aviso A1, la tabla de variables y los pasos minimos
+  [ok] la simulacion y su resumen aparecen igual con --debug
+  [ok] --debug con IF: la traza dice que condicion valio y que rama se ejecuto; las variables finales salen
+  [ok] --debug con REPEAT: la traza dice cuantas veces corre el cuerpo
+  [ok] --debug con un error semantico: muestra tokens, arbol y el diagnostico, y NO simula (codigo 1)
+  [ok] --debug con un error de sintaxis: muestra tokens, el arbol parcial y avisa que no hubo analisis semantico (codigo 1)
+  [ok] --debug con un error lexico: igual, sin simular
+  [ok] --debug puede ir antes del archivo
+
+== 16. desde cualquier carpeta y con los lanzadores
+  [ok] desde codigo/ (python main.py), desde la raiz (python codigo/main.py) y desde otra carpeta: misma simulacion y codigo 0
+  [ok] run.bat (cmd de windows): ejecuta main.py y devuelve su codigo 0
+  [ok] run.bat devuelve el codigo 4 del fallo de arranque simulado
+  [ok] run.bat devuelve el codigo 1 de un programa rechazado
+  [ok] run.bat sin argumentos devuelve el codigo 2
+  [ok] run (sh): ejecuta main.py y devuelve su codigo 0
+  [ok] run (sh) devuelve el codigo 4 del fallo de arranque simulado
+  [ok] sin PLY instalado: codigo 70 y el mensaje dice como instalarlo (pip install -r requirements.txt), sin traza
+  [ok] --help no necesita PLY: funciona igual sin el
+  [ok] (en proceso) ctrl+c da 130 y un fallo interno inesperado da 70 con un mensaje, no una traza
+
+== 17. el simulador no toca el equipo real
+  [ok] simulador.py: sin imports de red, procesos o sistema de archivos, sin llamadas de escritura ni abrir archivos
+  [ok] reglas_arranque.py: sin imports de red, procesos o sistema de archivos, sin llamadas de escritura ni abrir archivos
+  [ok] semantica.py: sin imports de red, procesos o sistema de archivos, sin llamadas de escritura (solo abre en modo lectura, para leer el .dsl)
+  [ok] main.py: sin imports de red, procesos o sistema de archivos, sin llamadas de escritura (solo abre en modo lectura, para leer el .dsl)
+  [ok] despues de ejecutar con --debug la carpeta de trabajo queda igual: no se creo, borro ni cambio ningun archivo
+
+== 18. programas al azar: el simulador y la semantica no se contradicen
+  [ok] 3000 programas de arranque sin bucles (2287 con fallos simulados y 713 sin ellos): los avisos de la semantica son exactamente los fallos y rechazos que ocurrieron, y el estado previsto es el final
+  [ok] todos esos programas se aceptan (un fallo simulado no es un error del programa)
+  [ok] el azar produjo suficientes casos con y sin fallos
+  [ok] 3000 programas con variables, IF, REPEAT y BEGIN (2511 aceptados, 204 con error de ejecucion, 804 terminan en estado de error): ninguna excepcion
+  [ok] en todos: rechazado => no se simula; aceptado => el estado final es el previsto, los pasos reales no bajan del minimo calculado y cada aviso corresponde a un fallo o rechazo real
+  [ok] el azar produjo suficientes programas aceptados, con fallos simulados y con errores de ejecucion
+  [ok] 4000 programas del generador de f06 (la mitad rotos): sin excepciones y ninguno con errores llega al simulador
+  [ok] 2000 arboles armados al azar y sin validar (tipos y operadores absurdos): el simulador termina siempre con un resultado, sin excepciones de python
+
+== 19. arquitectura
+  [ok] el simulador hereda de Visitante y tiene un metodo por cada uno de los 12 tipos de nodo
+  [ok] las reglas de transicion no estan duplicadas: simulador.py usa reglas_arranque.aplicar_comando
+  [ok] politica de codigos de salida: 0, 1, 2, 3, 4, 5, 70 y 130, todos distintos
+
+pruebas ejecutadas: 167; con resultado distinto del esperado: 0
+RESULTADO: todas las pruebas dieron lo esperado
+[codigo de salida 0]

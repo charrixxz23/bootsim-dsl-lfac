@@ -1,0 +1,137 @@
+# evidencia f06: parser y ast. python 3.12.10, ply 3.11, 2026-11-21
+# cada bloque muestra el programa con numero de linea y la salida real de: python codigo/parser.py <archivo>
+
+## valido_3_if_else_firmware.dsl
+         1	SET ram = 4;
+         2	POWER_ON;
+         3	IF ram > 8 THEN
+         4	  SET_FIRMWARE UEFI;
+         5	ELSE
+         6	  SET_FIRMWARE BIOS;
+         7	ENDIF
+         8	CHECK_CPU 2;
+         9	CHECK_RAM ram;
+        10	CHECK_DISK 120 MBR;
+        11	RUN_POST;
+        12	SHOW_STATUS;
+# $ python codigo/parser.py docs/anexos/plan_prototipo/ejemplos/valido_3_if_else_firmware.dsl
+Programa  [1:1]
+  Asignar nombre=ram  [1:1]
+    Literal entero 4  [1:11]
+  Comando POWER_ON  [2:1]
+  Si  [3:1]
+    condicion:
+      BinOp >  [3:8]
+        Variable ram  [3:4]
+        Literal entero 8  [3:10]
+    entonces:
+      Comando SET_FIRMWARE  [4:3]
+        Opcion UEFI  [4:16]
+    sino:
+      Comando SET_FIRMWARE  [6:3]
+        Opcion BIOS  [6:16]
+  Comando CHECK_CPU  [8:1]
+    Literal entero 2  [8:11]
+  Comando CHECK_RAM  [9:1]
+    Variable ram  [9:11]
+  Comando CHECK_DISK  [10:1]
+    Literal entero 120  [10:12]
+    Opcion MBR  [10:16]
+  Comando RUN_POST  [11:1]
+  Comando SHOW_STATUS  [12:1]
+[codigo de salida: 0]
+
+## valido_4_repeat_y_bloque.dsl
+         1	POWER_ON;
+         2	BEGIN
+         3	  CHECK_CPU 8;
+         4	  CHECK_RAM 32;
+         5	  CHECK_DISK 1000 GPT;
+         6	END
+         7	REPEAT 2 * 2 TIMES
+         8	  SHOW_STATUS;
+         9	ENDREPEAT
+# $ python codigo/parser.py docs/anexos/plan_prototipo/ejemplos/valido_4_repeat_y_bloque.dsl
+Programa  [1:1]
+  Comando POWER_ON  [1:1]
+  Bloque  [2:1]
+    Comando CHECK_CPU  [3:3]
+      Literal entero 8  [3:13]
+    Comando CHECK_RAM  [4:3]
+      Literal entero 32  [4:13]
+    Comando CHECK_DISK  [5:3]
+      Literal entero 1000  [5:14]
+      Opcion GPT  [5:19]
+  Repetir  [7:1]
+    cantidad:
+      BinOp *  [7:10]
+        Literal entero 2  [7:8]
+        Literal entero 2  [7:12]
+    cuerpo:
+      Comando SHOW_STATUS  [8:3]
+[codigo de salida: 0]
+
+## invalido_2_sintactico_falta_puntoycoma.dsl
+         1	POWER_ON
+         2	CHECK_CPU 4;
+         3	CHECK_RAM ;
+         4	SHOW_STATUS;
+# $ python codigo/parser.py docs/anexos/plan_prototipo/ejemplos/invalido_2_sintactico_falta_puntoycoma.dsl
+Programa  [1:1]
+  Invalida  [2:1]
+  Invalida  [3:11]
+  Comando SHOW_STATUS  [4:1]
+[sintáctico] línea 2, columna 1: la palabra 'CHECK_CPU' no corresponde en este lugar; se esperaba ';' al final de la sentencia anterior
+[sintáctico] línea 3, columna 11: el símbolo ';' no corresponde en este lugar; se esperaba un valor o una expresión (número, variable, cadena, TRUE, FALSE, paréntesis, "-" o NOT)
+[codigo de salida: 1]
+
+## invalido_3_sintactico_if_sin_endif.dsl
+         1	POWER_ON;
+         2	IF 1 < 2 THEN
+         3	  CHECK_CPU 4;
+         4	SHOW_STATUS;
+# $ python codigo/parser.py docs/anexos/plan_prototipo/ejemplos/invalido_3_sintactico_if_sin_endif.dsl
+Programa  [1:1]
+  Comando POWER_ON  [1:1]
+[sintáctico] línea 5, columna 1: fin de archivo inesperado: falta ENDIF para cerrar el IF abierto en la línea 2, columna 1
+[codigo de salida: 1]
+
+## invalido_1_lexico.dsl
+         1	POWER_ON;
+         2	CHECK_RAM 8 @;
+         3	LOAD_KERNEL "linux-6.1 TRUE;
+         4	SHOW_STATUS;
+# $ python codigo/parser.py docs/anexos/plan_prototipo/ejemplos/invalido_1_lexico.dsl
+Programa  [1:1]
+  Comando POWER_ON  [1:1]
+  Comando CHECK_RAM  [2:1]
+    Literal entero 8  [2:11]
+  Invalida  [3:28]
+  Comando SHOW_STATUS  [4:1]
+[léxico] línea 2, columna 13: carácter inesperado '@': no forma parte del lenguaje
+[léxico] línea 3, columna 13: cadena sin cerrar: falta la comilla de cierre (") antes del fin de la línea; se supone que la cadena termina antes del ';'
+[sintáctico] línea 3, columna 28: el símbolo ';' no corresponde en este lugar; se esperaba un valor o una expresión (número, variable, cadena, TRUE, FALSE, paréntesis, "-" o NOT)
+[codigo de salida: 1]
+
+## expresion con precedencia (archivo temporal)
+         1	SET x = 2 + 3 * 4 - NOT y;
+         2	SET z = (1 + 2) * -3;
+# $ python codigo/parser.py /tmp/expr.dsl
+Programa  [1:1]
+  Asignar nombre=x  [1:1]
+    BinOp -  [1:19]
+      BinOp +  [1:11]
+        Literal entero 2  [1:9]
+        BinOp *  [1:15]
+          Literal entero 3  [1:13]
+          Literal entero 4  [1:17]
+      UnOp NOT  [1:21]
+        Variable y  [1:25]
+  Asignar nombre=z  [2:1]
+    BinOp *  [2:17]
+      BinOp +  [2:12]
+        Literal entero 1  [2:10]
+        Literal entero 2  [2:14]
+      UnOp -  [2:19]
+        Literal entero 3  [2:20]
+[codigo de salida: 0]

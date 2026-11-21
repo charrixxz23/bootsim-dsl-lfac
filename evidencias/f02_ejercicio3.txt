@@ -1,0 +1,25 @@
+# evidencia f02 ejercicio 3: contraejemplos semanticos. python 3.12.10. fecha 2026-11-21
+
+## $ timeout 20 python ej3_semantica.py
+== caso 0 (programa correcto)
+   base      : acepta
+   corregida : acepta
+== contraejemplo A (etapas en orden inverso)
+   base      : acepta
+   corregida : ['START_OS fuera de orden: se esperaba POWER_ON', 'LOAD_KERNEL fuera de orden: se esperaba POWER_ON', 'LOAD_BOOTLOADER fuera de orden: se esperaba POWER_ON', 'RUN_POST fuera de orden: se esperaba POWER_ON']
+== contraejemplo B (limite escondido en una expresion)
+   base      : acepta
+   corregida : ['ram 4096 fuera de rango 1..1024']
+== contraejemplo C (etapa solo en una rama del IF)
+   base      : acepta
+   corregida : ['las dos ramas del IF dejan el arranque en etapas distintas']
+== contraejemplo D (variable usada sin declarar)
+   base      : acepta
+   corregida : ['variable memoria usada sin declarar']
+== control E (literal directo sobre el limite; la base si lo atrapa)
+   base      : ['ram 2048 supera 1024']
+   corregida : ['ram 2048 fuera de rango 1..1024']
+== contraejemplo F (valor negativo calculado; la base no mira el minimo)
+   base      : acepta
+   corregida : ['ram -8 fuera de rango 1..1024']
+[codigo de salida: 0]

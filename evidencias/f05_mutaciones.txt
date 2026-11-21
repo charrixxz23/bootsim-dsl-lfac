@@ -1,0 +1,15 @@
+# evidencia f05: mutaciones (se rompe el lexer a proposito en una copia y se mira si las pruebas protestan). python 3.12.10, ply 3.11, 2026-11-21
+# $ python codigo/mutaciones_lexer.py
+[detectada] el comentario // deja de existir | pruebas: protestan (5 fallos)
+[detectada] las reservadas dejan de distinguir mayusculas | pruebas: protestan (2 fallos)
+[detectada] los errores se arrastran de un analisis a otro | pruebas: protestan (36 fallos)
+[detectada] la columna empieza en 0 | pruebas: protestan (31 fallos)
+[detectada] el salto de linea no cuenta lineas | pruebas: protestan (9 fallos)
+[detectada] la cadena sin cerrar se come el ; final | pruebas: protestan (3 fallos)
+[detectada] no hay limite de errores | pruebas: protestan (3 fallos)
+[detectada] el ; final se busca ignorando cualquier espacio (el primer diseno) | pruebas: protestan (1 fallos); comparacion con el borrador: protesta
+[detectada] SET_FIRMWARE se parte en dos tokens (se quita del diccionario) | pruebas: protestan (7 fallos)
+
+mutaciones: 9; sin detectar: 0
+RESULTADO: todas las mutaciones fueron detectadas
+[codigo de salida: 0]

@@ -1,0 +1,4 @@
+docs/capitulos/01_introduccion.md: 25 etiquetas de cita
+docs/capitulos/02_post_bios_uefi.md: 108 etiquetas de cita
+citas en el json: 86; usadas en los capitulos: 86; sin usar: 0 []
+RESULTADO: todas las etiquetas apuntan a una cita existente de la fuente correcta

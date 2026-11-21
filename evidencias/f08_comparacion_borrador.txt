@@ -1,0 +1,62 @@
+evidencia f08: comparacion del simulador definitivo con el del prototipo de f03 (2026-11-21 13:09)
+== los 38 escenarios de f03
+  [igual] 1. if: condicion verdadera ejecuta solo la rama THEN
+  [igual] 2. if: condicion falsa ejecuta solo la rama ELSE
+  [igual] 3. if sin else con condicion conocida y falsa: la rama no se ejecuta y no cambia el estado
+  [rechazan los dos (igual)] 4. if sin else con condicion que la semantica no puede calcular: regla conservadora, se rechaza
+  [rechazan los dos (igual)] 5. if con condicion conocida: la rama que no se ejecuta aun se revisa en tipos y rangos
+  [igual] 6. if con condicion conocida verdadera: la variable asignada en la rama que corre existe despues
+  [rechazan los dos (igual)] 7. if sin else con condicion incierta que asigna una variable usada despues: rechazado
+  [rechazan los dos (igual)] 8. rama que no corre (THEN con condicion falsa): un error de tipos dentro de ella se detecta igual
+  [rechazan los dos (igual)] 9. rama que no corre (ELSE con condicion verdadera): una variable no asignada dentro de ella se detecta igual
+  [igual] 10. rama que no corre: una variable asignada dentro de ella y usada dentro de ella es valida
+  [rechazan los dos (igual)] 11. rama que no corre: la variable que solo ella asigna no existe despues del IF
+  [rechazan los dos (igual)] 12. rama que no corre: el tipo del argumento de un comando se revisa
+  [rechazan los dos (igual)] 13. rama que no corre con otro IF dentro: el error anidado se detecta
+  [rechazan los dos (igual)] 14. if incierto: la misma variable con tipos distintos en las dos ramas se rechaza
+  [igual] 15. if con dos ramas validas: se simula solo una pero las dos se revisaron
+  [rechazan los dos (igual)] 16. repeat 0: un error de tipos dentro del cuerpo se detecta aunque no corra
+  [rechazan los dos (igual)] 17. repeat 0: una variable no asignada dentro del cuerpo se detecta aunque no corra
+  [rechazan los dos (igual)] 18. if con condicion entera: rechazado por tipos
+  [igual] 19. repeat 3: el cuerpo corre tres veces
+  [igual] 20. repeat 0: el cuerpo no corre y se revisa en tipos y variables, pero no en orden
+  [igual] 21. repeat 1: el cuerpo corre una vez
+  [rechazan los dos (igual)] 22. repeat 1001: fuera del tope de 1000
+  [rechazan los dos (igual)] 23. repeat negativo calculado
+  [rechazan los dos (igual)] 24. repeat 2 con un cuerpo que no se puede repetir (POWER_ON dos veces)
+  [explicada: el borrador acepta y corta a los 10 000 pasos; el definitivo lo rechaza antes (regla S8 de f07)] 25. repeat anidado 1000 x 1000: la ejecucion se corta por el limite de pasos
+  [igual] 26. reset_system a mitad del arranque: borra lecturas, conserva variables y permite empezar de nuevo
+  [igual] 27. reset_system estando apagado es valido
+  [igual] 28. error de post (ram = 0): los comandos siguientes se rechazan y reset_system permite recuperarse
+  [igual] 29. arranque desde usb: error_arranque
+  [igual] 30. bios con disco gpt: error_arranque al cargar el gestor, el kernel se rechaza
+  [igual] 31. kernel sin initramfs: kernel_panic y programa que termina en estado de error
+  [rechazan los dos (igual)] 32. division por cero con variable conocida: rechazado
+  [rechazan los dos (igual)] 33. 1 + NOT x: la gramatica lo acepta y los tipos lo rechazan (suma de entero y booleano)
+  [igual] 34. a == NOT b con booleanos: valido
+  [igual] 35. encadenar igualdades de booleanos: (a == b) == c es valido
+  [rechazan los dos (igual)] 36. 1 < 2 < 3 nunca es valido por tipos: error sintactico
+  [rechazan los dos (igual)] 37. comparar cadena con entero: rechazado
+  [rechazan los dos (igual)] 38. una variable no puede cambiar de tipo
+
+== los diez ejemplos
+  [rechazan los dos (igual)] invalido_1_lexico.dsl
+  [rechazan los dos (igual)] invalido_2_sintactico_falta_puntoycoma.dsl
+  [rechazan los dos (igual)] invalido_3_sintactico_if_sin_endif.dsl
+  [rechazan los dos (igual)] invalido_4_semantico_variable.dsl
+  [rechazan los dos (igual)] invalido_5_semantico_orden_y_limite.dsl
+  [igual] valido_1_secuencia_basica.dsl
+  [igual] valido_2_variables_y_expresiones.dsl
+  [igual] valido_3_if_else_firmware.dsl
+  [igual] valido_4_repeat_y_bloque.dsl
+  [igual] valido_5_kernel_panic_y_reinicio.dsl
+
+== 3000 programas al azar (generador de f06): ambos: 47, rechazan los dos: 2953, solo borrador: 0, solo definitivo: 0
+
+== 3000 programas al azar (arranques con variables, IF y REPEAT): ambos: 1857, rechazan los dos: 1143, solo borrador: 0, solo definitivo: 0
+
+totales: 6048 programas; ambos: 1926; rechazan los dos: 4121; solo borrador: 1; solo definitivo: 0
+iguales: 5993; diferencias explicadas: 54 (limite de componente comprobado al correr (el borrador de f03 lo dejaba pasar: por ejemplo CHECK_CPU -2)); 1 (el borrador acepta y corta a los 10 000 pasos; el definitivo lo rechaza antes (regla S8 de f07))
+diferencias inesperadas en total: 0
+RESULTADO: el simulador definitivo coincide con el del borrador en todo lo que los dos aceptan, salvo las diferencias explicadas
+[codigo de salida 0]

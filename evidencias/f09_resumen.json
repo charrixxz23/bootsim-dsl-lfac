@@ -1,0 +1,134 @@
+[
+  {
+    "id": "valido_01",
+    "archivo": "pruebas/validos/valido_01.dsl",
+    "objetivo": "arranque completo y correcto hasta SO_ACTIVO, con comentarios # y //",
+    "clase": "valido",
+    "comando": "python codigo/main.py pruebas/validos/valido_01.dsl",
+    "codigo": 0,
+    "estado_final": "SO_ACTIVO",
+    "pasos": 10,
+    "fallos_simulados": 0,
+    "rechazados": 0,
+    "avisos": []
+  },
+  {
+    "id": "valido_02",
+    "archivo": "pruebas/validos/valido_02.dsl",
+    "objetivo": "variables y expresiones aritmeticas, relacionales y booleanas",
+    "clase": "valido",
+    "comando": "python codigo/main.py pruebas/validos/valido_02.dsl",
+    "codigo": 0,
+    "estado_final": "POST_OK",
+    "pasos": 14,
+    "fallos_simulados": 0,
+    "rechazados": 0,
+    "avisos": []
+  },
+  {
+    "id": "valido_03",
+    "archivo": "pruebas/validos/valido_03.dsl",
+    "objetivo": "IF/THEN/ELSE con BEGIN/END y un IF anidado",
+    "clase": "valido",
+    "comando": "python codigo/main.py pruebas/validos/valido_03.dsl",
+    "codigo": 0,
+    "estado_final": "SO_ACTIVO",
+    "pasos": 15,
+    "fallos_simulados": 0,
+    "rechazados": 0,
+    "avisos": []
+  },
+  {
+    "id": "valido_04",
+    "archivo": "pruebas/validos/valido_04.dsl",
+    "objetivo": "REPEAT/ENDREPEAT (anidado y con cero vueltas) y comentarios",
+    "clase": "valido",
+    "comando": "python codigo/main.py pruebas/validos/valido_04.dsl",
+    "codigo": 0,
+    "estado_final": "POST_OK",
+    "pasos": 20,
+    "fallos_simulados": 0,
+    "rechazados": 0,
+    "avisos": []
+  },
+  {
+    "id": "valido_05",
+    "archivo": "pruebas/validos/valido_05.dsl",
+    "objetivo": "fallo de arranque simulado (BIOS con GPT), RESET_SYSTEM y continuacion hasta SO_ACTIVO",
+    "clase": "valido",
+    "comando": "python codigo/main.py pruebas/validos/valido_05.dsl",
+    "codigo": 0,
+    "estado_final": "SO_ACTIVO",
+    "pasos": 22,
+    "fallos_simulados": 1,
+    "rechazados": 1,
+    "avisos": [
+      "S5 línea 10",
+      "A2 línea 11"
+    ]
+  },
+  {
+    "id": "invalido_01",
+    "archivo": "pruebas/invalidos/invalido_01.dsl",
+    "objetivo": "error lexico: un caracter que el lenguaje no reconoce",
+    "clase": "invalido",
+    "comando": "python codigo/main.py pruebas/invalidos/invalido_01.dsl",
+    "codigo": 1,
+    "fase": "léxico",
+    "errores": [
+      "[léxico] línea 3, columna 13: carácter inesperado '@': no forma parte del lenguaje"
+    ]
+  },
+  {
+    "id": "invalido_02",
+    "archivo": "pruebas/invalidos/invalido_02.dsl",
+    "objetivo": "error sintactico: instruccion incompleta (a CHECK_DISK le falta el esquema)",
+    "clase": "invalido",
+    "comando": "python codigo/main.py pruebas/invalidos/invalido_02.dsl",
+    "codigo": 1,
+    "fase": "sintáctico",
+    "errores": [
+      "[sintáctico] línea 4, columna 15: el símbolo ';' no corresponde en este lugar; se esperaba MBR o GPT"
+    ]
+  },
+  {
+    "id": "invalido_03",
+    "archivo": "pruebas/invalidos/invalido_03.dsl",
+    "objetivo": "error sintactico en una estructura: REPEAT sin ENDREPEAT",
+    "clase": "invalido",
+    "comando": "python codigo/main.py pruebas/invalidos/invalido_03.dsl",
+    "codigo": 1,
+    "fase": "sintáctico",
+    "errores": [
+      "[sintáctico] línea 6, columna 1: fin de archivo inesperado: falta ENDREPEAT para cerrar el REPEAT abierto en la línea 3, columna 1"
+    ]
+  },
+  {
+    "id": "invalido_04",
+    "archivo": "pruebas/invalidos/invalido_04.dsl",
+    "objetivo": "errores semanticos: variable sin valor y tipos incompatibles",
+    "clase": "invalido",
+    "comando": "python codigo/main.py pruebas/invalidos/invalido_04.dsl",
+    "codigo": 1,
+    "fase": "semántico",
+    "errores": [
+      "[semántico S1] línea 2, columna 13: la variable 'nucleos' se usa antes de asignarle un valor (use SET nucleos = ...; antes)",
+      "[semántico S4] línea 3, columna 16: '+' solo opera con valores enteros: el lado derecho es booleano"
+    ]
+  },
+  {
+    "id": "invalido_05",
+    "archivo": "pruebas/invalidos/invalido_05.dsl",
+    "objetivo": "errores semanticos: limites fuera de rango y orden de etapas",
+    "clase": "invalido",
+    "comando": "python codigo/main.py pruebas/invalidos/invalido_05.dsl",
+    "codigo": 1,
+    "fase": "semántico",
+    "errores": [
+      "[semántico S3] línea 3, columna 1: CHECK_CPU: 100 núcleos de CPU está fuera del rango permitido (1 a 64)",
+      "[semántico S3] línea 4, columna 1: CHECK_RAM: 2048 GB de RAM está fuera del rango permitido (0 a 1024)",
+      "[semántico S2] línea 5, columna 1: RUN_POST necesita antes CHECK_DISK",
+      "[semántico S2] línea 6, columna 1: LOAD_KERNEL está fuera de orden: el arranque está en ENCENDIDO y LOAD_KERNEL se usa en GESTOR_CARGADO; en este punto se puede usar: CHECK_CPU, CHECK_RAM, CHECK_DISK, SET_FIRMWARE, RUN_POST, SHOW_STATUS, RESET_SYSTEM"
+    ]
+  }
+]

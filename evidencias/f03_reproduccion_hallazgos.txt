@@ -1,0 +1,34 @@
+# evidencia f03: reproduccion de los hallazgos b-07 y b-08 y pruebas negativas, sobre copias temporales. ply 3.11, python 3.12.10, 2026-11-21
+# $ python reproducir_hallazgos.py
+== b-08, primera version: sin errok() la recuperacion oculta el segundo error
+   --- invalido_2_sintactico_falta_puntoycoma.dsl
+       [sintactico] linea 2, columna 1: token inesperado 'CHECK_CPU' (CHECK_CPU)
+       VEREDICTO: RECHAZADO en el analisis lexico/sintactico; la semantica y la simulacion NO se ejecutan
+== b-08, primera version: el fin de archivo no traia posicion
+   --- invalido_3_sintactico_if_sin_endif.dsl
+       [sintactico] linea None, columna None: fin de archivo inesperado (falta cerrar un IF, REPEAT, BEGIN o una sentencia)
+       VEREDICTO: RECHAZADO en el analisis lexico/sintactico; la semantica y la simulacion NO se ejecutan
+== b-07, propuesta original: todos los comparadores en un solo nivel no asociativo
+   a == b != c        -> error sintactico en la columna 8: token inesperado '!=' (DISTINTO)
+   a < b == c < d     -> error sintactico en la columna 7: token inesperado '==' (IGUAL)
+   a == NOT b         -> ('==', ('var', 'a'), ('NOT', ('var', 'b')))
+   a == NOT b == c    -> ('==', ('var', 'a'), ('NOT', ('==', ('var', 'b'), ('var', 'c'))))
+   niveles de precedencia iguales en la ebnf y en ply: False
+   RESULTADO: HAY DIFERENCIAS
+== prueba negativa de la semantica: si las ramas que no corren no se revisan, los escenarios deben fallar
+   5. [FALLO] if con condicion conocida: la rama que no se ejecuta aun se revisa en tipos y rangos
+   8. [FALLO] rama que no corre (THEN con condicion falsa): un error de tipos dentro de ella se detecta igual
+   9. [FALLO] rama que no corre (ELSE con condicion verdadera): una variable no asignada dentro de ella se detect
+   12. [FALLO] rama que no corre: el tipo del argumento de un comando se revisa
+   13. [FALLO] rama que no corre con otro IF dentro: el error anidado se detecta
+   16. [FALLO] repeat 0: un error de tipos dentro del cuerpo se detecta aunque no corra
+   17. [FALLO] repeat 0: una variable no asignada dentro del cuerpo se detecta aunque no corra
+   escenarios: 38; con resultado distinto del esperado: 7
+== hueco anterior de la semantica: dos ramas de un if incierto con tipos distintos pasaban sin aviso
+   14. [FALLO] if incierto: la misma variable con tipos distintos en las dos ramas se rechaza
+== hueco anterior de la semantica: el cuerpo de un repeat 0 no se revisaba
+   16. [FALLO] repeat 0: un error de tipos dentro del cuerpo se detecta aunque no corra
+   17. [FALLO] repeat 0: una variable no asignada dentro del cuerpo se detecta aunque no corra
+== prueba negativa de los casos manuales: si + y * tuvieran la misma precedencia, deben fallar
+   casos manuales: 47; con resultado distinto del esperado: 4
+[codigo de salida: 0]

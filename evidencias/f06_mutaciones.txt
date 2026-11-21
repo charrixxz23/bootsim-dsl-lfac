@@ -1,0 +1,18 @@
+# evidencia f06: mutaciones del parser. python 3.12.10, ply 3.11, 2026-11-21
+# $ python codigo/mutaciones_parser.py
+[detectada] + y * pasan a tener el mismo nivel de precedencia | probar_parser.py: 5 fallos
+[detectada] los relacionales pasan de no asociativos a asociativos | probar_parser.py: 3 fallos
+[detectada] NOT sube por encima de las comparaciones | probar_parser.py: 4 fallos
+[detectada] la recuperacion no llama a errok() | probar_parser.py: 6 fallos
+[detectada] una regla (variable) no devuelve su nodo | probar_parser.py: 0 fallos (termino con error: AttributeError: 'NoneType' object has no attribute 'valor')
+[detectada] el IF intercambia sus ramas | probar_parser.py: 7 fallos
+[detectada] la regla IF/ELSE cierra con END en lugar de ENDIF | probar_parser.py: 1 fallos
+[detectada] el error de fin de archivo pierde la columna | probar_parser.py: 4 fallos
+[detectada] los tokens esperados salen de la tabla lalr sin probar (el primer diseno) | probar_parser.py: 1 fallos
+[detectada] los errores del analisis anterior no se borran | probar_parser.py: 4 fallos
+[detectada] el nodo de una operacion usa la posicion del primer operando | probar_parser.py: 3 fallos
+[detectada] el resultado da arbol aunque haya errores | probar_parser.py: 22 fallos
+
+mutaciones: 12; sin detectar: 0
+RESULTADO: todas las mutaciones fueron detectadas
+[codigo de salida: 0]

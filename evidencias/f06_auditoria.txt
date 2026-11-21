@@ -1,0 +1,9 @@
+# evidencia f06: auditoria. 2026-11-21
+# $ python scripts/gestor.py auditar (revisa los comentarios de codigo/*.py: minusculas y sin tildes)
+RESULTADO: 0 errores y 0 avisos
+[codigo de salida: 0]
+
+# revision aparte de los comentarios: archivos 10 (lexer, parser, ast_nodos y los archivos de pruebas); incumplimientos: 0
+
+# nombre de archivo: no hay ast.py que choque con la biblioteca estandar
+archivos llamados ast.py: 0

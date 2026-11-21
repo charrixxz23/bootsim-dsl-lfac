@@ -1,0 +1,37 @@
+$ python codigo/main.py pruebas/invalidos/invalido_02.dsl --debug
+[codigo de salida 1]
+--- salida estandar ---
+BootSim DSL | archivo: pruebas/invalidos/invalido_02.dsl
+
+=== tokens ===
+línea:col  token            valor
+2:1        POWER_ON         'POWER_ON'
+2:9        PUNTOYCOMA       ';'
+3:1        CHECK_CPU        'CHECK_CPU'
+3:11       ENTERO           4
+3:12       PUNTOYCOMA       ';'
+4:1        CHECK_DISK       'CHECK_DISK'
+4:12       ENTERO           512
+4:15       PUNTOYCOMA       ';'
+5:1        CHECK_RAM        'CHECK_RAM'
+5:11       ENTERO           16
+5:13       PUNTOYCOMA       ';'
+
+=== árbol sintáctico ===
+Programa  [1:1]
+  Comando POWER_ON  [2:1]
+  Comando CHECK_CPU  [3:1]
+    Literal entero 4  [3:11]
+  Invalida  [4:15]
+  Comando CHECK_RAM  [5:1]
+    Literal entero 16  [5:11]
+(árbol parcial: el programa tiene errores léxicos o sintácticos)
+
+=== análisis semántico ===
+(no se hizo: antes hay errores léxicos o sintácticos)
+
+=== errores de análisis ===
+[sintáctico] línea 4, columna 15: el símbolo ';' no corresponde en este lugar; se esperaba MBR o GPT
+
+RECHAZADO: el programa tiene errores, así que no se simuló nada.
+--- salida de error ---

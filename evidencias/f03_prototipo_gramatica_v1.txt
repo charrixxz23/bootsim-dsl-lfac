@@ -1,0 +1,61 @@
+# evidencia f03: gramatica borrador con ply 3.11, python 3.12.10, 2026-11-21
+# $ timeout 30 python comprobar_plan.py
+Generating LALR tables
+== programas de ejemplo
+--- invalido_1_lexico.dsl
+    errores lexicos: 2, sintacticos: 1
+    [lexico] linea 2, columna 13: caracter inesperado '@'
+    [lexico] linea 3, columna 13: cadena sin cerrar
+    [sintactico] linea 4, columna 1: token inesperado 'SHOW_STATUS' (SHOW_STATUS)
+    sentencias reconocidas en el nivel superior: 3
+--- invalido_2_sintactico_falta_puntoycoma.dsl
+    errores lexicos: 0, sintacticos: 2
+    [sintactico] linea 2, columna 1: token inesperado 'CHECK_CPU' (CHECK_CPU)
+    [sintactico] linea 3, columna 11: token inesperado ';' (PUNTOYCOMA)
+    sentencias reconocidas en el nivel superior: 3
+--- invalido_3_sintactico_if_sin_endif.dsl
+    errores lexicos: 0, sintacticos: 1
+    [sintactico] linea 5, columna 1: fin de archivo inesperado (falta cerrar un IF, REPEAT, BEGIN o una sentencia)
+    sin arbol (el parser no pudo reconstruir el programa)
+--- invalido_4_semantico_variable.dsl
+    errores lexicos: 0, sintacticos: 0
+    sentencias reconocidas en el nivel superior: 3
+--- invalido_5_semantico_orden_y_limite.dsl
+    errores lexicos: 0, sintacticos: 0
+    sentencias reconocidas en el nivel superior: 4
+--- valido_1_secuencia_basica.dsl
+    errores lexicos: 0, sintacticos: 0
+    sentencias reconocidas en el nivel superior: 10
+--- valido_2_variables_y_expresiones.dsl
+    errores lexicos: 0, sintacticos: 0
+    sentencias reconocidas en el nivel superior: 8
+--- valido_3_if_else_firmware.dsl
+    errores lexicos: 0, sintacticos: 0
+    sentencias reconocidas en el nivel superior: 8
+--- valido_4_repeat_y_bloque.dsl
+    errores lexicos: 0, sintacticos: 0
+    sentencias reconocidas en el nivel superior: 3
+--- valido_5_kernel_panic_y_reinicio.dsl
+    errores lexicos: 0, sintacticos: 0
+    sentencias reconocidas en el nivel superior: 11
+
+== precedencia y asociatividad (arbol de la expresion)
+    2 + 3 * 4          -> ('+', 2, ('*', 3, 4))
+    10 - 4 - 3         -> ('-', ('-', 10, 4), 3)
+    8 / 4 / 2          -> ('/', ('/', 8, 4), 2)
+    -2 * 3             -> ('*', ('neg', 2), 3)
+    NOT a AND b OR c   -> ('OR', ('AND', ('NOT', ('var', 'a')), ('var', 'b')), ('var', 'c'))
+    a OR b AND c       -> ('OR', ('var', 'a'), ('AND', ('var', 'b'), ('var', 'c')))
+    NOT x > 3          -> ('NOT', ('>', ('var', 'x'), 3))
+    (2 + 3) * 4        -> ('*', ('+', 2, 3), 4)
+    a < b < c          -> ERROR [(1, 15, "token inesperado '<' (MENOR)")]
+    a == b != c        -> ERROR [(1, 16, "token inesperado '!=' (DISTINTO)")]
+
+== comentarios // y # frente a la division /
+    sentencias: [('set', 'r', ('/', 8, 2)), ('set', 's', ('/', 9, 3))] errores: []
+[codigo de salida: 0]
+
+# lineas con la palabra conflict en salida_ply/parser_borrador.out: 0
+# producciones y estados de la tabla lalr:
+reglas: 50
+estados: 94

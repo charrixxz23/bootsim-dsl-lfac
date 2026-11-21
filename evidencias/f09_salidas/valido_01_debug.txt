@@ -1,0 +1,86 @@
+$ python codigo/main.py pruebas/validos/valido_01.dsl --debug
+[codigo de salida 0]
+--- salida estandar ---
+BootSim DSL | archivo: pruebas/validos/valido_01.dsl
+
+=== tokens ===
+línea:col  token            valor
+3:1        POWER_ON         'POWER_ON'
+3:9        PUNTOYCOMA       ';'
+4:1        CHECK_CPU        'CHECK_CPU'
+4:11       ENTERO           8
+4:12       PUNTOYCOMA       ';'
+5:1        CHECK_RAM        'CHECK_RAM'
+5:11       ENTERO           16
+5:13       PUNTOYCOMA       ';'
+6:1        CHECK_DISK       'CHECK_DISK'
+6:12       ENTERO           512
+6:16       GPT              'GPT'
+6:19       PUNTOYCOMA       ';'
+7:1        RUN_POST         'RUN_POST'
+7:9        PUNTOYCOMA       ';'
+8:1        SELECT_BOOT      'SELECT_BOOT'
+8:13       DISK             'DISK'
+8:17       PUNTOYCOMA       ';'
+9:1        LOAD_BOOTLOADER  'LOAD_BOOTLOADER'
+9:17       GRUB             'GRUB'
+9:21       PUNTOYCOMA       ';'
+10:1       LOAD_KERNEL      'LOAD_KERNEL'
+10:13      CADENA           'linux-6.1'
+10:25      TRUE             'TRUE'
+10:29      PUNTOYCOMA       ';'
+11:1       START_OS         'START_OS'
+11:9       PUNTOYCOMA       ';'
+12:1       SHOW_STATUS      'SHOW_STATUS'
+12:12      PUNTOYCOMA       ';'
+
+=== árbol sintáctico ===
+Programa  [1:1]
+  Comando POWER_ON  [3:1]
+  Comando CHECK_CPU  [4:1]
+    Literal entero 8  [4:11]
+  Comando CHECK_RAM  [5:1]
+    Literal entero 16  [5:11]
+  Comando CHECK_DISK  [6:1]
+    Literal entero 512  [6:12]
+    Opcion GPT  [6:16]
+  Comando RUN_POST  [7:1]
+  Comando SELECT_BOOT  [8:1]
+    Opcion DISK  [8:13]
+  Comando LOAD_BOOTLOADER  [9:1]
+    Opcion GRUB  [9:17]
+  Comando LOAD_KERNEL  [10:1]
+    Literal cadena 'linux-6.1'  [10:13]
+    Literal booleano TRUE  [10:25]
+  Comando START_OS  [11:1]
+  Comando SHOW_STATUS  [12:1]
+
+=== análisis semántico ===
+sin errores ni avisos
+variable         tipo       valor
+pasos mínimos de ejecución: 10; etapa al final (sin fallos): SO_ACTIVO
+
+=== simulación ===
+[línea 3] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+[línea 4] CHECK_CPU 8 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 5] CHECK_RAM 16 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 6] CHECK_DISK 512 GPT -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 7] RUN_POST -> ok (ENCENDIDO -> POST_OK)
+[línea 8] SELECT_BOOT DISK -> ok (POST_OK -> DISPOSITIVO_ELEGIDO)
+[línea 9] LOAD_BOOTLOADER GRUB -> ok (DISPOSITIVO_ELEGIDO -> GESTOR_CARGADO)
+[línea 10] LOAD_KERNEL "linux-6.1" TRUE -> ok (GESTOR_CARGADO -> KERNEL_CARGADO)
+[línea 11] START_OS -> ok (KERNEL_CARGADO -> SO_ACTIVO)
+[línea 12] SHOW_STATUS -> estado=SO_ACTIVO | firmware=UEFI | cpu=8 | ram=16 GB | disco=512 GB GPT | initramfs=sí
+
+=== traza del control de flujo ===
+(el programa no usa IF ni REPEAT)
+
+=== variables al terminar ===
+(el programa no asigna variables)
+
+=== resumen ===
+estado final: SO_ACTIVO
+pasos ejecutados: 10; fallos de arranque simulados: 0; comandos rechazados: 0
+
+PROGRAMA CORRECTO: la simulación terminó sin fallos de arranque.
+--- salida de error ---

@@ -1,0 +1,24 @@
+# evidencia f06: comparacion del parser definitivo con el borrador de f03. python 3.12.10, ply 3.11, 2026-11-21
+# $ python codigo/comparar_parser_borrador.py
+== 1. los diez programas de ejemplo del plan
+  [esperada] invalido_1_lexico.dsl
+  [igual] invalido_2_sintactico_falta_puntoycoma.dsl
+  [igual] invalido_3_sintactico_if_sin_endif.dsl
+  [igual] invalido_4_semantico_variable.dsl
+  [igual] invalido_5_semantico_orden_y_limite.dsl
+  [igual] valido_1_secuencia_basica.dsl
+  [igual] valido_2_variables_y_expresiones.dsl
+  [igual] valido_3_if_else_firmware.dsl
+  [igual] valido_4_repeat_y_bloque.dsl
+  [igual] valido_5_kernel_panic_y_reinicio.dsl
+
+== 2. programas correctos al azar (3000)
+  iguales: 3000; con diferencia esperada: 0; inesperadas: 0
+
+== 3. programas rotos a proposito (15000)
+  iguales: 14742; con diferencia esperada (cadena sin cerrar): 258; inesperadas: 0
+  programas rotos con al menos un error sintactico: 13968
+
+diferencias inesperadas en total: 0
+RESULTADO: el parser definitivo coincide con el borrador (arboles y posiciones de errores)
+[codigo de salida: 0]

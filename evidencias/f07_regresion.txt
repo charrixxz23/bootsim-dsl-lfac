@@ -1,0 +1,7 @@
+evidencia f07: regresion de lexer y parser tras agregar la semantica (2026-11-21 12:36)
+
+pruebas ejecutadas: 104; con resultado distinto del esperado: 0
+RESULTADO: todas las pruebas dieron lo esperado
+
+pruebas ejecutadas: 145; con resultado distinto del esperado: 0
+RESULTADO: todas las pruebas dieron lo esperado

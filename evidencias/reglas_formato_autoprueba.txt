@@ -1,0 +1,3 @@
+docx correcto construido a mano: 0 comprobaciones que fallan (se esperaba 0)
+docx incorrecto (Arial 11, interlineado 1,08, margenes de 2 cm, titulo azul, sin indice ni numero de pagina): 7 fallan; detectadas 7 de 7
+AUTOPRUEBA: el verificador distingue un documento correcto de uno incorrecto

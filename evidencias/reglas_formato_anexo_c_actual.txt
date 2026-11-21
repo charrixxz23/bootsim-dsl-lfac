@@ -1,0 +1,22 @@
+verificacion de formato de docs/anexos/ANEXO_C_PLAN.docx
+  [ok] papel A4 (11906 x 16838 twips) en todas las secciones
+  [FALLA] margenes de 2,5 cm (1417 twips) arriba, abajo, izquierda y derecha | [(1134, 1134, 1134, 1134)] (en cm: [(2.0, 2.0, 2.0, 2.0)])
+  [ok] fuente del estilo Normal: Arial
+  [FALLA] tamano del estilo Normal: 12 pt (sz 24) | sz=22 (11.0 pt)
+  [FALLA] ningun texto con un tamano distinto de 12 pt puesto a mano | tamanos encontrados (medios puntos: veces): {'19': 125, '16': 7}
+  [ok] ningun texto con una fuente distinta de Arial puesta a mano
+  [FALLA] interlineado del estilo Normal: 1,5 lineas (line=360, auto) | line=None rule=None
+  [ok] ningun parrafo con interlineado distinto de 1,5 puesto a mano
+  [ok] texto del cuerpo justificado (90 % o mas de los parrafos largos)
+  [ok] hay titulos con los estilos de encabezado de Word
+  [FALLA] estilos Titulo 1 a 3: Arial 12, negrita y negro (sin azul del tema) | heading 1: tamano sz=26; heading 2: tamano sz=21; heading 3: sin negrita; heading 3: tamano sz=28
+  [FALLA] numeracion jerarquica automatica enlazada a los titulos (lista multinivel) | sin numPr en los estilos de titulo
+  [FALLA] indice automatico (campo TOC de Word)
+  [ok] numero de pagina en el pie (campo PAGE)
+  [FALLA] tablas dentro del ancho util de 16 cm | tabla 1: 9855 twips (17.4 cm); tabla 2: 9855 twips (17.4 cm); tabla 3: 9855 twips (17.4 cm)
+  [ok] fila de encabezado repetida en cada tabla (tblHeader)
+  [ok] imagenes dentro del ancho util y con sus proporciones intactas
+  [FALLA] la portada trae los textos institucionales, el titulo y los cinco integrantes | faltan: ['Universidad Tecnológica de Panamá', 'Facultad de Ingeniería de Sistemas Computacionales', 'Licenciatura en Ingeniería de Sistemas y Computación', 'Lenguajes Formales, Autómatas y Compiladores', 'Grupo 1IL-143', 'Segundo Semestre 2026', 'BootSim DSL: Simulación del sistema de arranque de una computadora mediante un lenguaje específico de dominio']
+  [FALLA] la portada tiene al menos dos imagenes (los logos de la UTP y de la FISC) | 0 dibujos en el documento
+comprobaciones: 19; que no cumplen: 10
+RESULTADO: NO cumple el formato institucional

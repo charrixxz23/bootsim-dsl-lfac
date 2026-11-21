@@ -1,0 +1,205 @@
+$ python codigo/main.py pruebas/validos/valido_02.dsl --debug
+[codigo de salida 0]
+--- salida estandar ---
+BootSim DSL | archivo: pruebas/validos/valido_02.dsl
+
+=== tokens ===
+línea:col  token            valor
+2:1        SET              'SET'
+2:5        ID               'nucleos'
+2:13       ASIGNA           '='
+2:15       ENTERO           2
+2:17       MULT             '*'
+2:19       ENTERO           4
+2:20       PUNTOYCOMA       ';'
+3:1        SET              'SET'
+3:5        ID               'memoria'
+3:13       ASIGNA           '='
+3:15       PARENIZQ         '('
+3:16       ENTERO           8
+3:18       MAS              '+'
+3:20       ENTERO           8
+3:21       PARENDER         ')'
+3:23       DIV              '/'
+3:25       ENTERO           2
+3:27       MAS              '+'
+3:29       ENTERO           4
+3:30       PUNTOYCOMA       ';'
+4:1        SET              'SET'
+4:5        ID               'resta'
+4:11       ASIGNA           '='
+4:13       ENTERO           0
+4:15       MENOS            '-'
+4:17       ENTERO           7
+4:19       DIV              '/'
+4:21       ENTERO           2
+4:22       PUNTOYCOMA       ';'
+5:1        SET              'SET'
+5:5        ID               'invertido'
+5:15       ASIGNA           '='
+5:17       MENOS            '-'
+5:18       ID               'memoria'
+5:25       PUNTOYCOMA       ';'
+6:1        SET              'SET'
+6:5        ID               'suficiente'
+6:16       ASIGNA           '='
+6:18       ID               'memoria'
+6:26       MAYORIGUAL       '>='
+6:29       ENTERO           8
+6:31       AND              'AND'
+6:35       NOT              'NOT'
+6:39       PARENIZQ         '('
+6:40       ID               'nucleos'
+6:48       MENOR            '<'
+6:50       ENTERO           2
+6:51       PARENDER         ')'
+6:52       PUNTOYCOMA       ';'
+7:1        SET              'SET'
+7:5        ID               'igualdad'
+7:14       ASIGNA           '='
+7:16       PARENIZQ         '('
+7:17       ID               'nucleos'
+7:25       IGUAL            '=='
+7:28       ENTERO           8
+7:29       PARENDER         ')'
+7:31       DISTINTO         '!='
+7:34       PARENIZQ         '('
+7:35       ID               'memoria'
+7:43       IGUAL            '=='
+7:46       ENTERO           8
+7:47       PARENDER         ')'
+7:48       PUNTOYCOMA       ';'
+8:1        SET              'SET'
+8:5        ID               'alguna'
+8:12       ASIGNA           '='
+8:14       ID               'nucleos'
+8:22       MAYOR            '>'
+8:24       ENTERO           100
+8:28       OR               'OR'
+8:31       ID               'suficiente'
+8:41       PUNTOYCOMA       ';'
+9:1        SET              'SET'
+9:5        ID               'cabe'
+9:10       ASIGNA           '='
+9:12       ID               'memoria'
+9:20       MENORIGUAL       '<='
+9:23       ENTERO           16
+9:25       PUNTOYCOMA       ';'
+10:1       POWER_ON         'POWER_ON'
+10:9       PUNTOYCOMA       ';'
+11:1       CHECK_CPU        'CHECK_CPU'
+11:11      ID               'nucleos'
+11:18      PUNTOYCOMA       ';'
+12:1       CHECK_RAM        'CHECK_RAM'
+12:11      ID               'memoria'
+12:18      PUNTOYCOMA       ';'
+13:1       CHECK_DISK       'CHECK_DISK'
+13:12      ENTERO           256
+13:16      MBR              'MBR'
+13:19      PUNTOYCOMA       ';'
+14:1       RUN_POST         'RUN_POST'
+14:9       PUNTOYCOMA       ';'
+15:1       SHOW_STATUS      'SHOW_STATUS'
+15:12      PUNTOYCOMA       ';'
+
+=== árbol sintáctico ===
+Programa  [1:1]
+  Asignar nombre=nucleos  [2:1]
+    BinOp *  [2:17]
+      Literal entero 2  [2:15]
+      Literal entero 4  [2:19]
+  Asignar nombre=memoria  [3:1]
+    BinOp +  [3:27]
+      BinOp /  [3:23]
+        BinOp +  [3:18]
+          Literal entero 8  [3:16]
+          Literal entero 8  [3:20]
+        Literal entero 2  [3:25]
+      Literal entero 4  [3:29]
+  Asignar nombre=resta  [4:1]
+    BinOp -  [4:15]
+      Literal entero 0  [4:13]
+      BinOp /  [4:19]
+        Literal entero 7  [4:17]
+        Literal entero 2  [4:21]
+  Asignar nombre=invertido  [5:1]
+    UnOp -  [5:17]
+      Variable memoria  [5:18]
+  Asignar nombre=suficiente  [6:1]
+    BinOp AND  [6:31]
+      BinOp >=  [6:26]
+        Variable memoria  [6:18]
+        Literal entero 8  [6:29]
+      UnOp NOT  [6:35]
+        BinOp <  [6:48]
+          Variable nucleos  [6:40]
+          Literal entero 2  [6:50]
+  Asignar nombre=igualdad  [7:1]
+    BinOp !=  [7:31]
+      BinOp ==  [7:25]
+        Variable nucleos  [7:17]
+        Literal entero 8  [7:28]
+      BinOp ==  [7:43]
+        Variable memoria  [7:35]
+        Literal entero 8  [7:46]
+  Asignar nombre=alguna  [8:1]
+    BinOp OR  [8:28]
+      BinOp >  [8:22]
+        Variable nucleos  [8:14]
+        Literal entero 100  [8:24]
+      Variable suficiente  [8:31]
+  Asignar nombre=cabe  [9:1]
+    BinOp <=  [9:20]
+      Variable memoria  [9:12]
+      Literal entero 16  [9:23]
+  Comando POWER_ON  [10:1]
+  Comando CHECK_CPU  [11:1]
+    Variable nucleos  [11:11]
+  Comando CHECK_RAM  [12:1]
+    Variable memoria  [12:11]
+  Comando CHECK_DISK  [13:1]
+    Literal entero 256  [13:12]
+    Opcion MBR  [13:16]
+  Comando RUN_POST  [14:1]
+  Comando SHOW_STATUS  [15:1]
+
+=== análisis semántico ===
+sin errores ni avisos
+variable         tipo       valor
+alguna           booleano   True
+cabe             booleano   True
+igualdad         booleano   True
+invertido        entero     -12
+memoria          entero     12
+nucleos          entero     8
+resta            entero     -3
+suficiente       booleano   True
+pasos mínimos de ejecución: 14; etapa al final (sin fallos): POST_OK
+
+=== simulación ===
+[línea 10] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+[línea 11] CHECK_CPU 8 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 12] CHECK_RAM 12 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 13] CHECK_DISK 256 MBR -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 14] RUN_POST -> ok (ENCENDIDO -> POST_OK)
+[línea 15] SHOW_STATUS -> estado=POST_OK | firmware=UEFI | cpu=8 | ram=12 GB | disco=256 GB MBR | initramfs=sin cargar
+
+=== traza del control de flujo ===
+(el programa no usa IF ni REPEAT)
+
+=== variables al terminar ===
+alguna = TRUE
+cabe = TRUE
+igualdad = TRUE
+invertido = -12
+memoria = 12
+nucleos = 8
+resta = -3
+suficiente = TRUE
+
+=== resumen ===
+estado final: POST_OK
+pasos ejecutados: 14; fallos de arranque simulados: 0; comandos rechazados: 0
+
+PROGRAMA CORRECTO: la simulación terminó sin fallos de arranque.
+--- salida de error ---

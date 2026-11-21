@@ -1,0 +1,10 @@
+$ python codigo/main.py pruebas/invalidos/invalido_02.dsl
+[codigo de salida 1]
+--- salida estandar ---
+BootSim DSL | archivo: pruebas/invalidos/invalido_02.dsl
+
+=== errores de análisis ===
+[sintáctico] línea 4, columna 15: el símbolo ';' no corresponde en este lugar; se esperaba MBR o GPT
+
+RECHAZADO: el programa tiene errores, así que no se simuló nada.
+--- salida de error ---

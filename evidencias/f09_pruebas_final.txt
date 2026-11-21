@@ -1,0 +1,487 @@
+evidencia f09 (corrida final del cierre): python codigo/probar_programas.py (2026-11-21 13:56)
+no reemplaza a evidencias/f09_pruebas.txt (corrida anterior con --guardar, tambien en verde)
+== 1. los diez archivos: existen, no estan vacios ni repetidos
+  [ok] hay exactamente 5 archivos en pruebas/validos y 5 en pruebas/invalidos (ni mas ni menos)
+  [ok] ninguno esta vacio: todos tienen al menos 3 lineas y mas de 100 caracteres
+  [ok] ninguno esta repetido (huellas SHA-256 distintas)
+  [ok] ninguno de los diez coincide con otro .dsl del proyecto (se compararon 31 archivos .dsl)
+  [ok] todos terminan con salto de linea y no tienen BOM ni caracteres de control raros
+
+== 2. los diez usan la gramatica definitiva (parser de f06 y semantica de f07)
+  [ok] valido_01: sin errores lexicos, sintacticos ni semanticos
+  [ok] valido_02: sin errores lexicos, sintacticos ni semanticos
+  [ok] valido_03: sin errores lexicos, sintacticos ni semanticos
+  [ok] valido_04: sin errores lexicos, sintacticos ni semanticos
+  [ok] valido_05: sin errores lexicos, sintacticos ni semanticos
+  [ok] invalido_01: el error es de la clase prevista (léxico) y de ninguna otra
+  [ok] invalido_02: el error es de la clase prevista (sintáctico) y de ninguna otra
+  [ok] invalido_03: el error es de la clase prevista (sintáctico) y de ninguna otra
+  [ok] invalido_04: el error es de la clase prevista (semántico) y de ninguna otra
+  [ok] invalido_05: el error es de la clase prevista (semántico) y de ninguna otra
+  [ok] los cinco validos juntos usan los 11 tipos de nodo del arbol (todos menos Invalida, que solo sale en errores)
+  [ok] los cinco validos juntos usan los 12 comandos del lenguaje
+  [ok] los cinco validos juntos usan todos los operadores: + - * / < > <= >= == != AND OR NOT y el menos unario
+  [ok] los validos usan comentarios # y //
+
+== 3. ejecucion real de main.py con cada archivo (normal y --debug, dos veces cada una)
+
+---- valido_01: arranque completo y correcto hasta SO_ACTIVO, con comentarios # y //
+archivo: pruebas/validos/valido_01.dsl
+codigo fuente:
+    # valido 1: arranque completo y correcto, de POWER_ON hasta SO_ACTIVO
+    // los dos tipos de comentario (# y //) valen igual
+    POWER_ON;                      # se enciende el equipo
+    CHECK_CPU 8;                   # 8 nucleos
+    CHECK_RAM 16;                  # 16 GB de memoria
+    CHECK_DISK 512 GPT;            # disco de 512 GB con esquema GPT
+    RUN_POST;                      // autodiagnostico del hardware
+    SELECT_BOOT DISK;              // se arranca desde el disco
+    LOAD_BOOTLOADER GRUB;          // se carga el gestor de arranque
+    LOAD_KERNEL "linux-6.1" TRUE;  // kernel con initramfs
+    START_OS;                      // inicia el sistema operativo
+    SHOW_STATUS;                   // muestra el estado final
+comando: python codigo/main.py pruebas/validos/valido_01.dsl   (desde la carpeta del proyecto)
+codigo de salida: 0
+salida real:
+    BootSim DSL | archivo: pruebas/validos/valido_01.dsl
+    
+    === simulación ===
+    [línea 3] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+    [línea 4] CHECK_CPU 8 -> ok (ENCENDIDO -> ENCENDIDO)
+    [línea 5] CHECK_RAM 16 -> ok (ENCENDIDO -> ENCENDIDO)
+    [línea 6] CHECK_DISK 512 GPT -> ok (ENCENDIDO -> ENCENDIDO)
+    [línea 7] RUN_POST -> ok (ENCENDIDO -> POST_OK)
+    [línea 8] SELECT_BOOT DISK -> ok (POST_OK -> DISPOSITIVO_ELEGIDO)
+    [línea 9] LOAD_BOOTLOADER GRUB -> ok (DISPOSITIVO_ELEGIDO -> GESTOR_CARGADO)
+    [línea 10] LOAD_KERNEL "linux-6.1" TRUE -> ok (GESTOR_CARGADO -> KERNEL_CARGADO)
+    [línea 11] START_OS -> ok (KERNEL_CARGADO -> SO_ACTIVO)
+    [línea 12] SHOW_STATUS -> estado=SO_ACTIVO | firmware=UEFI | cpu=8 | ram=16 GB | disco=512 GB GPT | initramfs=sí
+    
+    === resumen ===
+    estado final: SO_ACTIVO
+    pasos ejecutados: 10; fallos de arranque simulados: 0; comandos rechazados: 0
+    
+    PROGRAMA CORRECTO: la simulación terminó sin fallos de arranque.
+comando con depuracion: python codigo/main.py pruebas/validos/valido_01.dsl --debug   -> codigo de salida 0
+  [ok] valido_01: codigo de salida 0 (el definido en f08), normal y con --debug
+  [ok] valido_01: no escribe nada por la salida de error ni muestra trazas de python
+  [ok] valido_01: ejecutado dos veces da exactamente lo mismo (salida y codigo), normal y con --debug
+  [ok] valido_01: estado final SO_ACTIVO, 10 pasos, 0 fallo(s) simulado(s) y 0 rechazo(s)
+  [ok] valido_01: la simulacion muestra '[línea 12] SHOW_STATUS -> estado=SO_ACTIVO | firmware=UEFI | cpu=8 | ram=16 GB | disco=512'
+  [ok] valido_01: se simula (hay seccion de simulacion) y aparecen los comandos con su linea
+  [ok] valido_01: avisos ninguno en las lineas previstas
+  [ok] valido_01 --debug: salen las siete secciones (tokens, arbol, semantica, simulacion, traza, variables, resumen) en ese orden
+  [ok] valido_01 --debug: contiene ['POWER_ON', 'LOAD_KERNEL', 'CADENA', 'Comando START_OS']
+  [ok] valido_01 --debug: la tabla de tokens tiene linea:columna, tipo y valor en cada fila
+  [ok] valido_01 --debug: variables al terminar ninguna
+
+---- valido_02: variables y expresiones aritmeticas, relacionales y booleanas
+archivo: pruebas/validos/valido_02.dsl
+codigo fuente:
+    # valido 2: variables, aritmetica, comparaciones y logica
+    SET nucleos = 2 * 4;                        # 8
+    SET memoria = (8 + 8) / 2 + 4;              # 12 (la division es entera)
+    SET resta = 0 - 7 / 2;                      # -3: se trunca hacia cero
+    SET invertido = -memoria;                   # -12
+    SET suficiente = memoria >= 8 AND NOT (nucleos < 2);   # TRUE
+    SET igualdad = (nucleos == 8) != (memoria == 8);       # TRUE != FALSE = TRUE
+    SET alguna = nucleos > 100 OR suficiente;              # TRUE
+    SET cabe = memoria <= 16;                              # TRUE
+    POWER_ON;
+    CHECK_CPU nucleos;
+    CHECK_RAM memoria;
+    CHECK_DISK 256 MBR;
+    RUN_POST;
+    SHOW_STATUS;
+comando: python codigo/main.py pruebas/validos/valido_02.dsl   (desde la carpeta del proyecto)
+codigo de salida: 0
+salida real:
+    BootSim DSL | archivo: pruebas/validos/valido_02.dsl
+    
+    === simulación ===
+    [línea 10] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+    [línea 11] CHECK_CPU 8 -> ok (ENCENDIDO -> ENCENDIDO)
+    [línea 12] CHECK_RAM 12 -> ok (ENCENDIDO -> ENCENDIDO)
+    [línea 13] CHECK_DISK 256 MBR -> ok (ENCENDIDO -> ENCENDIDO)
+    [línea 14] RUN_POST -> ok (ENCENDIDO -> POST_OK)
+    [línea 15] SHOW_STATUS -> estado=POST_OK | firmware=UEFI | cpu=8 | ram=12 GB | disco=256 GB MBR | initramfs=sin cargar
+    
+    === resumen ===
+    estado final: POST_OK
+    pasos ejecutados: 14; fallos de arranque simulados: 0; comandos rechazados: 0
+    
+    PROGRAMA CORRECTO: la simulación terminó sin fallos de arranque.
+comando con depuracion: python codigo/main.py pruebas/validos/valido_02.dsl --debug   -> codigo de salida 0
+  [ok] valido_02: codigo de salida 0 (el definido en f08), normal y con --debug
+  [ok] valido_02: no escribe nada por la salida de error ni muestra trazas de python
+  [ok] valido_02: ejecutado dos veces da exactamente lo mismo (salida y codigo), normal y con --debug
+  [ok] valido_02: estado final POST_OK, 14 pasos, 0 fallo(s) simulado(s) y 0 rechazo(s)
+  [ok] valido_02: la simulacion muestra '[línea 15] SHOW_STATUS -> estado=POST_OK | firmware=UEFI | cpu=8 | ram=12 GB | disco=256 G'
+  [ok] valido_02: se simula (hay seccion de simulacion) y aparecen los comandos con su linea
+  [ok] valido_02: avisos ninguno en las lineas previstas
+  [ok] valido_02 --debug: salen las siete secciones (tokens, arbol, semantica, simulacion, traza, variables, resumen) en ese orden
+  [ok] valido_02 --debug: contiene ['BinOp', 'UnOp', 'Variable memoria', 'MENORIGUAL']
+  [ok] valido_02 --debug: la tabla de tokens tiene linea:columna, tipo y valor en cada fila
+  [ok] valido_02 --debug: variables al terminar {'nucleos': '8', 'memoria': '12', 'resta': '-3', 'invertido': '-12', 'suficiente': 'TRUE', 'igualdad': 'TRUE', 'alguna': 'TRUE', 'cabe': 'TRUE'}
+
+---- valido_03: IF/THEN/ELSE con BEGIN/END y un IF anidado
+archivo: pruebas/validos/valido_03.dsl
+codigo fuente:
+    # valido 3: IF/THEN/ELSE con BEGIN/END y un IF dentro de otro
+    SET ram = 8;
+    SET usa_uefi = ram >= 16;
+    POWER_ON;
+    IF usa_uefi THEN
+      BEGIN
+        SET_FIRMWARE UEFI;
+        CHECK_DISK 512 GPT;
+      END
+    ELSE
+      BEGIN
+        SET_FIRMWARE BIOS;
+        CHECK_DISK 512 MBR;
+        IF ram < 4 THEN
+          CHECK_CPU 1;
+        ELSE
+          CHECK_CPU 4;
+        ENDIF
+      END
+    ENDIF
+    CHECK_RAM ram;
+    RUN_POST;
+    SELECT_BOOT DISK;
+    LOAD_BOOTLOADER GRUB;
+    LOAD_KERNEL "linux-5.15" TRUE;
+    START_OS;
+    SHOW_STATUS;
+comando: python codigo/main.py pruebas/validos/valido_03.dsl   (desde la carpeta del proyecto)
+codigo de salida: 0
+salida real:
+    BootSim DSL | archivo: pruebas/validos/valido_03.dsl
+    
+    === simulación ===
+    [línea 4] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+    [línea 12] SET_FIRMWARE BIOS -> ok (ENCENDIDO -> ENCENDIDO)
+    [línea 13] CHECK_DISK 512 MBR -> ok (ENCENDIDO -> ENCENDIDO)
+    [línea 17] CHECK_CPU 4 -> ok (ENCENDIDO -> ENCENDIDO)
+    [línea 21] CHECK_RAM 8 -> ok (ENCENDIDO -> ENCENDIDO)
+    [línea 22] RUN_POST -> ok (ENCENDIDO -> POST_OK)
+    [línea 23] SELECT_BOOT DISK -> ok (POST_OK -> DISPOSITIVO_ELEGIDO)
+    [línea 24] LOAD_BOOTLOADER GRUB -> ok (DISPOSITIVO_ELEGIDO -> GESTOR_CARGADO)
+    [línea 25] LOAD_KERNEL "linux-5.15" TRUE -> ok (GESTOR_CARGADO -> KERNEL_CARGADO)
+    [línea 26] START_OS -> ok (KERNEL_CARGADO -> SO_ACTIVO)
+    [línea 27] SHOW_STATUS -> estado=SO_ACTIVO | firmware=BIOS | cpu=4 | ram=8 GB | disco=512 GB MBR | initramfs=sí
+    
+    === resumen ===
+    estado final: SO_ACTIVO
+    pasos ejecutados: 15; fallos de arranque simulados: 0; comandos rechazados: 0
+    
+    PROGRAMA CORRECTO: la simulación terminó sin fallos de arranque.
+comando con depuracion: python codigo/main.py pruebas/validos/valido_03.dsl --debug   -> codigo de salida 0
+  [ok] valido_03: codigo de salida 0 (el definido en f08), normal y con --debug
+  [ok] valido_03: no escribe nada por la salida de error ni muestra trazas de python
+  [ok] valido_03: ejecutado dos veces da exactamente lo mismo (salida y codigo), normal y con --debug
+  [ok] valido_03: estado final SO_ACTIVO, 15 pasos, 0 fallo(s) simulado(s) y 0 rechazo(s)
+  [ok] valido_03: la simulacion muestra '[línea 27] SHOW_STATUS -> estado=SO_ACTIVO | firmware=BIOS | cpu=4 | ram=8 GB | disco=512 '
+  [ok] valido_03: se simula (hay seccion de simulacion) y aparecen los comandos con su linea
+  [ok] valido_03: avisos ninguno en las lineas previstas
+  [ok] valido_03 --debug: salen las siete secciones (tokens, arbol, semantica, simulacion, traza, variables, resumen) en ese orden
+  [ok] valido_03 --debug: contiene ['Si', 'Bloque', 'condicion:', 'entonces:', 'sino:', 'la condición vale FALSE, se ejecuta la rama ELSE']
+  [ok] valido_03 --debug: la tabla de tokens tiene linea:columna, tipo y valor en cada fila
+  [ok] valido_03 --debug: variables al terminar {'ram': '8', 'usa_uefi': 'FALSE'}
+
+---- valido_04: REPEAT/ENDREPEAT (anidado y con cero vueltas) y comentarios
+archivo: pruebas/validos/valido_04.dsl
+codigo fuente:
+    # valido 4: REPEAT/ENDREPEAT (tambien anidado y con cero vueltas) y comentarios
+    POWER_ON;
+    SET vueltas = 3;
+    REPEAT vueltas TIMES             # se repite 3 veces
+      CHECK_CPU 2;
+      REPEAT 2 TIMES                 // y por cada vuelta, dos veces mas
+        SHOW_STATUS;
+      ENDREPEAT
+    ENDREPEAT
+    REPEAT 0 TIMES                   # con cero vueltas el cuerpo no se ejecuta
+      CHECK_RAM 1;
+    ENDREPEAT
+    CHECK_RAM 8;
+    CHECK_DISK 128 GPT;
+    RUN_POST;
+    SHOW_STATUS;
+comando: python codigo/main.py pruebas/validos/valido_04.dsl   (desde la carpeta del proyecto)
+codigo de salida: 0
+salida real:
+    BootSim DSL | archivo: pruebas/validos/valido_04.dsl
+    
+    === simulación ===
+    [línea 2] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+    [línea 5] CHECK_CPU 2 -> ok (ENCENDIDO -> ENCENDIDO)
+    [línea 7] SHOW_STATUS -> estado=ENCENDIDO | firmware=UEFI | cpu=2 | ram=sin leer | disco=sin leer | initramfs=sin cargar
+    [línea 7] SHOW_STATUS -> estado=ENCENDIDO | firmware=UEFI | cpu=2 | ram=sin leer | disco=sin leer | initramfs=sin cargar
+    [línea 5] CHECK_CPU 2 -> ok (ENCENDIDO -> ENCENDIDO)
+    [línea 7] SHOW_STATUS -> estado=ENCENDIDO | firmware=UEFI | cpu=2 | ram=sin leer | disco=sin leer | initramfs=sin cargar
+    [línea 7] SHOW_STATUS -> estado=ENCENDIDO | firmware=UEFI | cpu=2 | ram=sin leer | disco=sin leer | initramfs=sin cargar
+    [línea 5] CHECK_CPU 2 -> ok (ENCENDIDO -> ENCENDIDO)
+    [línea 7] SHOW_STATUS -> estado=ENCENDIDO | firmware=UEFI | cpu=2 | ram=sin leer | disco=sin leer | initramfs=sin cargar
+    [línea 7] SHOW_STATUS -> estado=ENCENDIDO | firmware=UEFI | cpu=2 | ram=sin leer | disco=sin leer | initramfs=sin cargar
+    [línea 13] CHECK_RAM 8 -> ok (ENCENDIDO -> ENCENDIDO)
+    [línea 14] CHECK_DISK 128 GPT -> ok (ENCENDIDO -> ENCENDIDO)
+    [línea 15] RUN_POST -> ok (ENCENDIDO -> POST_OK)
+    [línea 16] SHOW_STATUS -> estado=POST_OK | firmware=UEFI | cpu=2 | ram=8 GB | disco=128 GB GPT | initramfs=sin cargar
+    
+    === resumen ===
+    estado final: POST_OK
+    pasos ejecutados: 20; fallos de arranque simulados: 0; comandos rechazados: 0
+    
+    PROGRAMA CORRECTO: la simulación terminó sin fallos de arranque.
+comando con depuracion: python codigo/main.py pruebas/validos/valido_04.dsl --debug   -> codigo de salida 0
+  [ok] valido_04: codigo de salida 0 (el definido en f08), normal y con --debug
+  [ok] valido_04: no escribe nada por la salida de error ni muestra trazas de python
+  [ok] valido_04: ejecutado dos veces da exactamente lo mismo (salida y codigo), normal y con --debug
+  [ok] valido_04: estado final POST_OK, 20 pasos, 0 fallo(s) simulado(s) y 0 rechazo(s)
+  [ok] valido_04: la simulacion muestra '[línea 16] SHOW_STATUS -> estado=POST_OK | firmware=UEFI | cpu=2 | ram=8 GB | disco=128 GB'
+  [ok] valido_04: se simula (hay seccion de simulacion) y aparecen los comandos con su linea
+  [ok] valido_04: avisos ninguno en las lineas previstas
+  [ok] valido_04 --debug: salen las siete secciones (tokens, arbol, semantica, simulacion, traza, variables, resumen) en ese orden
+  [ok] valido_04 --debug: contiene ['Repetir', 'REPEAT: el cuerpo se ejecuta 3 vez/veces', 'REPEAT: el cuerpo se ejecuta 2 vez/veces', 'REPEAT: el cuerpo se ejecuta 0 vez/veces']
+  [ok] valido_04 --debug: la tabla de tokens tiene linea:columna, tipo y valor en cada fila
+  [ok] valido_04 --debug: variables al terminar {'vueltas': '3'}
+
+---- valido_05: fallo de arranque simulado (BIOS con GPT), RESET_SYSTEM y continuacion hasta SO_ACTIVO
+archivo: pruebas/validos/valido_05.dsl
+codigo fuente:
+    # valido 5: un fallo de arranque simulado, recuperacion con RESET_SYSTEM y continuacion
+    SET memoria = 8;               # esta variable sobrevive al reinicio
+    POWER_ON;
+    SET_FIRMWARE BIOS;             # bios...
+    CHECK_CPU 4;
+    CHECK_RAM memoria;
+    CHECK_DISK 256 GPT;            # ...con un disco gpt: no son compatibles en BootSim
+    RUN_POST;
+    SELECT_BOOT DISK;
+    LOAD_BOOTLOADER GRUB;          # aqui falla: ERROR_ARRANQUE
+    LOAD_KERNEL "linux-6.1" TRUE;  # se rechaza porque el sistema esta en error
+    SHOW_STATUS;
+    RESET_SYSTEM;                  # unica salida de un estado de error
+    POWER_ON;                      # el firmware vuelve a UEFI, que si acepta gpt
+    CHECK_CPU 4;
+    CHECK_RAM memoria;
+    CHECK_DISK 256 GPT;
+    RUN_POST;
+    SELECT_BOOT DISK;
+    LOAD_BOOTLOADER GRUB;
+    LOAD_KERNEL "linux-6.1" TRUE;
+    START_OS;
+    SHOW_STATUS;
+comando: python codigo/main.py pruebas/validos/valido_05.dsl   (desde la carpeta del proyecto)
+codigo de salida: 0
+salida real:
+    BootSim DSL | archivo: pruebas/validos/valido_05.dsl
+    
+    === avisos (no impiden simular) ===
+    [aviso S5] línea 10, columna 1: se prevé que la simulación termine en ERROR_ARRANQUE: el firmware BIOS y el esquema GPT no son compatibles en este simulador
+    [aviso A2] línea 11, columna 1: LOAD_KERNEL será rechazado en la simulación: el sistema está en ERROR_ARRANQUE; solo se aceptan SHOW_STATUS y RESET_SYSTEM; RESET_SYSTEM permite volver a empezar
+    
+    === simulación ===
+    [línea 3] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+    [línea 4] SET_FIRMWARE BIOS -> ok (ENCENDIDO -> ENCENDIDO)
+    [línea 5] CHECK_CPU 4 -> ok (ENCENDIDO -> ENCENDIDO)
+    [línea 6] CHECK_RAM 8 -> ok (ENCENDIDO -> ENCENDIDO)
+    [línea 7] CHECK_DISK 256 GPT -> ok (ENCENDIDO -> ENCENDIDO)
+    [línea 8] RUN_POST -> ok (ENCENDIDO -> POST_OK)
+    [línea 9] SELECT_BOOT DISK -> ok (POST_OK -> DISPOSITIVO_ELEGIDO)
+    [línea 10] LOAD_BOOTLOADER GRUB -> ERROR SIMULADO (ERROR_ARRANQUE): el firmware BIOS y el esquema GPT no son compatibles en este simulador
+    [línea 11] LOAD_KERNEL "linux-6.1" TRUE -> RECHAZADO: el sistema está en ERROR_ARRANQUE; solo se aceptan SHOW_STATUS y RESET_SYSTEM
+    [línea 12] SHOW_STATUS -> estado=ERROR_ARRANQUE | firmware=BIOS | cpu=4 | ram=8 GB | disco=256 GB GPT | initramfs=sin cargar
+    [línea 13] RESET_SYSTEM -> reinicio simulado: estado=APAGADO
+    [línea 14] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+    [línea 15] CHECK_CPU 4 -> ok (ENCENDIDO -> ENCENDIDO)
+    [línea 16] CHECK_RAM 8 -> ok (ENCENDIDO -> ENCENDIDO)
+    [línea 17] CHECK_DISK 256 GPT -> ok (ENCENDIDO -> ENCENDIDO)
+    [línea 18] RUN_POST -> ok (ENCENDIDO -> POST_OK)
+    [línea 19] SELECT_BOOT DISK -> ok (POST_OK -> DISPOSITIVO_ELEGIDO)
+    [línea 20] LOAD_BOOTLOADER GRUB -> ok (DISPOSITIVO_ELEGIDO -> GESTOR_CARGADO)
+    [línea 21] LOAD_KERNEL "linux-6.1" TRUE -> ok (GESTOR_CARGADO -> KERNEL_CARGADO)
+    [línea 22] START_OS -> ok (KERNEL_CARGADO -> SO_ACTIVO)
+    [línea 23] SHOW_STATUS -> estado=SO_ACTIVO | firmware=UEFI | cpu=4 | ram=8 GB | disco=256 GB GPT | initramfs=sí
+    
+    === resumen ===
+    estado final: SO_ACTIVO
+    pasos ejecutados: 22; fallos de arranque simulados: 1; comandos rechazados: 1
+    
+    PROGRAMA CORRECTO: hubo 1 fallo(s) de arranque simulado(s), pero el equipo terminó en un estado normal.
+comando con depuracion: python codigo/main.py pruebas/validos/valido_05.dsl --debug   -> codigo de salida 0
+  [ok] valido_05: codigo de salida 0 (el definido en f08), normal y con --debug
+  [ok] valido_05: no escribe nada por la salida de error ni muestra trazas de python
+  [ok] valido_05: ejecutado dos veces da exactamente lo mismo (salida y codigo), normal y con --debug
+  [ok] valido_05: estado final SO_ACTIVO, 22 pasos, 1 fallo(s) simulado(s) y 1 rechazo(s)
+  [ok] valido_05: la simulacion muestra '[línea 10] LOAD_BOOTLOADER GRUB -> ERROR SIMULADO (ERROR_ARRANQUE)'
+  [ok] valido_05: la simulacion muestra '[línea 11] LOAD_KERNEL "linux-6.1" TRUE -> RECHAZADO'
+  [ok] valido_05: la simulacion muestra '[línea 12] SHOW_STATUS -> estado=ERROR_ARRANQUE | firmware=BIOS | cpu=4 | ram=8 GB | disco'
+  [ok] valido_05: la simulacion muestra '[línea 13] RESET_SYSTEM -> reinicio simulado: estado=APAGADO'
+  [ok] valido_05: la simulacion muestra '[línea 23] SHOW_STATUS -> estado=SO_ACTIVO | firmware=UEFI | cpu=4 | ram=8 GB | disco=256 '
+  [ok] valido_05: se simula (hay seccion de simulacion) y aparecen los comandos con su linea
+  [ok] valido_05: avisos ['S5', 'A2'] en las lineas previstas
+  [ok] valido_05 --debug: salen las siete secciones (tokens, arbol, semantica, simulacion, traza, variables, resumen) en ese orden
+  [ok] valido_05 --debug: contiene ['[aviso S5]', '[aviso A2]']
+  [ok] valido_05 --debug: la tabla de tokens tiene linea:columna, tipo y valor en cada fila
+  [ok] valido_05 --debug: variables al terminar {'memoria': '8'}
+
+---- invalido_01: error lexico: un caracter que el lenguaje no reconoce
+archivo: pruebas/invalidos/invalido_01.dsl
+codigo fuente:
+    # invalido 1: error lexico, un caracter que el lenguaje no reconoce
+    POWER_ON;
+    CHECK_CPU 4 @;
+    CHECK_RAM 16;
+comando: python codigo/main.py pruebas/invalidos/invalido_01.dsl   (desde la carpeta del proyecto)
+codigo de salida: 1
+salida real:
+    BootSim DSL | archivo: pruebas/invalidos/invalido_01.dsl
+    
+    === errores de análisis ===
+    [léxico] línea 3, columna 13: carácter inesperado '@': no forma parte del lenguaje
+    
+    RECHAZADO: el programa tiene errores, así que no se simuló nada.
+comando con depuracion: python codigo/main.py pruebas/invalidos/invalido_01.dsl --debug   -> codigo de salida 1
+  [ok] invalido_01: codigo de salida 1 (el definido en f08), normal y con --debug
+  [ok] invalido_01: no escribe nada por la salida de error ni muestra trazas de python
+  [ok] invalido_01: ejecutado dos veces da exactamente lo mismo (salida y codigo), normal y con --debug
+  [ok] invalido_01: cada error trae clase, linea y columna con el formato [clase] línea L, columna C: mensaje
+  [ok] invalido_01: exactamente 1 error(es), con la clase y la posicion previstas
+  [ok] invalido_01: el mensaje de cada error dice lo esperado
+  [ok] invalido_01: RECHAZADO y no se simula: no hay seccion de simulacion, ni estado final, ni lineas de comandos ejecutados
+  [ok] invalido_01 --debug: tampoco se simula (sin seccion de simulacion ni de resumen)
+  [ok] invalido_01 --debug: muestra tokens, arbol (o aviso de que no hay) y diagnosticos: ['=== tokens ===', 'CHECK_CPU', 'no se hizo']
+  [ok] invalido_01 --debug: la seccion de tokens trae la tabla linea:columna
+
+---- invalido_02: error sintactico: instruccion incompleta (a CHECK_DISK le falta el esquema)
+archivo: pruebas/invalidos/invalido_02.dsl
+codigo fuente:
+    # invalido 2: error sintactico, una instruccion incompleta (a CHECK_DISK le falta el esquema)
+    POWER_ON;
+    CHECK_CPU 4;
+    CHECK_DISK 512;
+    CHECK_RAM 16;
+comando: python codigo/main.py pruebas/invalidos/invalido_02.dsl   (desde la carpeta del proyecto)
+codigo de salida: 1
+salida real:
+    BootSim DSL | archivo: pruebas/invalidos/invalido_02.dsl
+    
+    === errores de análisis ===
+    [sintáctico] línea 4, columna 15: el símbolo ';' no corresponde en este lugar; se esperaba MBR o GPT
+    
+    RECHAZADO: el programa tiene errores, así que no se simuló nada.
+comando con depuracion: python codigo/main.py pruebas/invalidos/invalido_02.dsl --debug   -> codigo de salida 1
+  [ok] invalido_02: codigo de salida 1 (el definido en f08), normal y con --debug
+  [ok] invalido_02: no escribe nada por la salida de error ni muestra trazas de python
+  [ok] invalido_02: ejecutado dos veces da exactamente lo mismo (salida y codigo), normal y con --debug
+  [ok] invalido_02: cada error trae clase, linea y columna con el formato [clase] línea L, columna C: mensaje
+  [ok] invalido_02: exactamente 1 error(es), con la clase y la posicion previstas
+  [ok] invalido_02: el mensaje de cada error dice lo esperado
+  [ok] invalido_02: RECHAZADO y no se simula: no hay seccion de simulacion, ni estado final, ni lineas de comandos ejecutados
+  [ok] invalido_02 --debug: tampoco se simula (sin seccion de simulacion ni de resumen)
+  [ok] invalido_02 --debug: muestra tokens, arbol (o aviso de que no hay) y diagnosticos: ['=== tokens ===', 'CHECK_DISK', 'no se hizo']
+  [ok] invalido_02 --debug: la seccion de tokens trae la tabla linea:columna
+
+---- invalido_03: error sintactico en una estructura: REPEAT sin ENDREPEAT
+archivo: pruebas/invalidos/invalido_03.dsl
+codigo fuente:
+    # invalido 3: error sintactico en una estructura, un REPEAT que nunca se cierra
+    POWER_ON;
+    REPEAT 3 TIMES
+      CHECK_CPU 2;
+    SHOW_STATUS;
+comando: python codigo/main.py pruebas/invalidos/invalido_03.dsl   (desde la carpeta del proyecto)
+codigo de salida: 1
+salida real:
+    BootSim DSL | archivo: pruebas/invalidos/invalido_03.dsl
+    
+    === errores de análisis ===
+    [sintáctico] línea 6, columna 1: fin de archivo inesperado: falta ENDREPEAT para cerrar el REPEAT abierto en la línea 3, columna 1
+    
+    RECHAZADO: el programa tiene errores, así que no se simuló nada.
+comando con depuracion: python codigo/main.py pruebas/invalidos/invalido_03.dsl --debug   -> codigo de salida 1
+  [ok] invalido_03: codigo de salida 1 (el definido en f08), normal y con --debug
+  [ok] invalido_03: no escribe nada por la salida de error ni muestra trazas de python
+  [ok] invalido_03: ejecutado dos veces da exactamente lo mismo (salida y codigo), normal y con --debug
+  [ok] invalido_03: cada error trae clase, linea y columna con el formato [clase] línea L, columna C: mensaje
+  [ok] invalido_03: exactamente 1 error(es), con la clase y la posicion previstas
+  [ok] invalido_03: el mensaje de cada error dice lo esperado
+  [ok] invalido_03: RECHAZADO y no se simula: no hay seccion de simulacion, ni estado final, ni lineas de comandos ejecutados
+  [ok] invalido_03 --debug: tampoco se simula (sin seccion de simulacion ni de resumen)
+  [ok] invalido_03 --debug: muestra tokens, arbol (o aviso de que no hay) y diagnosticos: ['=== tokens ===', 'REPEAT', 'no se hizo']
+  [ok] invalido_03 --debug: la seccion de tokens trae la tabla linea:columna
+
+---- invalido_04: errores semanticos: variable sin valor y tipos incompatibles
+archivo: pruebas/invalidos/invalido_04.dsl
+codigo fuente:
+    # invalido 4: errores semanticos de variables y tipos (el programa esta bien escrito)
+    SET total = nucleos + 1;      # 'nucleos' nunca recibio un valor
+    SET mezcla = 3 + TRUE;        # no se puede sumar un entero con un booleano
+    POWER_ON;
+comando: python codigo/main.py pruebas/invalidos/invalido_04.dsl   (desde la carpeta del proyecto)
+codigo de salida: 1
+salida real:
+    BootSim DSL | archivo: pruebas/invalidos/invalido_04.dsl
+    
+    === errores de análisis ===
+    [semántico S1] línea 2, columna 13: la variable 'nucleos' se usa antes de asignarle un valor (use SET nucleos = ...; antes)
+    [semántico S4] línea 3, columna 16: '+' solo opera con valores enteros: el lado derecho es booleano
+    
+    RECHAZADO: el programa tiene errores, así que no se simuló nada.
+comando con depuracion: python codigo/main.py pruebas/invalidos/invalido_04.dsl --debug   -> codigo de salida 1
+  [ok] invalido_04: codigo de salida 1 (el definido en f08), normal y con --debug
+  [ok] invalido_04: no escribe nada por la salida de error ni muestra trazas de python
+  [ok] invalido_04: ejecutado dos veces da exactamente lo mismo (salida y codigo), normal y con --debug
+  [ok] invalido_04: cada error trae clase, linea y columna con el formato [clase] línea L, columna C: mensaje
+  [ok] invalido_04: exactamente 2 error(es), con la clase y la posicion previstas
+  [ok] invalido_04: el mensaje de cada error dice lo esperado
+  [ok] invalido_04: RECHAZADO y no se simula: no hay seccion de simulacion, ni estado final, ni lineas de comandos ejecutados
+  [ok] invalido_04 --debug: tampoco se simula (sin seccion de simulacion ni de resumen)
+  [ok] invalido_04 --debug: muestra tokens, arbol (o aviso de que no hay) y diagnosticos: ['=== tokens ===', 'Programa', 'BinOp', '[semántico S1]', '[semántico S4]']
+  [ok] invalido_04 --debug: la seccion de tokens trae la tabla linea:columna
+
+---- invalido_05: errores semanticos: limites fuera de rango y orden de etapas
+archivo: pruebas/invalidos/invalido_05.dsl
+codigo fuente:
+    # invalido 5: errores semanticos de limites y de orden de etapas
+    POWER_ON;
+    CHECK_CPU 100;                # el maximo es 64 nucleos
+    CHECK_RAM 2048;               # el maximo es 1024 GB
+    RUN_POST;                     # faltan las lecturas de disco
+    LOAD_KERNEL "linux" TRUE;     # no se puede cargar un kernel sin gestor de arranque
+comando: python codigo/main.py pruebas/invalidos/invalido_05.dsl   (desde la carpeta del proyecto)
+codigo de salida: 1
+salida real:
+    BootSim DSL | archivo: pruebas/invalidos/invalido_05.dsl
+    
+    === errores de análisis ===
+    [semántico S3] línea 3, columna 1: CHECK_CPU: 100 núcleos de CPU está fuera del rango permitido (1 a 64)
+    [semántico S3] línea 4, columna 1: CHECK_RAM: 2048 GB de RAM está fuera del rango permitido (0 a 1024)
+    [semántico S2] línea 5, columna 1: RUN_POST necesita antes CHECK_DISK
+    [semántico S2] línea 6, columna 1: LOAD_KERNEL está fuera de orden: el arranque está en ENCENDIDO y LOAD_KERNEL se usa en GESTOR_CARGADO; en este punto se puede usar: CHECK_CPU, CHECK_RAM, CHECK_DISK, SET_FIRMWARE, RUN_POST, SHOW_STATUS, RESET_SYSTEM
+    
+    RECHAZADO: el programa tiene errores, así que no se simuló nada.
+comando con depuracion: python codigo/main.py pruebas/invalidos/invalido_05.dsl --debug   -> codigo de salida 1
+  [ok] invalido_05: codigo de salida 1 (el definido en f08), normal y con --debug
+  [ok] invalido_05: no escribe nada por la salida de error ni muestra trazas de python
+  [ok] invalido_05: ejecutado dos veces da exactamente lo mismo (salida y codigo), normal y con --debug
+  [ok] invalido_05: cada error trae clase, linea y columna con el formato [clase] línea L, columna C: mensaje
+  [ok] invalido_05: exactamente 4 error(es), con la clase y la posicion previstas
+  [ok] invalido_05: el mensaje de cada error dice lo esperado
+  [ok] invalido_05: RECHAZADO y no se simula: no hay seccion de simulacion, ni estado final, ni lineas de comandos ejecutados
+  [ok] invalido_05 --debug: tampoco se simula (sin seccion de simulacion ni de resumen)
+  [ok] invalido_05 --debug: muestra tokens, arbol (o aviso de que no hay) y diagnosticos: ['=== tokens ===', 'Programa', '[semántico S3]', '[semántico S2]']
+  [ok] invalido_05 --debug: la seccion de tokens trae la tabla linea:columna
+
+== 4. comprobaciones de conjunto
+  [ok] todos los fragmentos que se esperaban encontrar en los archivos (@, CHECK_DISK 512;, RESET_SYSTEM;, ...) estan donde se esperaba
+  [ok] los codigos de salida de los diez coinciden con la politica de f08 (0 los cinco validos, 1 los cinco invalidos)
+  [ok] ninguno de los diez invalidos mostro una seccion de simulacion en ninguna de las cuatro ejecuciones (normal y debug)
+  [ok] un error semantico no se confunde con un aviso: los dos programas semanticos invalidos se rechazan y valido_05 (que solo avisa) se simula
+
+pruebas ejecutadas: 132; con resultado distinto del esperado: 0
+RESULTADO: todas las pruebas dieron lo esperado
+[codigo de salida 0]

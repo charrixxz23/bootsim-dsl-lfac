@@ -1,0 +1,17 @@
+# evidencia f03: auditoria final de la revision humana. 2026-11-21
+# $ python scripts/gestor.py auditar
+AVISO: F03: pendiente de aprobacion humana
+RESULTADO: 0 errores y 1 avisos
+[codigo de salida: 0]
+
+# comentarios de los .py del taller y del prototipo y del .ps1 (la auditoria del gestor solo mira codigo/): minusculas y sin tildes
+archivos revisados: 22; comentarios con mayusculas o tildes: 0
+
+# estado del gestor
+BOOTSIM DSL - AVANCE
+F01 | completada  | Assess: analizar la tarea
+F02 | completada  | Scaffold: calibracion de IA con PLY
+F03 | completada  | Plan: diseno del DSL | revision pendiente
+F04 | pendiente   | Introduccion y arquitectura POST/BIOS/UEFI
+F05 | pendiente   | Lexer PLY y pruebas lexicas
+BLOQUEO: Esperando revision humana de F03: Plan: diseno del DSL

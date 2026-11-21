@@ -1,0 +1,55 @@
+# evidencia f03: 47 casos manuales de expresiones (arbol y valor calculados a mano antes de correr ply). ply 3.11, python 3.12.10, 2026-11-21
+# $ python casos_manuales_expresiones.py
+== arbol y valor esperados (calculados a mano)
+  [ok] 2 + 3 * 4 - 10 / 3                 valor: 11
+  [ok] -7 / 2                             valor: -3
+  [ok] 7 / -2                             valor: -3
+  [ok] 10 - 2 - 3 * 2                     valor: 2
+  [ok] NOT (1 < 2) OR 3 == 3 AND 2 >= 1   valor: True
+  [ok] 1 + 2 < 3 * 4 == TRUE              valor: True
+  [ok] - (2 + 3) * 4                      valor: -20
+  [ok] - - 2                              valor: 2
+  [ok] 2 * - 3                            valor: -6
+  [ok] NOT NOT TRUE                       valor: True
+  [ok] (1 + 2) * (3 - 4) / 5              valor: 0
+  [ok] 8 / 2 / 2 * 3                      valor: 6
+  [ok] 2 * (3 + 4) - 5 * (6 - 7)          valor: 19
+  [ok] 1 - - 1                            valor: 2
+  [ok] 100 / 7 / 2                        valor: 7
+  [ok] 0 - 7 / 2                          valor: -3
+  [ok] TRUE AND FALSE OR TRUE             valor: True
+  [ok] NOT FALSE == TRUE                  valor: True
+  [ok] (1 < 2) == (2 < 3)                 valor: True
+  [ok] 1 + (2 * (3 + (4 - (5 * 6))))      valor: -45
+  [ok] a OR b AND c OR d                  valor: -
+  [ok] x < y AND y < z                    valor: -
+  [ok] x + 1 == y - 1                     valor: -
+  [ok] NOT x == y                         valor: -
+  [ok] a == b == c == d                   valor: -
+  [ok] NOT a AND NOT b                    valor: -
+  [ok] a AND NOT b OR c                   valor: -
+  [ok] a == NOT b == c                    valor: -
+== errores de sintaxis esperados
+  [ok] 1 < 2 < 3
+  [ok] a >= b <= c
+  [ok] 1 +
+  [ok] ( 1 + 2
+  [ok] 1 2
+  [ok] * 3
+  [ok] ( )
+  [ok] NOT
+  [ok] 1 + * 2
+  [ok] - 
+  [ok] 1 == == 2
+== errores de tipos y de calculo esperados (la sintaxis los acepta)
+  [ok] 1 + TRUE           -> '+' espera enteros y recibio entero y booleano
+  [ok] NOT 1              -> 'NOT' espera booleano y recibio entero
+  [ok] TRUE < 1           -> '<' espera enteros y recibio booleano y entero
+  [ok] 1 == TRUE          -> '==' compara tipos distintos (entero y booleano)
+  [ok] - TRUE             -> '-' espera entero y recibio booleano
+  [ok] 5 / (3 - 3)        -> division por cero
+  [ok] 1 + NOT TRUE       -> '+' espera enteros y recibio entero y booleano
+  [ok] (1 < 2) + 1        -> '+' espera enteros y recibio booleano y entero
+casos manuales: 47; con resultado distinto del esperado: 0
+RESULTADO: todos coinciden con lo calculado a mano
+[codigo de salida: 0]

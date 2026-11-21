@@ -1,0 +1,24 @@
+$ python codigo/main.py pruebas/validos/valido_03.dsl
+[codigo de salida 0]
+--- salida estandar ---
+BootSim DSL | archivo: pruebas/validos/valido_03.dsl
+
+=== simulación ===
+[línea 4] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+[línea 12] SET_FIRMWARE BIOS -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 13] CHECK_DISK 512 MBR -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 17] CHECK_CPU 4 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 21] CHECK_RAM 8 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 22] RUN_POST -> ok (ENCENDIDO -> POST_OK)
+[línea 23] SELECT_BOOT DISK -> ok (POST_OK -> DISPOSITIVO_ELEGIDO)
+[línea 24] LOAD_BOOTLOADER GRUB -> ok (DISPOSITIVO_ELEGIDO -> GESTOR_CARGADO)
+[línea 25] LOAD_KERNEL "linux-5.15" TRUE -> ok (GESTOR_CARGADO -> KERNEL_CARGADO)
+[línea 26] START_OS -> ok (KERNEL_CARGADO -> SO_ACTIVO)
+[línea 27] SHOW_STATUS -> estado=SO_ACTIVO | firmware=BIOS | cpu=4 | ram=8 GB | disco=512 GB MBR | initramfs=sí
+
+=== resumen ===
+estado final: SO_ACTIVO
+pasos ejecutados: 15; fallos de arranque simulados: 0; comandos rechazados: 0
+
+PROGRAMA CORRECTO: la simulación terminó sin fallos de arranque.
+--- salida de error ---

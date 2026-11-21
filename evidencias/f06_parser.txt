@@ -1,0 +1,185 @@
+# evidencia f06: pruebas del parser y del ast. python 3.12.10, ply 3.11, 2026-11-21
+# $ python codigo/probar_parser.py
+
+== 1. los cinco ejemplos validos de f03
+  [ok] valido_1_secuencia_basica.dsl: sin errores, raiz Programa con 10 sentencias
+  [ok] valido_2_variables_y_expresiones.dsl: sin errores, raiz Programa con 8 sentencias
+  [ok] valido_3_if_else_firmware.dsl: sin errores, raiz Programa con 8 sentencias
+  [ok] valido_4_repeat_y_bloque.dsl: sin errores, raiz Programa con 3 sentencias
+  [ok] valido_5_kernel_panic_y_reinicio.dsl: sin errores, raiz Programa con 11 sentencias
+  [ok] valido_3: la tercera sentencia es un Si con condicion ram > 8
+  [ok] valido_3: ramas con un SET_FIRMWARE UEFI y un SET_FIRMWARE BIOS
+  [ok] valido_4: BEGIN/END con 3 comandos y REPEAT 2 * 2 con un SHOW_STATUS
+  [ok] valido_2: SET nucleos = 2 * 4; es un Asignar con BinOp *
+  [ok] valido_1: LOAD_KERNEL "linux-6.1" TRUE; tiene una cadena y un booleano
+  [ok] valido_1: CHECK_DISK 512 GPT; tiene un entero y una Opcion GPT en 4:12 y 4:16
+
+== 2. los cinco ejemplos invalidos: sintaxis frente a semantica
+  [ok] invalido_1 (lexico): hay errores lexicos en 2:13 y 3:13 y el arbol final es None
+  [ok] invalido_1: el error sintactico en cadena esta en la misma linea (3:28) y el arbol parcial conserva SHOW_STATUS
+  [ok] invalido_2 (sintactico): dos errores, 2:1 y 3:11, y arbol None
+  [ok] invalido_2: el arbol parcial tiene dos Invalida y SHOW_STATUS
+  [ok] invalido_3 (sintactico): fin de archivo en 5:1 y el mensaje dice que falta ENDIF del IF de 2:1
+  [ok] invalido_3: el arbol parcial conserva el POWER_ON anterior
+  [ok] invalido_4_semantico_variable.dsl: es sintacticamente correcto (lo rechazara la semantica en f07, no el parser)
+  [ok] invalido_5_semantico_orden_y_limite.dsl: es sintacticamente correcto (lo rechazara la semantica en f07, no el parser)
+
+== 3. IF/ELSE anidados
+  [ok] IF a THEN IF b THEN ... ELSE ... ENDIF ENDIF: el ELSE es del IF de adentro
+  [ok] IF a THEN IF b THEN ... ENDIF ELSE ... ENDIF: el ELSE es del IF de afuera
+  [ok] tres IF anidados
+  [ok] ELSE seguido de otro IF: el IF queda dentro de la rama sino
+  [ok] dos IF seguidos son hermanos, no anidados
+  [ok] posiciones del IF de afuera (1:1) y del de adentro (1:11)
+
+== 4. BEGIN/END dentro de condiciones y repeticiones
+  [ok] IF con un bloque dentro
+  [ok] REPEAT con bloques anidados
+  [ok] un bloque con un IF que tiene un REPEAT
+  [ok] REPEAT con un IF con ELSE dentro
+  [ok] sentencia SET entre dos bloques
+
+== 5. precedencia, asociatividad, parentesis y operadores unarios (casos calculados a mano en f03)
+  [ok] 2 + 3 * 4 - 10 / 3
+  [ok] -7 / 2
+  [ok] 7 / -2
+  [ok] 10 - 2 - 3 * 2
+  [ok] NOT (1 < 2) OR 3 == 3 AND 2 >= 1
+  [ok] 1 + 2 < 3 * 4 == TRUE
+  [ok] - (2 + 3) * 4
+  [ok] - - 2
+  [ok] 2 * - 3
+  [ok] NOT NOT TRUE
+  [ok] (1 + 2) * (3 - 4) / 5
+  [ok] 8 / 2 / 2 * 3
+  [ok] 2 * (3 + 4) - 5 * (6 - 7)
+  [ok] 1 - - 1
+  [ok] 100 / 7 / 2
+  [ok] 0 - 7 / 2
+  [ok] TRUE AND FALSE OR TRUE
+  [ok] NOT FALSE == TRUE
+  [ok] (1 < 2) == (2 < 3)
+  [ok] 1 + (2 * (3 + (4 - (5 * 6))))
+  [ok] a OR b AND c OR d
+  [ok] x < y AND y < z
+  [ok] x + 1 == y - 1
+  [ok] NOT x == y
+  [ok] a == b == c == d
+  [ok] NOT a AND NOT b
+  [ok] a AND NOT b OR c
+  [ok] a == NOT b == c
+  [ok] error de sintaxis esperado: 1 < 2 < 3
+  [ok] error de sintaxis esperado: a >= b <= c
+  [ok] error de sintaxis esperado: 1 +
+  [ok] error de sintaxis esperado: ( 1 + 2
+  [ok] error de sintaxis esperado: 1 2
+  [ok] error de sintaxis esperado: * 3
+  [ok] error de sintaxis esperado: ( )
+  [ok] error de sintaxis esperado: NOT
+  [ok] error de sintaxis esperado: 1 + * 2
+  [ok] error de sintaxis esperado: - 
+  [ok] error de sintaxis esperado: 1 == == 2
+  [ok] 1 + TRUE: el parser lo acepta (el error es de tipos, lo revisara f07)
+  [ok] NOT 1: el parser lo acepta (el error es de tipos, lo revisara f07)
+  [ok] TRUE < 1: el parser lo acepta (el error es de tipos, lo revisara f07)
+  [ok] 1 == TRUE: el parser lo acepta (el error es de tipos, lo revisara f07)
+  [ok] - TRUE: el parser lo acepta (el error es de tipos, lo revisara f07)
+  [ok] 5 / (3 - 3): el parser lo acepta (el error es de tipos, lo revisara f07)
+  [ok] 1 + NOT TRUE: el parser lo acepta (el error es de tipos, lo revisara f07)
+  [ok] (1 < 2) + 1: el parser lo acepta (el error es de tipos, lo revisara f07)
+  [ok] posiciones en SET r = 1 + 2;: Asignar 1:1, BinOp en 1:11 (el operador), literales 1:9 y 1:13
+  [ok] el menos unario: UnOp - con una Variable; posicion del operador 1:9
+  [ok] los parentesis no crean nodo: BinOp * con un BinOp + a la izquierda
+
+== 6. programas de varias lineas y comentarios
+  [ok] los comentarios no producen nodos y las posiciones cuentan las lineas
+  [ok] saltos de linea de windows
+  [ok] IF repartido en cinco lineas: posiciones del IF y de los comandos
+
+== 7. instrucciones incompletas y cierres faltantes
+  [ok] 'CHECK_CPU ;': errores en [(1, 11)] y el mensaje contiene 'valor o una expresión'
+  [ok] 'CHECK_DISK 512 ;': errores en [(1, 16)] y el mensaje contiene 'MBR o GPT'
+  [ok] 'LOAD_KERNEL "x" ;': errores en [(1, 17)] y el mensaje contiene 'valor o una expresión'
+  [ok] 'SET x = ;': errores en [(1, 9)] y el mensaje contiene 'valor o una expresión'
+  [ok] 'SET = 3;': errores en [(1, 5)] y el mensaje contiene 'nombre de una variable'
+  [ok] 'SET x 3;': errores en [(1, 7)] y el mensaje contiene "'='"
+  [ok] 'IF x THEN': errores en [(1, 10)] y el mensaje contiene 'falta ENDIF'
+  [ok] 'IF THEN POWER_ON; ENDIF': errores en [(1, 4), (1, 19)] y el mensaje contiene 'valor o una expresión'
+  [ok] 'IF a POWER_ON; ENDIF': errores en [(1, 6), (1, 16)] y el mensaje contiene 'THEN'
+  [ok] 'REPEAT 2 TIMES POWER_ON;': errores en [(1, 25)] y el mensaje contiene 'falta ENDREPEAT'
+  [ok] 'BEGIN POWER_ON;': errores en [(1, 16)] y el mensaje contiene 'falta END'
+  [ok] 'ELSE POWER_ON;': errores en [(1, 1)] y el mensaje contiene 'inicio de una sentencia'
+  [ok] 'POWER_ON; ENDIF': errores en [(1, 11)] y el mensaje contiene 'inicio de una sentencia'
+  [ok] 'END': errores en [(1, 1)] y el mensaje contiene 'inicio de una sentencia'
+  [ok] ';': errores en [(1, 1)] y el mensaje contiene 'inicio de una sentencia'
+  [ok] '': errores en [(1, 1)] y el mensaje contiene 'vacío'
+  [ok] '# a\n// b\n': errores en [(3, 1)] y el mensaje contiene 'vacío'
+  [ok] 'power_on;': errores en [(1, 1)] y el mensaje contiene 'MAYÚSCULAS'
+  [ok] 'CHECK_CPU (1 + 2;': errores en [(1, 17)] y el mensaje contiene "')'"
+  [ok] 'POWER_ON POWER_ON;': errores en [(1, 10)] y el mensaje contiene "';'"
+  [ok] 'CHECK_CPU 4 5;': errores en [(1, 13)] y el mensaje contiene "';'"
+  [ok] 'SHOW_STATUS': errores en [(1, 12)] y el mensaje contiene "falta ';'"
+  [ok] un ';' faltante dentro de un IF: se informa el error en el ENDIF (1:20)
+  [ok] el mensaje para una reservada en minusculas dice que sugiere POWER_ON
+  [ok] el mensaje de un error describe el token en palabras sencillas
+
+== 8. varios errores sintacticos en un mismo archivo
+  [ok] tres errores: 2:11, 4:5 y 6:1
+  [ok] el arbol parcial conserva las sentencias buenas y marca las malas
+  [ok] cada Invalida queda en el lugar del error
+  [ok] la recuperacion funciona dentro de un IF: un error (1:21) y el IF y SHOW_STATUS siguen en el arbol
+  [ok] dos errores en lugares distintos con un bloque entre ellos (1:17 y 1:33)
+
+== 9. errores lexicos y sintacticos juntos
+  [ok] un error lexico solo: sin errores sintacticos, arbol None y arbol parcial con POWER_ON
+  [ok] un error lexico y uno sintactico: se muestran ordenados por posicion y con su tipo
+  [ok] cadena sin cerrar: el parser no ve error sintactico pero el programa NO se acepta (arbol None)
+  [ok] un caracter raro en medio de una expresion deja la expresion partida: error lexico y error sintactico
+
+== 10. analisis repetidos sin arrastrar estado
+  [ok] el mismo texto da el mismo resultado dos veces
+  [ok] tras un programa con errores, uno correcto no trae errores
+  [ok] la cuenta de lineas del analisis anterior no pasa al siguiente
+  [ok] modificar un resultado no cambia los siguientes
+  [ok] los arboles de analisis distintos son objetos distintos e independientes
+  [ok] cambiar un arbol no afecta a los siguientes
+
+== 11. integridad del arbol: ningun nodo vacio y posiciones validas
+  [ok] en 510 programas (10 ejemplos y 500 al azar) no hay hijos None ni posiciones menores que 1
+  [ok] en el corpus aparecen los 11 tipos de nodo que producen programas correctos
+  [ok] Invalida solo aparece en programas con errores
+
+== 12. cobertura: ninguna regla omite su resultado
+  [ok] se usaron las 28 funciones de regla (sin contar p_error)
+  [ok] ninguna regla devolvio None
+
+== 13. representacion indentada para --debug
+  [ok] el dibujo coincide linea por linea con el calculado a mano
+  [ok] sin posiciones, el dibujo no lleva corchetes
+  [ok] un IF sin ELSE no dibuja la rama sino
+  [ok] un literal booleano se dibuja como TRUE/FALSE
+  [ok] el arbol parcial con errores tambien se puede dibujar (muestra Invalida)
+
+== 14. recorrido del arbol (para las dos pasadas de f07 y f08)
+  [ok] recorrer() entrega los nodos en preorden (la raiz primero)
+  [ok] un Visitante cuenta los 8 comandos de valido_3 (incluidos los de las dos ramas del IF)
+  [ok] recorrer() visita todos los nodos: coincide con el conteo de un visitante generico
+
+== 15. el parser solo construye el arbol
+  [ok] importar el parser no importa la semantica ni el simulador
+  [ok] los comandos quedan como datos (nombre y argumentos), sin ejecutarse
+  [ok] un programa con orden ilegal es sintacticamente correcto (el orden lo revisa la semantica)
+
+== 16. programas rotos al azar: sin excepciones y con las reglas de resultado
+  [ok] 5000 programas rotos (4659 con errores): ninguna excepcion
+  [ok] con errores el arbol es None; sin errores es un Programa sin Invalida; todo error trae linea, columna y mensaje
+
+== 17. uso desde la linea de comandos y gramatica
+  [ok] python codigo/parser.py con un programa correcto: codigo 0 y el arbol indentado
+  [ok] con errores: codigo 1 y mensajes [sintáctico]
+  [ok] sin argumentos: uso y codigo 2
+  [ok] comprobar_gramatica.py: gramatica coherente con la ebnf, sin advertencias ni conflictos de ply
+
+pruebas ejecutadas: 145; con resultado distinto del esperado: 0
+RESULTADO: todas las pruebas dieron lo esperado
+[codigo de salida: 0]

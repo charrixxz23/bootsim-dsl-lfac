@@ -1,0 +1,62 @@
+evidencia f08: ejecucion en Linux real (Ubuntu bajo WSL2) lanzada desde Windows (2026-11-21 13:01)
+sistema: Ubuntu 26.04 LTS; Python 3.14.4; PLY 3.11
+(PLY no esta instalado en ese Linux: se uso la copia de PLY 3.11 de las fases anteriores por PYTHONPATH; no se instalo nada en el Linux)
+
+$ sh codigo/run docs/anexos/plan_prototipo/ejemplos/valido_1_secuencia_basica.dsl
+=== resumen ===
+estado final: SO_ACTIVO
+pasos ejecutados: 10; fallos de arranque simulados: 0; comandos rechazados: 0
+
+PROGRAMA CORRECTO: la simulación terminó sin fallos de arranque.
+[codigo de salida 0]
+
+$ sh codigo/run evidencias/f08_programas/ram_defectuosa.dsl
+
+=== resumen ===
+estado final: ERROR_POST
+pasos ejecutados: 7; fallos de arranque simulados: 1; comandos rechazados: 1
+
+PROGRAMA CORRECTO, pero el arranque simulado terminó en el estado de error ERROR_POST (puede usar RESET_SYSTEM para recuperarse).
+[codigo de salida 4]
+
+$ sh codigo/run evidencias/f08_programas/bios_con_gpt.dsl
+=== resumen ===
+estado final: ERROR_ARRANQUE
+pasos ejecutados: 11; fallos de arranque simulados: 1; comandos rechazados: 2
+
+PROGRAMA CORRECTO, pero el arranque simulado terminó en el estado de error ERROR_ARRANQUE (puede usar RESET_SYSTEM para recuperarse).
+[codigo de salida 4]
+
+$ sh codigo/run docs/anexos/plan_prototipo/ejemplos/invalido_5_semantico_orden_y_limite.dsl
+[semántico S3] línea 3, columna 1: CHECK_RAM: 4096 GB de RAM está fuera del rango permitido (0 a 1024)
+[semántico S2] línea 4, columna 1: RUN_POST necesita antes CHECK_CPU, CHECK_DISK
+
+RECHAZADO: el programa tiene errores, así que no se simuló nada.
+[codigo de salida 1]
+
+$ sh codigo/run evidencias/f08_programas/latin1.dsl
+error de archivo: 'evidencias/f08_programas/latin1.dsl' no está codificado en UTF-8. Guárdelo como UTF-8 desde su editor.
+[codigo de salida 3]
+
+$ sh codigo/run evidencias/f08_programas/limite_pasos.dsl
+[ejecución] línea 10, columna 5: se superó el límite de 10000 pasos de ejecución
+
+ERROR DE EJECUCIÓN: la simulación se detuvo antes de terminar el programa.
+[codigo de salida 5]
+
+$ sh codigo/run
+error de uso: falta el archivo .dsl que se quiere simular
+use: python main.py ARCHIVO.dsl [--debug]   (más detalles con --help)
+[codigo de salida 2]
+
+$ python3 codigo/main.py evidencias/f08_programas/con_bom_crlf.dsl
+pasos ejecutados: 3; fallos de arranque simulados: 0; comandos rechazados: 0
+
+PROGRAMA CORRECTO: la simulación terminó sin fallos de arranque.
+[codigo de salida 0]
+
+$ cd codigo && python3 main.py ../docs/anexos/plan_prototipo/ejemplos/valido_4_repeat_y_bloque.dsl | tail -3
+pasos ejecutados: 9; fallos de arranque simulados: 0; comandos rechazados: 0
+
+PROGRAMA CORRECTO: la simulación terminó sin fallos de arranque.
+[codigo de salida 0]

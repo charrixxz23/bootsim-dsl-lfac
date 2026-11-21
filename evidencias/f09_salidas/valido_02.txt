@@ -1,0 +1,19 @@
+$ python codigo/main.py pruebas/validos/valido_02.dsl
+[codigo de salida 0]
+--- salida estandar ---
+BootSim DSL | archivo: pruebas/validos/valido_02.dsl
+
+=== simulación ===
+[línea 10] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+[línea 11] CHECK_CPU 8 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 12] CHECK_RAM 12 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 13] CHECK_DISK 256 MBR -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 14] RUN_POST -> ok (ENCENDIDO -> POST_OK)
+[línea 15] SHOW_STATUS -> estado=POST_OK | firmware=UEFI | cpu=8 | ram=12 GB | disco=256 GB MBR | initramfs=sin cargar
+
+=== resumen ===
+estado final: POST_OK
+pasos ejecutados: 14; fallos de arranque simulados: 0; comandos rechazados: 0
+
+PROGRAMA CORRECTO: la simulación terminó sin fallos de arranque.
+--- salida de error ---

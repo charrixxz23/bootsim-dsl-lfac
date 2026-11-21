@@ -1,0 +1,31 @@
+$ python codigo/main.py pruebas/invalidos/invalido_03.dsl --debug
+[codigo de salida 1]
+--- salida estandar ---
+BootSim DSL | archivo: pruebas/invalidos/invalido_03.dsl
+
+=== tokens ===
+línea:col  token            valor
+2:1        POWER_ON         'POWER_ON'
+2:9        PUNTOYCOMA       ';'
+3:1        REPEAT           'REPEAT'
+3:8        ENTERO           3
+3:10       TIMES            'TIMES'
+4:3        CHECK_CPU        'CHECK_CPU'
+4:13       ENTERO           2
+4:14       PUNTOYCOMA       ';'
+5:1        SHOW_STATUS      'SHOW_STATUS'
+5:12       PUNTOYCOMA       ';'
+
+=== árbol sintáctico ===
+Programa  [1:1]
+  Comando POWER_ON  [2:1]
+(árbol parcial: el programa tiene errores léxicos o sintácticos)
+
+=== análisis semántico ===
+(no se hizo: antes hay errores léxicos o sintácticos)
+
+=== errores de análisis ===
+[sintáctico] línea 6, columna 1: fin de archivo inesperado: falta ENDREPEAT para cerrar el REPEAT abierto en la línea 3, columna 1
+
+RECHAZADO: el programa tiene errores, así que no se simuló nada.
+--- salida de error ---

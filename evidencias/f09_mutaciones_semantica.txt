@@ -1,0 +1,28 @@
+evidencia f09: mutaciones de la semantica con el criterio reforzado: solo cuenta como detectada una mutacion si falla al menos una prueba de forma explicita (2026-11-21 13:48)
+[detectada] un literal entero acepta True (bool se mezcla con int) | probar_semantica.py: 1 fallos
+[detectada] la igualdad deja comparar tipos distintos | probar_semantica.py: 5 fallos
+[detectada] la division entre cero no se detecta | probar_semantica.py: 8 fallos
+[detectada] la division entera redondea hacia abajo en vez de truncar | probar_semantica.py: 4 fallos
+[detectada] una variable sin asignar se informa en cada uso (cascada) | probar_semantica.py: 1 fallos
+[detectada] el limite superior es un error por uno | probar_semantica.py: 5 fallos
+[detectada] REPEAT 1000 se rechaza | probar_semantica.py: 5 fallos
+[detectada] RUN_POST deja de pedir las lecturas | probar_semantica.py: 5 fallos
+[detectada] RESET_SYSTEM no borra las lecturas | probar_semantica.py: 1 fallos
+[detectada] la rama que no corre tambien se revisa en orden | probar_semantica.py: 3 fallos
+[detectada] la rama que no corre no se revisa | probar_semantica.py: 11 fallos
+[detectada] el cuerpo de REPEAT no se revisa una segunda vez | probar_semantica.py: 10 fallos
+[detectada] los pasos de las repeticiones no se multiplican | probar_semantica.py: 8 fallos
+[detectada] el limite de pasos pasa a 100 000 | probar_semantica.py: 2 fallos
+[detectada] no se avisa de los comandos rechazados tras un fallo | probar_semantica.py: 5 fallos
+[detectada] el aviso de firmware y esquema pierde su regla S5 | probar_semantica.py: 4 fallos
+[detectada] un programa con errores semanticos se acepta | probar_semantica.py: 6 fallos
+[detectada] RESET_SYSTEM no restablece los datos de la maquina | probar_semantica.py: 1 fallos
+[detectada] un estado de error acepta cualquier comando | probar_semantica.py: 1 fallos
+[detectada] los diagnosticos repetidos no se descartan | probar_semantica.py: 2 fallos
+[detectada] la condicion de un IF con error se trata como incierta (cascada de etapas) | probar_semantica.py: 1 fallos
+[detectada] los diagnosticos ya vistos se arrastran de un analisis al siguiente | probar_semantica.py: 2 fallos
+[equivalente, no cuenta] el resultado comparte la tabla de simbolos con el analizador (el analizador se crea nuevo en cada llamada y se descarta, nadie mas la ve) | las pruebas siguen en verde
+
+mutaciones: 22; sin detectar: 0
+RESULTADO: todas las mutaciones fueron detectadas
+[codigo de salida 0]

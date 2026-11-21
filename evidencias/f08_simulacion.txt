@@ -1,0 +1,556 @@
+evidencia f08: ejecuciones reales de python codigo/main.py (2026-11-21 13:01)
+python: Python 3.12.10; sistema: Windows, ejecutado desde Git Bash; PLY 3.11
+las ejecuciones las lanzo la IA en su sesion de trabajo; ningun integrante del equipo las ha repetido todavia.
+los archivos de entrada que no estan en docs/anexos/plan_prototipo/ejemplos estan en evidencias/f08_programas/.
+
+################ 1. ayuda y uso
+
+$ python codigo/main.py --help
+BootSim DSL: simulador educativo del arranque de una computadora.
+
+uso:
+  python codigo/main.py ARCHIVO.dsl [--debug]
+  python main.py ARCHIVO.dsl [--debug]        (desde la carpeta codigo/)
+
+opciones:
+  --debug       muestra tokens, árbol sintáctico, diagnósticos semánticos y la traza de la simulación
+  -h, --help    muestra esta ayuda
+
+códigos de salida:
+  0  programa correcto; el equipo simulado no terminó en un estado de error
+  1  errores léxicos, sintácticos o semánticos: no se simuló nada
+  2  argumentos incorrectos
+  3  archivo inexistente, ilegible, vacío o que no es UTF-8
+  4  programa correcto, pero el arranque simulado terminó en ERROR_POST, ERROR_ARRANQUE o KERNEL_PANIC
+  5  error de ejecución (límite de 10000 pasos, división entre cero, valor fuera de rango al correr)
+  70 fallo interno o dependencia faltante (por ejemplo PLY)
+
+la simulación solo ocurre en memoria: no modifica el firmware, los discos ni el arranque del equipo real.
+[codigo de salida 0]
+
+$ python codigo/main.py
+error de uso: falta el archivo .dsl que se quiere simular
+use: python main.py ARCHIVO.dsl [--debug]   (más detalles con --help)
+[codigo de salida 2]
+
+$ python codigo/main.py --no-existe docs/anexos/plan_prototipo/ejemplos/valido_1_secuencia_basica.dsl
+error de uso: opción desconocida: --no-existe
+use: python main.py ARCHIVO.dsl [--debug]   (más detalles con --help)
+[codigo de salida 2]
+
+$ python codigo/main.py docs/anexos/plan_prototipo/ejemplos/valido_1_secuencia_basica.dsl docs/anexos/plan_prototipo/ejemplos/valido_2_variables_y_expresiones.dsl
+error de uso: se indicó más de un archivo (docs/anexos/plan_prototipo/ejemplos/valido_1_secuencia_basica.dsl y docs/anexos/plan_prototipo/ejemplos/valido_2_variables_y_expresiones.dsl); solo se puede simular uno por vez
+use: python main.py ARCHIVO.dsl [--debug]   (más detalles con --help)
+[codigo de salida 2]
+
+################ 2. los cinco programas validos de f03
+
+$ python codigo/main.py docs/anexos/plan_prototipo/ejemplos/valido_1_secuencia_basica.dsl
+BootSim DSL | archivo: docs/anexos/plan_prototipo/ejemplos/valido_1_secuencia_basica.dsl
+
+=== simulación ===
+[línea 2] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+[línea 3] CHECK_CPU 4 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 4] CHECK_RAM 16 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 5] CHECK_DISK 512 GPT -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 6] RUN_POST -> ok (ENCENDIDO -> POST_OK)
+[línea 7] SELECT_BOOT DISK -> ok (POST_OK -> DISPOSITIVO_ELEGIDO)
+[línea 8] LOAD_BOOTLOADER GRUB -> ok (DISPOSITIVO_ELEGIDO -> GESTOR_CARGADO)
+[línea 9] LOAD_KERNEL "linux-6.1" TRUE -> ok (GESTOR_CARGADO -> KERNEL_CARGADO)
+[línea 10] START_OS -> ok (KERNEL_CARGADO -> SO_ACTIVO)
+[línea 11] SHOW_STATUS -> estado=SO_ACTIVO | firmware=UEFI | cpu=4 | ram=16 GB | disco=512 GB GPT | initramfs=sí
+
+=== resumen ===
+estado final: SO_ACTIVO
+pasos ejecutados: 10; fallos de arranque simulados: 0; comandos rechazados: 0
+
+PROGRAMA CORRECTO: la simulación terminó sin fallos de arranque.
+[codigo de salida 0]
+
+$ python codigo/main.py docs/anexos/plan_prototipo/ejemplos/valido_2_variables_y_expresiones.dsl
+BootSim DSL | archivo: docs/anexos/plan_prototipo/ejemplos/valido_2_variables_y_expresiones.dsl
+
+=== simulación ===
+[línea 5] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+[línea 6] CHECK_CPU 8 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 7] CHECK_RAM 12 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 8] CHECK_DISK 256 MBR -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 9] SHOW_STATUS -> estado=ENCENDIDO | firmware=UEFI | cpu=8 | ram=12 GB | disco=256 GB MBR | initramfs=sin cargar
+
+=== resumen ===
+estado final: ENCENDIDO
+pasos ejecutados: 8; fallos de arranque simulados: 0; comandos rechazados: 0
+
+PROGRAMA CORRECTO: la simulación terminó sin fallos de arranque.
+[codigo de salida 0]
+
+$ python codigo/main.py docs/anexos/plan_prototipo/ejemplos/valido_3_if_else_firmware.dsl
+BootSim DSL | archivo: docs/anexos/plan_prototipo/ejemplos/valido_3_if_else_firmware.dsl
+
+=== simulación ===
+[línea 2] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+[línea 6] SET_FIRMWARE BIOS -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 8] CHECK_CPU 2 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 9] CHECK_RAM 4 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 10] CHECK_DISK 120 MBR -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 11] RUN_POST -> ok (ENCENDIDO -> POST_OK)
+[línea 12] SHOW_STATUS -> estado=POST_OK | firmware=BIOS | cpu=2 | ram=4 GB | disco=120 GB MBR | initramfs=sin cargar
+
+=== resumen ===
+estado final: POST_OK
+pasos ejecutados: 9; fallos de arranque simulados: 0; comandos rechazados: 0
+
+PROGRAMA CORRECTO: la simulación terminó sin fallos de arranque.
+[codigo de salida 0]
+
+$ python codigo/main.py docs/anexos/plan_prototipo/ejemplos/valido_4_repeat_y_bloque.dsl
+BootSim DSL | archivo: docs/anexos/plan_prototipo/ejemplos/valido_4_repeat_y_bloque.dsl
+
+=== simulación ===
+[línea 1] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+[línea 3] CHECK_CPU 8 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 4] CHECK_RAM 32 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 5] CHECK_DISK 1000 GPT -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 8] SHOW_STATUS -> estado=ENCENDIDO | firmware=UEFI | cpu=8 | ram=32 GB | disco=1000 GB GPT | initramfs=sin cargar
+[línea 8] SHOW_STATUS -> estado=ENCENDIDO | firmware=UEFI | cpu=8 | ram=32 GB | disco=1000 GB GPT | initramfs=sin cargar
+[línea 8] SHOW_STATUS -> estado=ENCENDIDO | firmware=UEFI | cpu=8 | ram=32 GB | disco=1000 GB GPT | initramfs=sin cargar
+[línea 8] SHOW_STATUS -> estado=ENCENDIDO | firmware=UEFI | cpu=8 | ram=32 GB | disco=1000 GB GPT | initramfs=sin cargar
+
+=== resumen ===
+estado final: ENCENDIDO
+pasos ejecutados: 9; fallos de arranque simulados: 0; comandos rechazados: 0
+
+PROGRAMA CORRECTO: la simulación terminó sin fallos de arranque.
+[codigo de salida 0]
+
+$ python codigo/main.py docs/anexos/plan_prototipo/ejemplos/valido_5_kernel_panic_y_reinicio.dsl
+BootSim DSL | archivo: docs/anexos/plan_prototipo/ejemplos/valido_5_kernel_panic_y_reinicio.dsl
+
+=== avisos (no impiden simular) ===
+[aviso A1] línea 10, columna 1: se prevé que la simulación termine en KERNEL_PANIC: no se pudo montar el sistema de archivos raíz (no hay initramfs)
+
+=== simulación ===
+[línea 2] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+[línea 3] CHECK_CPU 2 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 4] CHECK_RAM 4 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 5] CHECK_DISK 64 GPT -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 6] RUN_POST -> ok (ENCENDIDO -> POST_OK)
+[línea 7] SELECT_BOOT DISK -> ok (POST_OK -> DISPOSITIVO_ELEGIDO)
+[línea 8] LOAD_BOOTLOADER GRUB -> ok (DISPOSITIVO_ELEGIDO -> GESTOR_CARGADO)
+[línea 9] LOAD_KERNEL "linux-roto" FALSE -> ok (GESTOR_CARGADO -> KERNEL_CARGADO)
+[línea 10] START_OS -> ERROR SIMULADO (KERNEL_PANIC): no se pudo montar el sistema de archivos raíz (no hay initramfs)
+[línea 11] SHOW_STATUS -> estado=KERNEL_PANIC | firmware=UEFI | cpu=2 | ram=4 GB | disco=64 GB GPT | initramfs=no
+[línea 12] RESET_SYSTEM -> reinicio simulado: estado=APAGADO
+
+=== resumen ===
+estado final: APAGADO
+pasos ejecutados: 11; fallos de arranque simulados: 1; comandos rechazados: 0
+
+PROGRAMA CORRECTO: hubo 1 fallo(s) de arranque simulado(s), pero el equipo terminó en un estado normal.
+[codigo de salida 0]
+
+################ 3. los cinco programas invalidos de f03 (nada se simula)
+
+$ python codigo/main.py docs/anexos/plan_prototipo/ejemplos/invalido_1_lexico.dsl
+BootSim DSL | archivo: docs/anexos/plan_prototipo/ejemplos/invalido_1_lexico.dsl
+
+=== errores de análisis ===
+[léxico] línea 2, columna 13: carácter inesperado '@': no forma parte del lenguaje
+[léxico] línea 3, columna 13: cadena sin cerrar: falta la comilla de cierre (") antes del fin de la línea; se supone que la cadena termina antes del ';'
+[sintáctico] línea 3, columna 28: el símbolo ';' no corresponde en este lugar; se esperaba un valor o una expresión (número, variable, cadena, TRUE, FALSE, paréntesis, "-" o NOT)
+
+RECHAZADO: el programa tiene errores, así que no se simuló nada.
+[codigo de salida 1]
+
+$ python codigo/main.py docs/anexos/plan_prototipo/ejemplos/invalido_2_sintactico_falta_puntoycoma.dsl
+BootSim DSL | archivo: docs/anexos/plan_prototipo/ejemplos/invalido_2_sintactico_falta_puntoycoma.dsl
+
+=== errores de análisis ===
+[sintáctico] línea 2, columna 1: la palabra 'CHECK_CPU' no corresponde en este lugar; se esperaba ';' al final de la sentencia anterior
+[sintáctico] línea 3, columna 11: el símbolo ';' no corresponde en este lugar; se esperaba un valor o una expresión (número, variable, cadena, TRUE, FALSE, paréntesis, "-" o NOT)
+
+RECHAZADO: el programa tiene errores, así que no se simuló nada.
+[codigo de salida 1]
+
+$ python codigo/main.py docs/anexos/plan_prototipo/ejemplos/invalido_3_sintactico_if_sin_endif.dsl
+BootSim DSL | archivo: docs/anexos/plan_prototipo/ejemplos/invalido_3_sintactico_if_sin_endif.dsl
+
+=== errores de análisis ===
+[sintáctico] línea 5, columna 1: fin de archivo inesperado: falta ENDIF para cerrar el IF abierto en la línea 2, columna 1
+
+RECHAZADO: el programa tiene errores, así que no se simuló nada.
+[codigo de salida 1]
+
+$ python codigo/main.py docs/anexos/plan_prototipo/ejemplos/invalido_4_semantico_variable.dsl
+BootSim DSL | archivo: docs/anexos/plan_prototipo/ejemplos/invalido_4_semantico_variable.dsl
+
+=== errores de análisis ===
+[semántico S1] línea 2, columna 11: la variable 'memoria_total' se usa antes de asignarle un valor (use SET memoria_total = ...; antes)
+
+RECHAZADO: el programa tiene errores, así que no se simuló nada.
+[codigo de salida 1]
+
+$ python codigo/main.py docs/anexos/plan_prototipo/ejemplos/invalido_5_semantico_orden_y_limite.dsl
+BootSim DSL | archivo: docs/anexos/plan_prototipo/ejemplos/invalido_5_semantico_orden_y_limite.dsl
+
+=== errores de análisis ===
+[semántico S2] línea 1, columna 1: LOAD_KERNEL está fuera de orden: el arranque está en APAGADO y LOAD_KERNEL se usa en GESTOR_CARGADO; en este punto se puede usar: POWER_ON, SHOW_STATUS, RESET_SYSTEM
+[semántico S3] línea 3, columna 1: CHECK_RAM: 4096 GB de RAM está fuera del rango permitido (0 a 1024)
+[semántico S2] línea 4, columna 1: RUN_POST necesita antes CHECK_CPU, CHECK_DISK
+
+RECHAZADO: el programa tiene errores, así que no se simuló nada.
+[codigo de salida 1]
+
+$ python codigo/main.py evidencias/f08_programas/error_semantico_division.dsl
+BootSim DSL | archivo: evidencias/f08_programas/error_semantico_division.dsl
+
+=== errores de análisis ===
+[semántico S6] línea 3, columna 20: división entre cero: el divisor vale 0
+
+RECHAZADO: el programa tiene errores, así que no se simuló nada.
+[codigo de salida 1]
+
+################ 4. fallos de arranque simulados (el programa es correcto)
+
+$ python codigo/main.py evidencias/f08_programas/ram_defectuosa.dsl
+BootSim DSL | archivo: evidencias/f08_programas/ram_defectuosa.dsl
+
+=== avisos (no impiden simular) ===
+[aviso A1] línea 6, columna 1: se prevé que la simulación termine en ERROR_POST: no se detecta memoria RAM (en un equipo real sonarían pitidos)
+[aviso A2] línea 7, columna 1: SELECT_BOOT será rechazado en la simulación: el sistema está en ERROR_POST; solo se aceptan SHOW_STATUS y RESET_SYSTEM; RESET_SYSTEM permite volver a empezar
+
+=== simulación ===
+[línea 2] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+[línea 3] CHECK_CPU 4 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 4] CHECK_RAM 0 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 5] CHECK_DISK 256 GPT -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 6] RUN_POST -> ERROR SIMULADO (ERROR_POST): no se detecta memoria RAM (en un equipo real sonarían pitidos)
+[línea 7] SELECT_BOOT DISK -> RECHAZADO: el sistema está en ERROR_POST; solo se aceptan SHOW_STATUS y RESET_SYSTEM
+[línea 8] SHOW_STATUS -> estado=ERROR_POST | firmware=UEFI | cpu=4 | ram=0 GB | disco=256 GB GPT | initramfs=sin cargar
+
+=== resumen ===
+estado final: ERROR_POST
+pasos ejecutados: 7; fallos de arranque simulados: 1; comandos rechazados: 1
+
+PROGRAMA CORRECTO, pero el arranque simulado terminó en el estado de error ERROR_POST (puede usar RESET_SYSTEM para recuperarse).
+[codigo de salida 4]
+
+$ python codigo/main.py evidencias/f08_programas/usb_sin_medio.dsl
+BootSim DSL | archivo: evidencias/f08_programas/usb_sin_medio.dsl
+
+=== avisos (no impiden simular) ===
+[aviso A1] línea 7, columna 1: se prevé que la simulación termine en ERROR_ARRANQUE: no hay medio de arranque en USB
+[aviso A2] línea 8, columna 1: LOAD_BOOTLOADER será rechazado en la simulación: el sistema está en ERROR_ARRANQUE; solo se aceptan SHOW_STATUS y RESET_SYSTEM; RESET_SYSTEM permite volver a empezar
+
+=== simulación ===
+[línea 2] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+[línea 3] CHECK_CPU 4 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 4] CHECK_RAM 8 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 5] CHECK_DISK 256 GPT -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 6] RUN_POST -> ok (ENCENDIDO -> POST_OK)
+[línea 7] SELECT_BOOT USB -> ERROR SIMULADO (ERROR_ARRANQUE): no hay medio de arranque en USB
+[línea 8] LOAD_BOOTLOADER GRUB -> RECHAZADO: el sistema está en ERROR_ARRANQUE; solo se aceptan SHOW_STATUS y RESET_SYSTEM
+[línea 9] SHOW_STATUS -> estado=ERROR_ARRANQUE | firmware=UEFI | cpu=4 | ram=8 GB | disco=256 GB GPT | initramfs=sin cargar
+
+=== resumen ===
+estado final: ERROR_ARRANQUE
+pasos ejecutados: 8; fallos de arranque simulados: 1; comandos rechazados: 1
+
+PROGRAMA CORRECTO, pero el arranque simulado terminó en el estado de error ERROR_ARRANQUE (puede usar RESET_SYSTEM para recuperarse).
+[codigo de salida 4]
+
+$ python codigo/main.py evidencias/f08_programas/bios_con_gpt.dsl
+BootSim DSL | archivo: evidencias/f08_programas/bios_con_gpt.dsl
+
+=== avisos (no impiden simular) ===
+[aviso S5] línea 9, columna 1: se prevé que la simulación termine en ERROR_ARRANQUE: el firmware BIOS y el esquema GPT no son compatibles en este simulador
+[aviso A2] línea 10, columna 1: LOAD_KERNEL será rechazado en la simulación: el sistema está en ERROR_ARRANQUE; solo se aceptan SHOW_STATUS y RESET_SYSTEM; RESET_SYSTEM permite volver a empezar
+[aviso A2] línea 11, columna 1: START_OS será rechazado en la simulación: el sistema está en ERROR_ARRANQUE; solo se aceptan SHOW_STATUS y RESET_SYSTEM; RESET_SYSTEM permite volver a empezar
+
+=== simulación ===
+[línea 2] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+[línea 3] SET_FIRMWARE BIOS -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 4] CHECK_CPU 4 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 5] CHECK_RAM 8 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 6] CHECK_DISK 256 GPT -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 7] RUN_POST -> ok (ENCENDIDO -> POST_OK)
+[línea 8] SELECT_BOOT DISK -> ok (POST_OK -> DISPOSITIVO_ELEGIDO)
+[línea 9] LOAD_BOOTLOADER GRUB -> ERROR SIMULADO (ERROR_ARRANQUE): el firmware BIOS y el esquema GPT no son compatibles en este simulador
+[línea 10] LOAD_KERNEL "linux-6.1" TRUE -> RECHAZADO: el sistema está en ERROR_ARRANQUE; solo se aceptan SHOW_STATUS y RESET_SYSTEM
+[línea 11] START_OS -> RECHAZADO: el sistema está en ERROR_ARRANQUE; solo se aceptan SHOW_STATUS y RESET_SYSTEM
+[línea 12] SHOW_STATUS -> estado=ERROR_ARRANQUE | firmware=BIOS | cpu=4 | ram=8 GB | disco=256 GB GPT | initramfs=sin cargar
+
+=== resumen ===
+estado final: ERROR_ARRANQUE
+pasos ejecutados: 11; fallos de arranque simulados: 1; comandos rechazados: 2
+
+PROGRAMA CORRECTO, pero el arranque simulado terminó en el estado de error ERROR_ARRANQUE (puede usar RESET_SYSTEM para recuperarse).
+[codigo de salida 4]
+
+$ python codigo/main.py evidencias/f08_programas/kernel_panic_sin_reinicio.dsl
+BootSim DSL | archivo: evidencias/f08_programas/kernel_panic_sin_reinicio.dsl
+
+=== avisos (no impiden simular) ===
+[aviso A1] línea 10, columna 1: se prevé que la simulación termine en KERNEL_PANIC: no se pudo montar el sistema de archivos raíz (no hay initramfs)
+
+=== simulación ===
+[línea 2] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+[línea 3] CHECK_CPU 2 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 4] CHECK_RAM 4 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 5] CHECK_DISK 64 GPT -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 6] RUN_POST -> ok (ENCENDIDO -> POST_OK)
+[línea 7] SELECT_BOOT DISK -> ok (POST_OK -> DISPOSITIVO_ELEGIDO)
+[línea 8] LOAD_BOOTLOADER GRUB -> ok (DISPOSITIVO_ELEGIDO -> GESTOR_CARGADO)
+[línea 9] LOAD_KERNEL "linux-roto" FALSE -> ok (GESTOR_CARGADO -> KERNEL_CARGADO)
+[línea 10] START_OS -> ERROR SIMULADO (KERNEL_PANIC): no se pudo montar el sistema de archivos raíz (no hay initramfs)
+[línea 11] SHOW_STATUS -> estado=KERNEL_PANIC | firmware=UEFI | cpu=2 | ram=4 GB | disco=64 GB GPT | initramfs=no
+
+=== resumen ===
+estado final: KERNEL_PANIC
+pasos ejecutados: 10; fallos de arranque simulados: 1; comandos rechazados: 0
+
+PROGRAMA CORRECTO, pero el arranque simulado terminó en el estado de error KERNEL_PANIC (puede usar RESET_SYSTEM para recuperarse).
+[codigo de salida 4]
+
+$ python codigo/main.py evidencias/f08_programas/reinicio_tras_fallo.dsl
+BootSim DSL | archivo: evidencias/f08_programas/reinicio_tras_fallo.dsl
+
+=== avisos (no impiden simular) ===
+[aviso A1] línea 7, columna 1: se prevé que la simulación termine en ERROR_POST: no se detecta memoria RAM (en un equipo real sonarían pitidos)
+[aviso A2] línea 8, columna 1: SELECT_BOOT será rechazado en la simulación: el sistema está en ERROR_POST; solo se aceptan SHOW_STATUS y RESET_SYSTEM; RESET_SYSTEM permite volver a empezar
+
+=== simulación ===
+[línea 3] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+[línea 4] CHECK_CPU 4 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 5] CHECK_RAM 0 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 6] CHECK_DISK 256 GPT -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 7] RUN_POST -> ERROR SIMULADO (ERROR_POST): no se detecta memoria RAM (en un equipo real sonarían pitidos)
+[línea 8] SELECT_BOOT DISK -> RECHAZADO: el sistema está en ERROR_POST; solo se aceptan SHOW_STATUS y RESET_SYSTEM
+[línea 9] RESET_SYSTEM -> reinicio simulado: estado=APAGADO
+[línea 10] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+[línea 11] CHECK_CPU 4 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 12] CHECK_RAM 8 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 13] CHECK_DISK 256 GPT -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 14] RUN_POST -> ok (ENCENDIDO -> POST_OK)
+[línea 15] SELECT_BOOT DISK -> ok (POST_OK -> DISPOSITIVO_ELEGIDO)
+[línea 16] LOAD_BOOTLOADER GRUB -> ok (DISPOSITIVO_ELEGIDO -> GESTOR_CARGADO)
+[línea 17] LOAD_KERNEL "linux-6.1" TRUE -> ok (GESTOR_CARGADO -> KERNEL_CARGADO)
+[línea 18] START_OS -> ok (KERNEL_CARGADO -> SO_ACTIVO)
+[línea 19] SHOW_STATUS -> estado=SO_ACTIVO | firmware=UEFI | cpu=4 | ram=8 GB | disco=256 GB GPT | initramfs=sí
+
+=== resumen ===
+estado final: SO_ACTIVO
+pasos ejecutados: 18; fallos de arranque simulados: 1; comandos rechazados: 1
+
+PROGRAMA CORRECTO: hubo 1 fallo(s) de arranque simulado(s), pero el equipo terminó en un estado normal.
+[codigo de salida 0]
+
+################ 5. valores que solo se conocen al correr: IF y REPEAT, y el limite de pasos
+
+$ python codigo/main.py evidencias/f08_programas/variables_if_repeat.dsl --debug
+BootSim DSL | archivo: evidencias/f08_programas/variables_if_repeat.dsl
+
+=== tokens ===
+línea:col  token            valor
+2:1        SET              'SET'
+2:5        ID               'x'
+2:7        ASIGNA           '='
+2:9        ENTERO           0
+2:10       PUNTOYCOMA       ';'
+3:1        REPEAT           'REPEAT'
+3:8        ENTERO           3
+3:10       TIMES            'TIMES'
+4:3        SET              'SET'
+4:7        ID               'x'
+4:9        ASIGNA           '='
+4:11       ID               'x'
+4:13       MAS              '+'
+4:15       ENTERO           1
+4:16       PUNTOYCOMA       ';'
+5:1        ENDREPEAT        'ENDREPEAT'
+6:1        POWER_ON         'POWER_ON'
+6:9        PUNTOYCOMA       ';'
+7:1        IF               'IF'
+7:4        ID               'x'
+7:6        MAYOR            '>'
+7:8        ENTERO           2
+7:10       THEN             'THEN'
+8:3        CHECK_CPU        'CHECK_CPU'
+8:13       ENTERO           8
+8:14       PUNTOYCOMA       ';'
+9:1        ELSE             'ELSE'
+10:3       CHECK_CPU        'CHECK_CPU'
+10:13      ENTERO           1
+10:14      PUNTOYCOMA       ';'
+11:1       ENDIF            'ENDIF'
+12:1       SHOW_STATUS      'SHOW_STATUS'
+12:12      PUNTOYCOMA       ';'
+
+=== árbol sintáctico ===
+Programa  [1:1]
+  Asignar nombre=x  [2:1]
+    Literal entero 0  [2:9]
+  Repetir  [3:1]
+    cantidad:
+      Literal entero 3  [3:8]
+    cuerpo:
+      Asignar nombre=x  [4:3]
+        BinOp +  [4:13]
+          Variable x  [4:11]
+          Literal entero 1  [4:15]
+  Comando POWER_ON  [6:1]
+  Si  [7:1]
+    condicion:
+      BinOp >  [7:6]
+        Variable x  [7:4]
+        Literal entero 2  [7:8]
+    entonces:
+      Comando CHECK_CPU  [8:3]
+        Literal entero 8  [8:13]
+    sino:
+      Comando CHECK_CPU  [10:3]
+        Literal entero 1  [10:13]
+  Comando SHOW_STATUS  [12:1]
+
+=== análisis semántico ===
+sin errores ni avisos
+variable         tipo       valor
+x                entero     (no calculable)
+pasos mínimos de ejecución: 9; etapa al final (sin fallos): ENCENDIDO
+
+=== simulación ===
+[línea 6] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+[línea 8] CHECK_CPU 8 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 12] SHOW_STATUS -> estado=ENCENDIDO | firmware=UEFI | cpu=8 | ram=sin leer | disco=sin leer | initramfs=sin cargar
+
+=== traza del control de flujo ===
+[línea 3] REPEAT: el cuerpo se ejecuta 3 vez/veces
+[línea 7] IF: la condición vale TRUE, se ejecuta la rama THEN
+
+=== variables al terminar ===
+x = 3
+
+=== resumen ===
+estado final: ENCENDIDO
+pasos ejecutados: 9; fallos de arranque simulados: 0; comandos rechazados: 0
+
+PROGRAMA CORRECTO: la simulación terminó sin fallos de arranque.
+[codigo de salida 0]
+
+$ python codigo/main.py evidencias/f08_programas/limite_pasos.dsl   (salida recortada: primeras 6 y ultimas 7 lineas)
+BootSim DSL | archivo: evidencias/f08_programas/limite_pasos.dsl
+
+=== simulación ===
+[línea 10] SHOW_STATUS -> estado=APAGADO | firmware=UEFI | cpu=sin leer | ram=sin leer | disco=sin leer | initramfs=sin cargar
+[línea 10] SHOW_STATUS -> estado=APAGADO | firmware=UEFI | cpu=sin leer | ram=sin leer | disco=sin leer | initramfs=sin cargar
+[línea 10] SHOW_STATUS -> estado=APAGADO | firmware=UEFI | cpu=sin leer | ram=sin leer | disco=sin leer | initramfs=sin cargar
+   [... 9966 lineas en total ...]
+
+=== resumen ===
+estado final: APAGADO
+pasos ejecutados: 10000; fallos de arranque simulados: 0; comandos rechazados: 0
+[ejecución] línea 10, columna 5: se superó el límite de 10000 pasos de ejecución
+
+ERROR DE EJECUCIÓN: la simulación se detuvo antes de terminar el programa.
+[codigo de salida 5]
+
+################ 6. archivos
+
+$ python codigo/main.py no_existe.dsl
+error de archivo: no existe el archivo 'no_existe.dsl'. Revise el nombre y la carpeta.
+[codigo de salida 3]
+
+$ python codigo/main.py evidencias
+error de archivo: 'evidencias' es una carpeta, no un archivo .dsl.
+[codigo de salida 3]
+
+$ python codigo/main.py evidencias/f08_programas/vacio.dsl
+error de archivo: el archivo 'evidencias/f08_programas/vacio.dsl' está vacío: no hay nada que analizar.
+[codigo de salida 3]
+
+$ python codigo/main.py evidencias/f08_programas/latin1.dsl
+error de archivo: 'evidencias/f08_programas/latin1.dsl' no está codificado en UTF-8. Guárdelo como UTF-8 desde su editor.
+[codigo de salida 3]
+
+$ python codigo/main.py evidencias/f08_programas/con_bom_crlf.dsl
+BootSim DSL | archivo: evidencias/f08_programas/con_bom_crlf.dsl
+
+=== simulación ===
+[línea 1] POWER_ON -> ok (APAGADO -> ENCENDIDO)
+[línea 2] CHECK_CPU 2 -> ok (ENCENDIDO -> ENCENDIDO)
+[línea 3] SHOW_STATUS -> estado=ENCENDIDO | firmware=UEFI | cpu=2 | ram=sin leer | disco=sin leer | initramfs=sin cargar
+
+=== resumen ===
+estado final: ENCENDIDO
+pasos ejecutados: 3; fallos de arranque simulados: 0; comandos rechazados: 0
+
+PROGRAMA CORRECTO: la simulación terminó sin fallos de arranque.
+[codigo de salida 0]
+
+################ 7. --debug de un programa con error (se muestran tokens y arbol, no se simula)
+
+$ python codigo/main.py docs/anexos/plan_prototipo/ejemplos/invalido_4_semantico_variable.dsl --debug
+BootSim DSL | archivo: docs/anexos/plan_prototipo/ejemplos/invalido_4_semantico_variable.dsl
+
+=== tokens ===
+línea:col  token            valor
+1:1        POWER_ON         'POWER_ON'
+1:9        PUNTOYCOMA       ';'
+2:1        CHECK_RAM        'CHECK_RAM'
+2:11       ID               'memoria_total'
+2:24       PUNTOYCOMA       ';'
+3:1        SHOW_STATUS      'SHOW_STATUS'
+3:12       PUNTOYCOMA       ';'
+
+=== árbol sintáctico ===
+Programa  [1:1]
+  Comando POWER_ON  [1:1]
+  Comando CHECK_RAM  [2:1]
+    Variable memoria_total  [2:11]
+  Comando SHOW_STATUS  [3:1]
+
+=== análisis semántico ===
+[semántico S1] línea 2, columna 11: la variable 'memoria_total' se usa antes de asignarle un valor (use SET memoria_total = ...; antes)
+variable         tipo       valor
+memoria_total    ?          (no calculable)
+pasos mínimos de ejecución: 3; etapa al final (sin fallos): ENCENDIDO
+
+=== errores de análisis ===
+[semántico S1] línea 2, columna 11: la variable 'memoria_total' se usa antes de asignarle un valor (use SET memoria_total = ...; antes)
+
+RECHAZADO: el programa tiene errores, así que no se simuló nada.
+[codigo de salida 1]
+
+################ 8. desde la carpeta codigo/ (python main.py)
+$ cd codigo && python main.py ../docs/anexos/plan_prototipo/ejemplos/valido_1_secuencia_basica.dsl
+estado final: SO_ACTIVO
+pasos ejecutados: 10; fallos de arranque simulados: 0; comandos rechazados: 0
+
+PROGRAMA CORRECTO: la simulación terminó sin fallos de arranque.
+[codigo de salida 0]
+
+################ 9. lanzador de CMD de windows (codigo\run.bat)
+$ cmd /c codigo\run.bat docs/anexos/plan_prototipo/ejemplos\valido_1_secuencia_basica.dsl   (se muestran las ultimas 4 lineas)
+estado final: SO_ACTIVO
+pasos ejecutados: 10; fallos de arranque simulados: 0; comandos rechazados: 0
+
+PROGRAMA CORRECTO: la simulación terminó sin fallos de arranque.
+[codigo de salida 0]
+$ cmd /c codigo\run.bat evidencias/f08_programas\ram_defectuosa.dsl   (ultimas 4 lineas)
+estado final: ERROR_POST
+pasos ejecutados: 7; fallos de arranque simulados: 1; comandos rechazados: 1
+
+PROGRAMA CORRECTO, pero el arranque simulado terminó en el estado de error ERROR_POST (puede usar RESET_SYSTEM para recuperarse).
+[codigo de salida 4]
+$ cmd /c codigo\run.bat   (sin argumentos)
+error de uso: falta el archivo .dsl que se quiere simular
+use: python main.py ARCHIVO.dsl [--debug]   (más detalles con --help)
+[codigo de salida 2]
+
+################ 10. lanzador sh (codigo/run) en Git Bash
+$ sh codigo/run docs/anexos/plan_prototipo/ejemplos/valido_5_kernel_panic_y_reinicio.dsl   (ultimas 4 lineas)
+estado final: APAGADO
+pasos ejecutados: 11; fallos de arranque simulados: 1; comandos rechazados: 0
+
+PROGRAMA CORRECTO: hubo 1 fallo(s) de arranque simulado(s), pero el equipo terminó en un estado normal.
+[codigo de salida 0]

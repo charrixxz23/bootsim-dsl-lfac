@@ -1,0 +1,43 @@
+evidencia f08: regresiones de f05, f06 y f07 con el codigo final de f08 (2026-11-21 13:02)
+
+$ python codigo/probar_lexer.py   (ultimas lineas)
+  [ok] sin argumentos muestra el uso y sale con codigo 2
+
+pruebas ejecutadas: 104; con resultado distinto del esperado: 0
+RESULTADO: todas las pruebas dieron lo esperado
+[codigo de salida 0]
+
+$ python codigo/comparar_lexer_borrador.py   (ultimas lineas)
+  [igual] valido_5_kernel_panic_y_reinicio.dsl: mismo árbol, 0 errores sintácticos, 0 léxicos
+
+diferencias inesperadas en total: 0
+RESULTADO: el lexer definitivo coincide con el borrador salvo en lo previsto
+[codigo de salida 0]
+
+$ python codigo/probar_parser.py   (ultimas lineas)
+  [ok] comprobar_gramatica.py: gramatica coherente con la ebnf, sin advertencias ni conflictos de ply
+
+pruebas ejecutadas: 145; con resultado distinto del esperado: 0
+RESULTADO: todas las pruebas dieron lo esperado
+[codigo de salida 0]
+
+$ python codigo/comparar_parser_borrador.py   (ultimas lineas)
+  programas rotos con al menos un error sintactico: 13968
+
+diferencias inesperadas en total: 0
+RESULTADO: el parser definitivo coincide con el borrador (arboles y posiciones de errores)
+[codigo de salida 0]
+
+$ python codigo/probar_semantica.py   (ultimas lineas)
+  [ok] sin argumentos: uso y codigo 2
+
+pruebas ejecutadas: 302; con resultado distinto del esperado: 0
+RESULTADO: todas las pruebas dieron lo esperado
+[codigo de salida 0]
+
+$ python codigo/comparar_semantica_borrador.py   (ultimas lineas)
+  [igual] valido_5_kernel_panic_y_reinicio.dsl
+
+casos: 48; iguales: 47; con diferencia explicada: 1; inesperadas: 0
+RESULTADO: todas las diferencias tienen explicacion
+[codigo de salida 0]
