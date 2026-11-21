@@ -1,0 +1,2883 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> programa
+Rule 1     programa -> lista_sentencias
+Rule 2     lista_sentencias -> sentencia
+Rule 3     lista_sentencias -> lista_sentencias sentencia
+Rule 4     sentencia -> comando PUNTOYCOMA
+Rule 5     sentencia -> SET ID ASIGNA expr PUNTOYCOMA
+Rule 6     sentencia -> IF expr THEN lista_sentencias ENDIF
+Rule 7     sentencia -> IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF
+Rule 8     sentencia -> REPEAT expr TIMES lista_sentencias ENDREPEAT
+Rule 9     sentencia -> BEGIN lista_sentencias END
+Rule 10    sentencia -> error PUNTOYCOMA
+Rule 11    comando -> POWER_ON
+Rule 12    comando -> RUN_POST
+Rule 13    comando -> START_OS
+Rule 14    comando -> SHOW_STATUS
+Rule 15    comando -> RESET_SYSTEM
+Rule 16    comando -> CHECK_CPU expr
+Rule 17    comando -> CHECK_RAM expr
+Rule 18    comando -> CHECK_DISK expr esquema
+Rule 19    comando -> SET_FIRMWARE firmware
+Rule 20    comando -> SELECT_BOOT dispositivo
+Rule 21    comando -> LOAD_BOOTLOADER GRUB
+Rule 22    comando -> LOAD_KERNEL CADENA expr
+Rule 23    esquema -> MBR
+Rule 24    esquema -> GPT
+Rule 25    firmware -> BIOS
+Rule 26    firmware -> UEFI
+Rule 27    dispositivo -> DISK
+Rule 28    dispositivo -> USB
+Rule 29    dispositivo -> NETWORK
+Rule 30    expr -> expr MAS expr
+Rule 31    expr -> expr MENOS expr
+Rule 32    expr -> expr MULT expr
+Rule 33    expr -> expr DIV expr
+Rule 34    expr -> expr IGUAL expr
+Rule 35    expr -> expr DISTINTO expr
+Rule 36    expr -> expr MENOR expr
+Rule 37    expr -> expr MAYOR expr
+Rule 38    expr -> expr MENORIGUAL expr
+Rule 39    expr -> expr MAYORIGUAL expr
+Rule 40    expr -> expr AND expr
+Rule 41    expr -> expr OR expr
+Rule 42    expr -> NOT expr
+Rule 43    expr -> MENOS expr
+Rule 44    expr -> PARENIZQ expr PARENDER
+Rule 45    expr -> ENTERO
+Rule 46    expr -> CADENA
+Rule 47    expr -> TRUE
+Rule 48    expr -> FALSE
+Rule 49    expr -> ID
+
+Terminals, with rules where they appear
+
+AND                  : 40
+ASIGNA               : 5
+BEGIN                : 9
+BIOS                 : 25
+CADENA               : 22 46
+CHECK_CPU            : 16
+CHECK_DISK           : 18
+CHECK_RAM            : 17
+DISK                 : 27
+DISTINTO             : 35
+DIV                  : 33
+ELSE                 : 7
+END                  : 9
+ENDIF                : 6 7
+ENDREPEAT            : 8
+ENTERO               : 45
+FALSE                : 48
+GPT                  : 24
+GRUB                 : 21
+ID                   : 5 49
+IF                   : 6 7
+IGUAL                : 34
+LOAD_BOOTLOADER      : 21
+LOAD_KERNEL          : 22
+MAS                  : 30
+MAYOR                : 37
+MAYORIGUAL           : 39
+MBR                  : 23
+MENOR                : 36
+MENORIGUAL           : 38
+MENOS                : 31 43
+MULT                 : 32
+NETWORK              : 29
+NOT                  : 42
+OR                   : 41
+PARENDER             : 44
+PARENIZQ             : 44
+POWER_ON             : 11
+PUNTOYCOMA           : 4 5 10
+REPEAT               : 8
+RESET_SYSTEM         : 15
+RUN_POST             : 12
+SELECT_BOOT          : 20
+SET                  : 5
+SET_FIRMWARE         : 19
+SHOW_STATUS          : 14
+START_OS             : 13
+THEN                 : 6 7
+TIMES                : 8
+TRUE                 : 47
+UEFI                 : 26
+USB                  : 28
+error                : 10
+
+Nonterminals, with rules where they appear
+
+comando              : 4
+dispositivo          : 20
+esquema              : 18
+expr                 : 5 6 7 8 16 17 18 22 30 30 31 31 32 32 33 33 34 34 35 35 36 36 37 37 38 38 39 39 40 40 41 41 42 43 44
+firmware             : 19
+lista_sentencias     : 1 3 6 7 7 8 9
+programa             : 0
+sentencia            : 2 3
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . programa
+    (1) programa -> . lista_sentencias
+    (2) lista_sentencias -> . sentencia
+    (3) lista_sentencias -> . lista_sentencias sentencia
+    (4) sentencia -> . comando PUNTOYCOMA
+    (5) sentencia -> . SET ID ASIGNA expr PUNTOYCOMA
+    (6) sentencia -> . IF expr THEN lista_sentencias ENDIF
+    (7) sentencia -> . IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF
+    (8) sentencia -> . REPEAT expr TIMES lista_sentencias ENDREPEAT
+    (9) sentencia -> . BEGIN lista_sentencias END
+    (10) sentencia -> . error PUNTOYCOMA
+    (11) comando -> . POWER_ON
+    (12) comando -> . RUN_POST
+    (13) comando -> . START_OS
+    (14) comando -> . SHOW_STATUS
+    (15) comando -> . RESET_SYSTEM
+    (16) comando -> . CHECK_CPU expr
+    (17) comando -> . CHECK_RAM expr
+    (18) comando -> . CHECK_DISK expr esquema
+    (19) comando -> . SET_FIRMWARE firmware
+    (20) comando -> . SELECT_BOOT dispositivo
+    (21) comando -> . LOAD_BOOTLOADER GRUB
+    (22) comando -> . LOAD_KERNEL CADENA expr
+
+    SET             shift and go to state 5
+    IF              shift and go to state 6
+    REPEAT          shift and go to state 7
+    BEGIN           shift and go to state 8
+    error           shift and go to state 9
+    POWER_ON        shift and go to state 10
+    RUN_POST        shift and go to state 11
+    START_OS        shift and go to state 12
+    SHOW_STATUS     shift and go to state 13
+    RESET_SYSTEM    shift and go to state 14
+    CHECK_CPU       shift and go to state 15
+    CHECK_RAM       shift and go to state 16
+    CHECK_DISK      shift and go to state 17
+    SET_FIRMWARE    shift and go to state 18
+    SELECT_BOOT     shift and go to state 19
+    LOAD_BOOTLOADER shift and go to state 20
+    LOAD_KERNEL     shift and go to state 21
+
+    programa                       shift and go to state 1
+    lista_sentencias               shift and go to state 2
+    sentencia                      shift and go to state 3
+    comando                        shift and go to state 4
+
+state 1
+
+    (0) S' -> programa .
+
+
+
+state 2
+
+    (1) programa -> lista_sentencias .
+    (3) lista_sentencias -> lista_sentencias . sentencia
+    (4) sentencia -> . comando PUNTOYCOMA
+    (5) sentencia -> . SET ID ASIGNA expr PUNTOYCOMA
+    (6) sentencia -> . IF expr THEN lista_sentencias ENDIF
+    (7) sentencia -> . IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF
+    (8) sentencia -> . REPEAT expr TIMES lista_sentencias ENDREPEAT
+    (9) sentencia -> . BEGIN lista_sentencias END
+    (10) sentencia -> . error PUNTOYCOMA
+    (11) comando -> . POWER_ON
+    (12) comando -> . RUN_POST
+    (13) comando -> . START_OS
+    (14) comando -> . SHOW_STATUS
+    (15) comando -> . RESET_SYSTEM
+    (16) comando -> . CHECK_CPU expr
+    (17) comando -> . CHECK_RAM expr
+    (18) comando -> . CHECK_DISK expr esquema
+    (19) comando -> . SET_FIRMWARE firmware
+    (20) comando -> . SELECT_BOOT dispositivo
+    (21) comando -> . LOAD_BOOTLOADER GRUB
+    (22) comando -> . LOAD_KERNEL CADENA expr
+
+    $end            reduce using rule 1 (programa -> lista_sentencias .)
+    SET             shift and go to state 5
+    IF              shift and go to state 6
+    REPEAT          shift and go to state 7
+    BEGIN           shift and go to state 8
+    error           shift and go to state 9
+    POWER_ON        shift and go to state 10
+    RUN_POST        shift and go to state 11
+    START_OS        shift and go to state 12
+    SHOW_STATUS     shift and go to state 13
+    RESET_SYSTEM    shift and go to state 14
+    CHECK_CPU       shift and go to state 15
+    CHECK_RAM       shift and go to state 16
+    CHECK_DISK      shift and go to state 17
+    SET_FIRMWARE    shift and go to state 18
+    SELECT_BOOT     shift and go to state 19
+    LOAD_BOOTLOADER shift and go to state 20
+    LOAD_KERNEL     shift and go to state 21
+
+    sentencia                      shift and go to state 22
+    comando                        shift and go to state 4
+
+state 3
+
+    (2) lista_sentencias -> sentencia .
+
+    SET             reduce using rule 2 (lista_sentencias -> sentencia .)
+    IF              reduce using rule 2 (lista_sentencias -> sentencia .)
+    REPEAT          reduce using rule 2 (lista_sentencias -> sentencia .)
+    BEGIN           reduce using rule 2 (lista_sentencias -> sentencia .)
+    error           reduce using rule 2 (lista_sentencias -> sentencia .)
+    POWER_ON        reduce using rule 2 (lista_sentencias -> sentencia .)
+    RUN_POST        reduce using rule 2 (lista_sentencias -> sentencia .)
+    START_OS        reduce using rule 2 (lista_sentencias -> sentencia .)
+    SHOW_STATUS     reduce using rule 2 (lista_sentencias -> sentencia .)
+    RESET_SYSTEM    reduce using rule 2 (lista_sentencias -> sentencia .)
+    CHECK_CPU       reduce using rule 2 (lista_sentencias -> sentencia .)
+    CHECK_RAM       reduce using rule 2 (lista_sentencias -> sentencia .)
+    CHECK_DISK      reduce using rule 2 (lista_sentencias -> sentencia .)
+    SET_FIRMWARE    reduce using rule 2 (lista_sentencias -> sentencia .)
+    SELECT_BOOT     reduce using rule 2 (lista_sentencias -> sentencia .)
+    LOAD_BOOTLOADER reduce using rule 2 (lista_sentencias -> sentencia .)
+    LOAD_KERNEL     reduce using rule 2 (lista_sentencias -> sentencia .)
+    $end            reduce using rule 2 (lista_sentencias -> sentencia .)
+    END             reduce using rule 2 (lista_sentencias -> sentencia .)
+    ENDIF           reduce using rule 2 (lista_sentencias -> sentencia .)
+    ELSE            reduce using rule 2 (lista_sentencias -> sentencia .)
+    ENDREPEAT       reduce using rule 2 (lista_sentencias -> sentencia .)
+
+
+state 4
+
+    (4) sentencia -> comando . PUNTOYCOMA
+
+    PUNTOYCOMA      shift and go to state 23
+
+
+state 5
+
+    (5) sentencia -> SET . ID ASIGNA expr PUNTOYCOMA
+
+    ID              shift and go to state 24
+
+
+state 6
+
+    (6) sentencia -> IF . expr THEN lista_sentencias ENDIF
+    (7) sentencia -> IF . expr THEN lista_sentencias ELSE lista_sentencias ENDIF
+    (30) expr -> . expr MAS expr
+    (31) expr -> . expr MENOS expr
+    (32) expr -> . expr MULT expr
+    (33) expr -> . expr DIV expr
+    (34) expr -> . expr IGUAL expr
+    (35) expr -> . expr DISTINTO expr
+    (36) expr -> . expr MENOR expr
+    (37) expr -> . expr MAYOR expr
+    (38) expr -> . expr MENORIGUAL expr
+    (39) expr -> . expr MAYORIGUAL expr
+    (40) expr -> . expr AND expr
+    (41) expr -> . expr OR expr
+    (42) expr -> . NOT expr
+    (43) expr -> . MENOS expr
+    (44) expr -> . PARENIZQ expr PARENDER
+    (45) expr -> . ENTERO
+    (46) expr -> . CADENA
+    (47) expr -> . TRUE
+    (48) expr -> . FALSE
+    (49) expr -> . ID
+
+    NOT             shift and go to state 27
+    MENOS           shift and go to state 26
+    PARENIZQ        shift and go to state 28
+    ENTERO          shift and go to state 29
+    CADENA          shift and go to state 30
+    TRUE            shift and go to state 31
+    FALSE           shift and go to state 32
+    ID              shift and go to state 33
+
+    expr                           shift and go to state 25
+
+state 7
+
+    (8) sentencia -> REPEAT . expr TIMES lista_sentencias ENDREPEAT
+    (30) expr -> . expr MAS expr
+    (31) expr -> . expr MENOS expr
+    (32) expr -> . expr MULT expr
+    (33) expr -> . expr DIV expr
+    (34) expr -> . expr IGUAL expr
+    (35) expr -> . expr DISTINTO expr
+    (36) expr -> . expr MENOR expr
+    (37) expr -> . expr MAYOR expr
+    (38) expr -> . expr MENORIGUAL expr
+    (39) expr -> . expr MAYORIGUAL expr
+    (40) expr -> . expr AND expr
+    (41) expr -> . expr OR expr
+    (42) expr -> . NOT expr
+    (43) expr -> . MENOS expr
+    (44) expr -> . PARENIZQ expr PARENDER
+    (45) expr -> . ENTERO
+    (46) expr -> . CADENA
+    (47) expr -> . TRUE
+    (48) expr -> . FALSE
+    (49) expr -> . ID
+
+    NOT             shift and go to state 27
+    MENOS           shift and go to state 26
+    PARENIZQ        shift and go to state 28
+    ENTERO          shift and go to state 29
+    CADENA          shift and go to state 30
+    TRUE            shift and go to state 31
+    FALSE           shift and go to state 32
+    ID              shift and go to state 33
+
+    expr                           shift and go to state 34
+
+state 8
+
+    (9) sentencia -> BEGIN . lista_sentencias END
+    (2) lista_sentencias -> . sentencia
+    (3) lista_sentencias -> . lista_sentencias sentencia
+    (4) sentencia -> . comando PUNTOYCOMA
+    (5) sentencia -> . SET ID ASIGNA expr PUNTOYCOMA
+    (6) sentencia -> . IF expr THEN lista_sentencias ENDIF
+    (7) sentencia -> . IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF
+    (8) sentencia -> . REPEAT expr TIMES lista_sentencias ENDREPEAT
+    (9) sentencia -> . BEGIN lista_sentencias END
+    (10) sentencia -> . error PUNTOYCOMA
+    (11) comando -> . POWER_ON
+    (12) comando -> . RUN_POST
+    (13) comando -> . START_OS
+    (14) comando -> . SHOW_STATUS
+    (15) comando -> . RESET_SYSTEM
+    (16) comando -> . CHECK_CPU expr
+    (17) comando -> . CHECK_RAM expr
+    (18) comando -> . CHECK_DISK expr esquema
+    (19) comando -> . SET_FIRMWARE firmware
+    (20) comando -> . SELECT_BOOT dispositivo
+    (21) comando -> . LOAD_BOOTLOADER GRUB
+    (22) comando -> . LOAD_KERNEL CADENA expr
+
+    SET             shift and go to state 5
+    IF              shift and go to state 6
+    REPEAT          shift and go to state 7
+    BEGIN           shift and go to state 8
+    error           shift and go to state 9
+    POWER_ON        shift and go to state 10
+    RUN_POST        shift and go to state 11
+    START_OS        shift and go to state 12
+    SHOW_STATUS     shift and go to state 13
+    RESET_SYSTEM    shift and go to state 14
+    CHECK_CPU       shift and go to state 15
+    CHECK_RAM       shift and go to state 16
+    CHECK_DISK      shift and go to state 17
+    SET_FIRMWARE    shift and go to state 18
+    SELECT_BOOT     shift and go to state 19
+    LOAD_BOOTLOADER shift and go to state 20
+    LOAD_KERNEL     shift and go to state 21
+
+    lista_sentencias               shift and go to state 35
+    sentencia                      shift and go to state 3
+    comando                        shift and go to state 4
+
+state 9
+
+    (10) sentencia -> error . PUNTOYCOMA
+
+    PUNTOYCOMA      shift and go to state 36
+
+
+state 10
+
+    (11) comando -> POWER_ON .
+
+    PUNTOYCOMA      reduce using rule 11 (comando -> POWER_ON .)
+
+
+state 11
+
+    (12) comando -> RUN_POST .
+
+    PUNTOYCOMA      reduce using rule 12 (comando -> RUN_POST .)
+
+
+state 12
+
+    (13) comando -> START_OS .
+
+    PUNTOYCOMA      reduce using rule 13 (comando -> START_OS .)
+
+
+state 13
+
+    (14) comando -> SHOW_STATUS .
+
+    PUNTOYCOMA      reduce using rule 14 (comando -> SHOW_STATUS .)
+
+
+state 14
+
+    (15) comando -> RESET_SYSTEM .
+
+    PUNTOYCOMA      reduce using rule 15 (comando -> RESET_SYSTEM .)
+
+
+state 15
+
+    (16) comando -> CHECK_CPU . expr
+    (30) expr -> . expr MAS expr
+    (31) expr -> . expr MENOS expr
+    (32) expr -> . expr MULT expr
+    (33) expr -> . expr DIV expr
+    (34) expr -> . expr IGUAL expr
+    (35) expr -> . expr DISTINTO expr
+    (36) expr -> . expr MENOR expr
+    (37) expr -> . expr MAYOR expr
+    (38) expr -> . expr MENORIGUAL expr
+    (39) expr -> . expr MAYORIGUAL expr
+    (40) expr -> . expr AND expr
+    (41) expr -> . expr OR expr
+    (42) expr -> . NOT expr
+    (43) expr -> . MENOS expr
+    (44) expr -> . PARENIZQ expr PARENDER
+    (45) expr -> . ENTERO
+    (46) expr -> . CADENA
+    (47) expr -> . TRUE
+    (48) expr -> . FALSE
+    (49) expr -> . ID
+
+    NOT             shift and go to state 27
+    MENOS           shift and go to state 26
+    PARENIZQ        shift and go to state 28
+    ENTERO          shift and go to state 29
+    CADENA          shift and go to state 30
+    TRUE            shift and go to state 31
+    FALSE           shift and go to state 32
+    ID              shift and go to state 33
+
+    expr                           shift and go to state 37
+
+state 16
+
+    (17) comando -> CHECK_RAM . expr
+    (30) expr -> . expr MAS expr
+    (31) expr -> . expr MENOS expr
+    (32) expr -> . expr MULT expr
+    (33) expr -> . expr DIV expr
+    (34) expr -> . expr IGUAL expr
+    (35) expr -> . expr DISTINTO expr
+    (36) expr -> . expr MENOR expr
+    (37) expr -> . expr MAYOR expr
+    (38) expr -> . expr MENORIGUAL expr
+    (39) expr -> . expr MAYORIGUAL expr
+    (40) expr -> . expr AND expr
+    (41) expr -> . expr OR expr
+    (42) expr -> . NOT expr
+    (43) expr -> . MENOS expr
+    (44) expr -> . PARENIZQ expr PARENDER
+    (45) expr -> . ENTERO
+    (46) expr -> . CADENA
+    (47) expr -> . TRUE
+    (48) expr -> . FALSE
+    (49) expr -> . ID
+
+    NOT             shift and go to state 27
+    MENOS           shift and go to state 26
+    PARENIZQ        shift and go to state 28
+    ENTERO          shift and go to state 29
+    CADENA          shift and go to state 30
+    TRUE            shift and go to state 31
+    FALSE           shift and go to state 32
+    ID              shift and go to state 33
+
+    expr                           shift and go to state 38
+
+state 17
+
+    (18) comando -> CHECK_DISK . expr esquema
+    (30) expr -> . expr MAS expr
+    (31) expr -> . expr MENOS expr
+    (32) expr -> . expr MULT expr
+    (33) expr -> . expr DIV expr
+    (34) expr -> . expr IGUAL expr
+    (35) expr -> . expr DISTINTO expr
+    (36) expr -> . expr MENOR expr
+    (37) expr -> . expr MAYOR expr
+    (38) expr -> . expr MENORIGUAL expr
+    (39) expr -> . expr MAYORIGUAL expr
+    (40) expr -> . expr AND expr
+    (41) expr -> . expr OR expr
+    (42) expr -> . NOT expr
+    (43) expr -> . MENOS expr
+    (44) expr -> . PARENIZQ expr PARENDER
+    (45) expr -> . ENTERO
+    (46) expr -> . CADENA
+    (47) expr -> . TRUE
+    (48) expr -> . FALSE
+    (49) expr -> . ID
+
+    NOT             shift and go to state 27
+    MENOS           shift and go to state 26
+    PARENIZQ        shift and go to state 28
+    ENTERO          shift and go to state 29
+    CADENA          shift and go to state 30
+    TRUE            shift and go to state 31
+    FALSE           shift and go to state 32
+    ID              shift and go to state 33
+
+    expr                           shift and go to state 39
+
+state 18
+
+    (19) comando -> SET_FIRMWARE . firmware
+    (25) firmware -> . BIOS
+    (26) firmware -> . UEFI
+
+    BIOS            shift and go to state 41
+    UEFI            shift and go to state 42
+
+    firmware                       shift and go to state 40
+
+state 19
+
+    (20) comando -> SELECT_BOOT . dispositivo
+    (27) dispositivo -> . DISK
+    (28) dispositivo -> . USB
+    (29) dispositivo -> . NETWORK
+
+    DISK            shift and go to state 44
+    USB             shift and go to state 45
+    NETWORK         shift and go to state 46
+
+    dispositivo                    shift and go to state 43
+
+state 20
+
+    (21) comando -> LOAD_BOOTLOADER . GRUB
+
+    GRUB            shift and go to state 47
+
+
+state 21
+
+    (22) comando -> LOAD_KERNEL . CADENA expr
+
+    CADENA          shift and go to state 48
+
+
+state 22
+
+    (3) lista_sentencias -> lista_sentencias sentencia .
+
+    SET             reduce using rule 3 (lista_sentencias -> lista_sentencias sentencia .)
+    IF              reduce using rule 3 (lista_sentencias -> lista_sentencias sentencia .)
+    REPEAT          reduce using rule 3 (lista_sentencias -> lista_sentencias sentencia .)
+    BEGIN           reduce using rule 3 (lista_sentencias -> lista_sentencias sentencia .)
+    error           reduce using rule 3 (lista_sentencias -> lista_sentencias sentencia .)
+    POWER_ON        reduce using rule 3 (lista_sentencias -> lista_sentencias sentencia .)
+    RUN_POST        reduce using rule 3 (lista_sentencias -> lista_sentencias sentencia .)
+    START_OS        reduce using rule 3 (lista_sentencias -> lista_sentencias sentencia .)
+    SHOW_STATUS     reduce using rule 3 (lista_sentencias -> lista_sentencias sentencia .)
+    RESET_SYSTEM    reduce using rule 3 (lista_sentencias -> lista_sentencias sentencia .)
+    CHECK_CPU       reduce using rule 3 (lista_sentencias -> lista_sentencias sentencia .)
+    CHECK_RAM       reduce using rule 3 (lista_sentencias -> lista_sentencias sentencia .)
+    CHECK_DISK      reduce using rule 3 (lista_sentencias -> lista_sentencias sentencia .)
+    SET_FIRMWARE    reduce using rule 3 (lista_sentencias -> lista_sentencias sentencia .)
+    SELECT_BOOT     reduce using rule 3 (lista_sentencias -> lista_sentencias sentencia .)
+    LOAD_BOOTLOADER reduce using rule 3 (lista_sentencias -> lista_sentencias sentencia .)
+    LOAD_KERNEL     reduce using rule 3 (lista_sentencias -> lista_sentencias sentencia .)
+    $end            reduce using rule 3 (lista_sentencias -> lista_sentencias sentencia .)
+    END             reduce using rule 3 (lista_sentencias -> lista_sentencias sentencia .)
+    ENDIF           reduce using rule 3 (lista_sentencias -> lista_sentencias sentencia .)
+    ELSE            reduce using rule 3 (lista_sentencias -> lista_sentencias sentencia .)
+    ENDREPEAT       reduce using rule 3 (lista_sentencias -> lista_sentencias sentencia .)
+
+
+state 23
+
+    (4) sentencia -> comando PUNTOYCOMA .
+
+    SET             reduce using rule 4 (sentencia -> comando PUNTOYCOMA .)
+    IF              reduce using rule 4 (sentencia -> comando PUNTOYCOMA .)
+    REPEAT          reduce using rule 4 (sentencia -> comando PUNTOYCOMA .)
+    BEGIN           reduce using rule 4 (sentencia -> comando PUNTOYCOMA .)
+    error           reduce using rule 4 (sentencia -> comando PUNTOYCOMA .)
+    POWER_ON        reduce using rule 4 (sentencia -> comando PUNTOYCOMA .)
+    RUN_POST        reduce using rule 4 (sentencia -> comando PUNTOYCOMA .)
+    START_OS        reduce using rule 4 (sentencia -> comando PUNTOYCOMA .)
+    SHOW_STATUS     reduce using rule 4 (sentencia -> comando PUNTOYCOMA .)
+    RESET_SYSTEM    reduce using rule 4 (sentencia -> comando PUNTOYCOMA .)
+    CHECK_CPU       reduce using rule 4 (sentencia -> comando PUNTOYCOMA .)
+    CHECK_RAM       reduce using rule 4 (sentencia -> comando PUNTOYCOMA .)
+    CHECK_DISK      reduce using rule 4 (sentencia -> comando PUNTOYCOMA .)
+    SET_FIRMWARE    reduce using rule 4 (sentencia -> comando PUNTOYCOMA .)
+    SELECT_BOOT     reduce using rule 4 (sentencia -> comando PUNTOYCOMA .)
+    LOAD_BOOTLOADER reduce using rule 4 (sentencia -> comando PUNTOYCOMA .)
+    LOAD_KERNEL     reduce using rule 4 (sentencia -> comando PUNTOYCOMA .)
+    $end            reduce using rule 4 (sentencia -> comando PUNTOYCOMA .)
+    END             reduce using rule 4 (sentencia -> comando PUNTOYCOMA .)
+    ENDIF           reduce using rule 4 (sentencia -> comando PUNTOYCOMA .)
+    ELSE            reduce using rule 4 (sentencia -> comando PUNTOYCOMA .)
+    ENDREPEAT       reduce using rule 4 (sentencia -> comando PUNTOYCOMA .)
+
+
+state 24
+
+    (5) sentencia -> SET ID . ASIGNA expr PUNTOYCOMA
+
+    ASIGNA          shift and go to state 49
+
+
+state 25
+
+    (6) sentencia -> IF expr . THEN lista_sentencias ENDIF
+    (7) sentencia -> IF expr . THEN lista_sentencias ELSE lista_sentencias ENDIF
+    (30) expr -> expr . MAS expr
+    (31) expr -> expr . MENOS expr
+    (32) expr -> expr . MULT expr
+    (33) expr -> expr . DIV expr
+    (34) expr -> expr . IGUAL expr
+    (35) expr -> expr . DISTINTO expr
+    (36) expr -> expr . MENOR expr
+    (37) expr -> expr . MAYOR expr
+    (38) expr -> expr . MENORIGUAL expr
+    (39) expr -> expr . MAYORIGUAL expr
+    (40) expr -> expr . AND expr
+    (41) expr -> expr . OR expr
+
+    THEN            shift and go to state 50
+    MAS             shift and go to state 51
+    MENOS           shift and go to state 52
+    MULT            shift and go to state 53
+    DIV             shift and go to state 54
+    IGUAL           shift and go to state 55
+    DISTINTO        shift and go to state 56
+    MENOR           shift and go to state 57
+    MAYOR           shift and go to state 58
+    MENORIGUAL      shift and go to state 59
+    MAYORIGUAL      shift and go to state 60
+    AND             shift and go to state 61
+    OR              shift and go to state 62
+
+
+state 26
+
+    (43) expr -> MENOS . expr
+    (30) expr -> . expr MAS expr
+    (31) expr -> . expr MENOS expr
+    (32) expr -> . expr MULT expr
+    (33) expr -> . expr DIV expr
+    (34) expr -> . expr IGUAL expr
+    (35) expr -> . expr DISTINTO expr
+    (36) expr -> . expr MENOR expr
+    (37) expr -> . expr MAYOR expr
+    (38) expr -> . expr MENORIGUAL expr
+    (39) expr -> . expr MAYORIGUAL expr
+    (40) expr -> . expr AND expr
+    (41) expr -> . expr OR expr
+    (42) expr -> . NOT expr
+    (43) expr -> . MENOS expr
+    (44) expr -> . PARENIZQ expr PARENDER
+    (45) expr -> . ENTERO
+    (46) expr -> . CADENA
+    (47) expr -> . TRUE
+    (48) expr -> . FALSE
+    (49) expr -> . ID
+
+    NOT             shift and go to state 27
+    MENOS           shift and go to state 26
+    PARENIZQ        shift and go to state 28
+    ENTERO          shift and go to state 29
+    CADENA          shift and go to state 30
+    TRUE            shift and go to state 31
+    FALSE           shift and go to state 32
+    ID              shift and go to state 33
+
+    expr                           shift and go to state 63
+
+state 27
+
+    (42) expr -> NOT . expr
+    (30) expr -> . expr MAS expr
+    (31) expr -> . expr MENOS expr
+    (32) expr -> . expr MULT expr
+    (33) expr -> . expr DIV expr
+    (34) expr -> . expr IGUAL expr
+    (35) expr -> . expr DISTINTO expr
+    (36) expr -> . expr MENOR expr
+    (37) expr -> . expr MAYOR expr
+    (38) expr -> . expr MENORIGUAL expr
+    (39) expr -> . expr MAYORIGUAL expr
+    (40) expr -> . expr AND expr
+    (41) expr -> . expr OR expr
+    (42) expr -> . NOT expr
+    (43) expr -> . MENOS expr
+    (44) expr -> . PARENIZQ expr PARENDER
+    (45) expr -> . ENTERO
+    (46) expr -> . CADENA
+    (47) expr -> . TRUE
+    (48) expr -> . FALSE
+    (49) expr -> . ID
+
+    NOT             shift and go to state 27
+    MENOS           shift and go to state 26
+    PARENIZQ        shift and go to state 28
+    ENTERO          shift and go to state 29
+    CADENA          shift and go to state 30
+    TRUE            shift and go to state 31
+    FALSE           shift and go to state 32
+    ID              shift and go to state 33
+
+    expr                           shift and go to state 64
+
+state 28
+
+    (44) expr -> PARENIZQ . expr PARENDER
+    (30) expr -> . expr MAS expr
+    (31) expr -> . expr MENOS expr
+    (32) expr -> . expr MULT expr
+    (33) expr -> . expr DIV expr
+    (34) expr -> . expr IGUAL expr
+    (35) expr -> . expr DISTINTO expr
+    (36) expr -> . expr MENOR expr
+    (37) expr -> . expr MAYOR expr
+    (38) expr -> . expr MENORIGUAL expr
+    (39) expr -> . expr MAYORIGUAL expr
+    (40) expr -> . expr AND expr
+    (41) expr -> . expr OR expr
+    (42) expr -> . NOT expr
+    (43) expr -> . MENOS expr
+    (44) expr -> . PARENIZQ expr PARENDER
+    (45) expr -> . ENTERO
+    (46) expr -> . CADENA
+    (47) expr -> . TRUE
+    (48) expr -> . FALSE
+    (49) expr -> . ID
+
+    NOT             shift and go to state 27
+    MENOS           shift and go to state 26
+    PARENIZQ        shift and go to state 28
+    ENTERO          shift and go to state 29
+    CADENA          shift and go to state 30
+    TRUE            shift and go to state 31
+    FALSE           shift and go to state 32
+    ID              shift and go to state 33
+
+    expr                           shift and go to state 65
+
+state 29
+
+    (45) expr -> ENTERO .
+
+    THEN            reduce using rule 45 (expr -> ENTERO .)
+    MAS             reduce using rule 45 (expr -> ENTERO .)
+    MENOS           reduce using rule 45 (expr -> ENTERO .)
+    MULT            reduce using rule 45 (expr -> ENTERO .)
+    DIV             reduce using rule 45 (expr -> ENTERO .)
+    IGUAL           reduce using rule 45 (expr -> ENTERO .)
+    DISTINTO        reduce using rule 45 (expr -> ENTERO .)
+    MENOR           reduce using rule 45 (expr -> ENTERO .)
+    MAYOR           reduce using rule 45 (expr -> ENTERO .)
+    MENORIGUAL      reduce using rule 45 (expr -> ENTERO .)
+    MAYORIGUAL      reduce using rule 45 (expr -> ENTERO .)
+    AND             reduce using rule 45 (expr -> ENTERO .)
+    OR              reduce using rule 45 (expr -> ENTERO .)
+    TIMES           reduce using rule 45 (expr -> ENTERO .)
+    PUNTOYCOMA      reduce using rule 45 (expr -> ENTERO .)
+    MBR             reduce using rule 45 (expr -> ENTERO .)
+    GPT             reduce using rule 45 (expr -> ENTERO .)
+    PARENDER        reduce using rule 45 (expr -> ENTERO .)
+
+
+state 30
+
+    (46) expr -> CADENA .
+
+    THEN            reduce using rule 46 (expr -> CADENA .)
+    MAS             reduce using rule 46 (expr -> CADENA .)
+    MENOS           reduce using rule 46 (expr -> CADENA .)
+    MULT            reduce using rule 46 (expr -> CADENA .)
+    DIV             reduce using rule 46 (expr -> CADENA .)
+    IGUAL           reduce using rule 46 (expr -> CADENA .)
+    DISTINTO        reduce using rule 46 (expr -> CADENA .)
+    MENOR           reduce using rule 46 (expr -> CADENA .)
+    MAYOR           reduce using rule 46 (expr -> CADENA .)
+    MENORIGUAL      reduce using rule 46 (expr -> CADENA .)
+    MAYORIGUAL      reduce using rule 46 (expr -> CADENA .)
+    AND             reduce using rule 46 (expr -> CADENA .)
+    OR              reduce using rule 46 (expr -> CADENA .)
+    TIMES           reduce using rule 46 (expr -> CADENA .)
+    PUNTOYCOMA      reduce using rule 46 (expr -> CADENA .)
+    MBR             reduce using rule 46 (expr -> CADENA .)
+    GPT             reduce using rule 46 (expr -> CADENA .)
+    PARENDER        reduce using rule 46 (expr -> CADENA .)
+
+
+state 31
+
+    (47) expr -> TRUE .
+
+    THEN            reduce using rule 47 (expr -> TRUE .)
+    MAS             reduce using rule 47 (expr -> TRUE .)
+    MENOS           reduce using rule 47 (expr -> TRUE .)
+    MULT            reduce using rule 47 (expr -> TRUE .)
+    DIV             reduce using rule 47 (expr -> TRUE .)
+    IGUAL           reduce using rule 47 (expr -> TRUE .)
+    DISTINTO        reduce using rule 47 (expr -> TRUE .)
+    MENOR           reduce using rule 47 (expr -> TRUE .)
+    MAYOR           reduce using rule 47 (expr -> TRUE .)
+    MENORIGUAL      reduce using rule 47 (expr -> TRUE .)
+    MAYORIGUAL      reduce using rule 47 (expr -> TRUE .)
+    AND             reduce using rule 47 (expr -> TRUE .)
+    OR              reduce using rule 47 (expr -> TRUE .)
+    TIMES           reduce using rule 47 (expr -> TRUE .)
+    PUNTOYCOMA      reduce using rule 47 (expr -> TRUE .)
+    MBR             reduce using rule 47 (expr -> TRUE .)
+    GPT             reduce using rule 47 (expr -> TRUE .)
+    PARENDER        reduce using rule 47 (expr -> TRUE .)
+
+
+state 32
+
+    (48) expr -> FALSE .
+
+    THEN            reduce using rule 48 (expr -> FALSE .)
+    MAS             reduce using rule 48 (expr -> FALSE .)
+    MENOS           reduce using rule 48 (expr -> FALSE .)
+    MULT            reduce using rule 48 (expr -> FALSE .)
+    DIV             reduce using rule 48 (expr -> FALSE .)
+    IGUAL           reduce using rule 48 (expr -> FALSE .)
+    DISTINTO        reduce using rule 48 (expr -> FALSE .)
+    MENOR           reduce using rule 48 (expr -> FALSE .)
+    MAYOR           reduce using rule 48 (expr -> FALSE .)
+    MENORIGUAL      reduce using rule 48 (expr -> FALSE .)
+    MAYORIGUAL      reduce using rule 48 (expr -> FALSE .)
+    AND             reduce using rule 48 (expr -> FALSE .)
+    OR              reduce using rule 48 (expr -> FALSE .)
+    TIMES           reduce using rule 48 (expr -> FALSE .)
+    PUNTOYCOMA      reduce using rule 48 (expr -> FALSE .)
+    MBR             reduce using rule 48 (expr -> FALSE .)
+    GPT             reduce using rule 48 (expr -> FALSE .)
+    PARENDER        reduce using rule 48 (expr -> FALSE .)
+
+
+state 33
+
+    (49) expr -> ID .
+
+    THEN            reduce using rule 49 (expr -> ID .)
+    MAS             reduce using rule 49 (expr -> ID .)
+    MENOS           reduce using rule 49 (expr -> ID .)
+    MULT            reduce using rule 49 (expr -> ID .)
+    DIV             reduce using rule 49 (expr -> ID .)
+    IGUAL           reduce using rule 49 (expr -> ID .)
+    DISTINTO        reduce using rule 49 (expr -> ID .)
+    MENOR           reduce using rule 49 (expr -> ID .)
+    MAYOR           reduce using rule 49 (expr -> ID .)
+    MENORIGUAL      reduce using rule 49 (expr -> ID .)
+    MAYORIGUAL      reduce using rule 49 (expr -> ID .)
+    AND             reduce using rule 49 (expr -> ID .)
+    OR              reduce using rule 49 (expr -> ID .)
+    TIMES           reduce using rule 49 (expr -> ID .)
+    PUNTOYCOMA      reduce using rule 49 (expr -> ID .)
+    MBR             reduce using rule 49 (expr -> ID .)
+    GPT             reduce using rule 49 (expr -> ID .)
+    PARENDER        reduce using rule 49 (expr -> ID .)
+
+
+state 34
+
+    (8) sentencia -> REPEAT expr . TIMES lista_sentencias ENDREPEAT
+    (30) expr -> expr . MAS expr
+    (31) expr -> expr . MENOS expr
+    (32) expr -> expr . MULT expr
+    (33) expr -> expr . DIV expr
+    (34) expr -> expr . IGUAL expr
+    (35) expr -> expr . DISTINTO expr
+    (36) expr -> expr . MENOR expr
+    (37) expr -> expr . MAYOR expr
+    (38) expr -> expr . MENORIGUAL expr
+    (39) expr -> expr . MAYORIGUAL expr
+    (40) expr -> expr . AND expr
+    (41) expr -> expr . OR expr
+
+    TIMES           shift and go to state 66
+    MAS             shift and go to state 51
+    MENOS           shift and go to state 52
+    MULT            shift and go to state 53
+    DIV             shift and go to state 54
+    IGUAL           shift and go to state 55
+    DISTINTO        shift and go to state 56
+    MENOR           shift and go to state 57
+    MAYOR           shift and go to state 58
+    MENORIGUAL      shift and go to state 59
+    MAYORIGUAL      shift and go to state 60
+    AND             shift and go to state 61
+    OR              shift and go to state 62
+
+
+state 35
+
+    (9) sentencia -> BEGIN lista_sentencias . END
+    (3) lista_sentencias -> lista_sentencias . sentencia
+    (4) sentencia -> . comando PUNTOYCOMA
+    (5) sentencia -> . SET ID ASIGNA expr PUNTOYCOMA
+    (6) sentencia -> . IF expr THEN lista_sentencias ENDIF
+    (7) sentencia -> . IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF
+    (8) sentencia -> . REPEAT expr TIMES lista_sentencias ENDREPEAT
+    (9) sentencia -> . BEGIN lista_sentencias END
+    (10) sentencia -> . error PUNTOYCOMA
+    (11) comando -> . POWER_ON
+    (12) comando -> . RUN_POST
+    (13) comando -> . START_OS
+    (14) comando -> . SHOW_STATUS
+    (15) comando -> . RESET_SYSTEM
+    (16) comando -> . CHECK_CPU expr
+    (17) comando -> . CHECK_RAM expr
+    (18) comando -> . CHECK_DISK expr esquema
+    (19) comando -> . SET_FIRMWARE firmware
+    (20) comando -> . SELECT_BOOT dispositivo
+    (21) comando -> . LOAD_BOOTLOADER GRUB
+    (22) comando -> . LOAD_KERNEL CADENA expr
+
+    END             shift and go to state 67
+    SET             shift and go to state 5
+    IF              shift and go to state 6
+    REPEAT          shift and go to state 7
+    BEGIN           shift and go to state 8
+    error           shift and go to state 9
+    POWER_ON        shift and go to state 10
+    RUN_POST        shift and go to state 11
+    START_OS        shift and go to state 12
+    SHOW_STATUS     shift and go to state 13
+    RESET_SYSTEM    shift and go to state 14
+    CHECK_CPU       shift and go to state 15
+    CHECK_RAM       shift and go to state 16
+    CHECK_DISK      shift and go to state 17
+    SET_FIRMWARE    shift and go to state 18
+    SELECT_BOOT     shift and go to state 19
+    LOAD_BOOTLOADER shift and go to state 20
+    LOAD_KERNEL     shift and go to state 21
+
+    sentencia                      shift and go to state 22
+    comando                        shift and go to state 4
+
+state 36
+
+    (10) sentencia -> error PUNTOYCOMA .
+
+    SET             reduce using rule 10 (sentencia -> error PUNTOYCOMA .)
+    IF              reduce using rule 10 (sentencia -> error PUNTOYCOMA .)
+    REPEAT          reduce using rule 10 (sentencia -> error PUNTOYCOMA .)
+    BEGIN           reduce using rule 10 (sentencia -> error PUNTOYCOMA .)
+    error           reduce using rule 10 (sentencia -> error PUNTOYCOMA .)
+    POWER_ON        reduce using rule 10 (sentencia -> error PUNTOYCOMA .)
+    RUN_POST        reduce using rule 10 (sentencia -> error PUNTOYCOMA .)
+    START_OS        reduce using rule 10 (sentencia -> error PUNTOYCOMA .)
+    SHOW_STATUS     reduce using rule 10 (sentencia -> error PUNTOYCOMA .)
+    RESET_SYSTEM    reduce using rule 10 (sentencia -> error PUNTOYCOMA .)
+    CHECK_CPU       reduce using rule 10 (sentencia -> error PUNTOYCOMA .)
+    CHECK_RAM       reduce using rule 10 (sentencia -> error PUNTOYCOMA .)
+    CHECK_DISK      reduce using rule 10 (sentencia -> error PUNTOYCOMA .)
+    SET_FIRMWARE    reduce using rule 10 (sentencia -> error PUNTOYCOMA .)
+    SELECT_BOOT     reduce using rule 10 (sentencia -> error PUNTOYCOMA .)
+    LOAD_BOOTLOADER reduce using rule 10 (sentencia -> error PUNTOYCOMA .)
+    LOAD_KERNEL     reduce using rule 10 (sentencia -> error PUNTOYCOMA .)
+    $end            reduce using rule 10 (sentencia -> error PUNTOYCOMA .)
+    END             reduce using rule 10 (sentencia -> error PUNTOYCOMA .)
+    ENDIF           reduce using rule 10 (sentencia -> error PUNTOYCOMA .)
+    ELSE            reduce using rule 10 (sentencia -> error PUNTOYCOMA .)
+    ENDREPEAT       reduce using rule 10 (sentencia -> error PUNTOYCOMA .)
+
+
+state 37
+
+    (16) comando -> CHECK_CPU expr .
+    (30) expr -> expr . MAS expr
+    (31) expr -> expr . MENOS expr
+    (32) expr -> expr . MULT expr
+    (33) expr -> expr . DIV expr
+    (34) expr -> expr . IGUAL expr
+    (35) expr -> expr . DISTINTO expr
+    (36) expr -> expr . MENOR expr
+    (37) expr -> expr . MAYOR expr
+    (38) expr -> expr . MENORIGUAL expr
+    (39) expr -> expr . MAYORIGUAL expr
+    (40) expr -> expr . AND expr
+    (41) expr -> expr . OR expr
+
+    PUNTOYCOMA      reduce using rule 16 (comando -> CHECK_CPU expr .)
+    MAS             shift and go to state 51
+    MENOS           shift and go to state 52
+    MULT            shift and go to state 53
+    DIV             shift and go to state 54
+    IGUAL           shift and go to state 55
+    DISTINTO        shift and go to state 56
+    MENOR           shift and go to state 57
+    MAYOR           shift and go to state 58
+    MENORIGUAL      shift and go to state 59
+    MAYORIGUAL      shift and go to state 60
+    AND             shift and go to state 61
+    OR              shift and go to state 62
+
+
+state 38
+
+    (17) comando -> CHECK_RAM expr .
+    (30) expr -> expr . MAS expr
+    (31) expr -> expr . MENOS expr
+    (32) expr -> expr . MULT expr
+    (33) expr -> expr . DIV expr
+    (34) expr -> expr . IGUAL expr
+    (35) expr -> expr . DISTINTO expr
+    (36) expr -> expr . MENOR expr
+    (37) expr -> expr . MAYOR expr
+    (38) expr -> expr . MENORIGUAL expr
+    (39) expr -> expr . MAYORIGUAL expr
+    (40) expr -> expr . AND expr
+    (41) expr -> expr . OR expr
+
+    PUNTOYCOMA      reduce using rule 17 (comando -> CHECK_RAM expr .)
+    MAS             shift and go to state 51
+    MENOS           shift and go to state 52
+    MULT            shift and go to state 53
+    DIV             shift and go to state 54
+    IGUAL           shift and go to state 55
+    DISTINTO        shift and go to state 56
+    MENOR           shift and go to state 57
+    MAYOR           shift and go to state 58
+    MENORIGUAL      shift and go to state 59
+    MAYORIGUAL      shift and go to state 60
+    AND             shift and go to state 61
+    OR              shift and go to state 62
+
+
+state 39
+
+    (18) comando -> CHECK_DISK expr . esquema
+    (30) expr -> expr . MAS expr
+    (31) expr -> expr . MENOS expr
+    (32) expr -> expr . MULT expr
+    (33) expr -> expr . DIV expr
+    (34) expr -> expr . IGUAL expr
+    (35) expr -> expr . DISTINTO expr
+    (36) expr -> expr . MENOR expr
+    (37) expr -> expr . MAYOR expr
+    (38) expr -> expr . MENORIGUAL expr
+    (39) expr -> expr . MAYORIGUAL expr
+    (40) expr -> expr . AND expr
+    (41) expr -> expr . OR expr
+    (23) esquema -> . MBR
+    (24) esquema -> . GPT
+
+    MAS             shift and go to state 51
+    MENOS           shift and go to state 52
+    MULT            shift and go to state 53
+    DIV             shift and go to state 54
+    IGUAL           shift and go to state 55
+    DISTINTO        shift and go to state 56
+    MENOR           shift and go to state 57
+    MAYOR           shift and go to state 58
+    MENORIGUAL      shift and go to state 59
+    MAYORIGUAL      shift and go to state 60
+    AND             shift and go to state 61
+    OR              shift and go to state 62
+    MBR             shift and go to state 69
+    GPT             shift and go to state 70
+
+    esquema                        shift and go to state 68
+
+state 40
+
+    (19) comando -> SET_FIRMWARE firmware .
+
+    PUNTOYCOMA      reduce using rule 19 (comando -> SET_FIRMWARE firmware .)
+
+
+state 41
+
+    (25) firmware -> BIOS .
+
+    PUNTOYCOMA      reduce using rule 25 (firmware -> BIOS .)
+
+
+state 42
+
+    (26) firmware -> UEFI .
+
+    PUNTOYCOMA      reduce using rule 26 (firmware -> UEFI .)
+
+
+state 43
+
+    (20) comando -> SELECT_BOOT dispositivo .
+
+    PUNTOYCOMA      reduce using rule 20 (comando -> SELECT_BOOT dispositivo .)
+
+
+state 44
+
+    (27) dispositivo -> DISK .
+
+    PUNTOYCOMA      reduce using rule 27 (dispositivo -> DISK .)
+
+
+state 45
+
+    (28) dispositivo -> USB .
+
+    PUNTOYCOMA      reduce using rule 28 (dispositivo -> USB .)
+
+
+state 46
+
+    (29) dispositivo -> NETWORK .
+
+    PUNTOYCOMA      reduce using rule 29 (dispositivo -> NETWORK .)
+
+
+state 47
+
+    (21) comando -> LOAD_BOOTLOADER GRUB .
+
+    PUNTOYCOMA      reduce using rule 21 (comando -> LOAD_BOOTLOADER GRUB .)
+
+
+state 48
+
+    (22) comando -> LOAD_KERNEL CADENA . expr
+    (30) expr -> . expr MAS expr
+    (31) expr -> . expr MENOS expr
+    (32) expr -> . expr MULT expr
+    (33) expr -> . expr DIV expr
+    (34) expr -> . expr IGUAL expr
+    (35) expr -> . expr DISTINTO expr
+    (36) expr -> . expr MENOR expr
+    (37) expr -> . expr MAYOR expr
+    (38) expr -> . expr MENORIGUAL expr
+    (39) expr -> . expr MAYORIGUAL expr
+    (40) expr -> . expr AND expr
+    (41) expr -> . expr OR expr
+    (42) expr -> . NOT expr
+    (43) expr -> . MENOS expr
+    (44) expr -> . PARENIZQ expr PARENDER
+    (45) expr -> . ENTERO
+    (46) expr -> . CADENA
+    (47) expr -> . TRUE
+    (48) expr -> . FALSE
+    (49) expr -> . ID
+
+    NOT             shift and go to state 27
+    MENOS           shift and go to state 26
+    PARENIZQ        shift and go to state 28
+    ENTERO          shift and go to state 29
+    CADENA          shift and go to state 30
+    TRUE            shift and go to state 31
+    FALSE           shift and go to state 32
+    ID              shift and go to state 33
+
+    expr                           shift and go to state 71
+
+state 49
+
+    (5) sentencia -> SET ID ASIGNA . expr PUNTOYCOMA
+    (30) expr -> . expr MAS expr
+    (31) expr -> . expr MENOS expr
+    (32) expr -> . expr MULT expr
+    (33) expr -> . expr DIV expr
+    (34) expr -> . expr IGUAL expr
+    (35) expr -> . expr DISTINTO expr
+    (36) expr -> . expr MENOR expr
+    (37) expr -> . expr MAYOR expr
+    (38) expr -> . expr MENORIGUAL expr
+    (39) expr -> . expr MAYORIGUAL expr
+    (40) expr -> . expr AND expr
+    (41) expr -> . expr OR expr
+    (42) expr -> . NOT expr
+    (43) expr -> . MENOS expr
+    (44) expr -> . PARENIZQ expr PARENDER
+    (45) expr -> . ENTERO
+    (46) expr -> . CADENA
+    (47) expr -> . TRUE
+    (48) expr -> . FALSE
+    (49) expr -> . ID
+
+    NOT             shift and go to state 27
+    MENOS           shift and go to state 26
+    PARENIZQ        shift and go to state 28
+    ENTERO          shift and go to state 29
+    CADENA          shift and go to state 30
+    TRUE            shift and go to state 31
+    FALSE           shift and go to state 32
+    ID              shift and go to state 33
+
+    expr                           shift and go to state 72
+
+state 50
+
+    (6) sentencia -> IF expr THEN . lista_sentencias ENDIF
+    (7) sentencia -> IF expr THEN . lista_sentencias ELSE lista_sentencias ENDIF
+    (2) lista_sentencias -> . sentencia
+    (3) lista_sentencias -> . lista_sentencias sentencia
+    (4) sentencia -> . comando PUNTOYCOMA
+    (5) sentencia -> . SET ID ASIGNA expr PUNTOYCOMA
+    (6) sentencia -> . IF expr THEN lista_sentencias ENDIF
+    (7) sentencia -> . IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF
+    (8) sentencia -> . REPEAT expr TIMES lista_sentencias ENDREPEAT
+    (9) sentencia -> . BEGIN lista_sentencias END
+    (10) sentencia -> . error PUNTOYCOMA
+    (11) comando -> . POWER_ON
+    (12) comando -> . RUN_POST
+    (13) comando -> . START_OS
+    (14) comando -> . SHOW_STATUS
+    (15) comando -> . RESET_SYSTEM
+    (16) comando -> . CHECK_CPU expr
+    (17) comando -> . CHECK_RAM expr
+    (18) comando -> . CHECK_DISK expr esquema
+    (19) comando -> . SET_FIRMWARE firmware
+    (20) comando -> . SELECT_BOOT dispositivo
+    (21) comando -> . LOAD_BOOTLOADER GRUB
+    (22) comando -> . LOAD_KERNEL CADENA expr
+
+    SET             shift and go to state 5
+    IF              shift and go to state 6
+    REPEAT          shift and go to state 7
+    BEGIN           shift and go to state 8
+    error           shift and go to state 9
+    POWER_ON        shift and go to state 10
+    RUN_POST        shift and go to state 11
+    START_OS        shift and go to state 12
+    SHOW_STATUS     shift and go to state 13
+    RESET_SYSTEM    shift and go to state 14
+    CHECK_CPU       shift and go to state 15
+    CHECK_RAM       shift and go to state 16
+    CHECK_DISK      shift and go to state 17
+    SET_FIRMWARE    shift and go to state 18
+    SELECT_BOOT     shift and go to state 19
+    LOAD_BOOTLOADER shift and go to state 20
+    LOAD_KERNEL     shift and go to state 21
+
+    lista_sentencias               shift and go to state 73
+    sentencia                      shift and go to state 3
+    comando                        shift and go to state 4
+
+state 51
+
+    (30) expr -> expr MAS . expr
+    (30) expr -> . expr MAS expr
+    (31) expr -> . expr MENOS expr
+    (32) expr -> . expr MULT expr
+    (33) expr -> . expr DIV expr
+    (34) expr -> . expr IGUAL expr
+    (35) expr -> . expr DISTINTO expr
+    (36) expr -> . expr MENOR expr
+    (37) expr -> . expr MAYOR expr
+    (38) expr -> . expr MENORIGUAL expr
+    (39) expr -> . expr MAYORIGUAL expr
+    (40) expr -> . expr AND expr
+    (41) expr -> . expr OR expr
+    (42) expr -> . NOT expr
+    (43) expr -> . MENOS expr
+    (44) expr -> . PARENIZQ expr PARENDER
+    (45) expr -> . ENTERO
+    (46) expr -> . CADENA
+    (47) expr -> . TRUE
+    (48) expr -> . FALSE
+    (49) expr -> . ID
+
+    NOT             shift and go to state 27
+    MENOS           shift and go to state 26
+    PARENIZQ        shift and go to state 28
+    ENTERO          shift and go to state 29
+    CADENA          shift and go to state 30
+    TRUE            shift and go to state 31
+    FALSE           shift and go to state 32
+    ID              shift and go to state 33
+
+    expr                           shift and go to state 74
+
+state 52
+
+    (31) expr -> expr MENOS . expr
+    (30) expr -> . expr MAS expr
+    (31) expr -> . expr MENOS expr
+    (32) expr -> . expr MULT expr
+    (33) expr -> . expr DIV expr
+    (34) expr -> . expr IGUAL expr
+    (35) expr -> . expr DISTINTO expr
+    (36) expr -> . expr MENOR expr
+    (37) expr -> . expr MAYOR expr
+    (38) expr -> . expr MENORIGUAL expr
+    (39) expr -> . expr MAYORIGUAL expr
+    (40) expr -> . expr AND expr
+    (41) expr -> . expr OR expr
+    (42) expr -> . NOT expr
+    (43) expr -> . MENOS expr
+    (44) expr -> . PARENIZQ expr PARENDER
+    (45) expr -> . ENTERO
+    (46) expr -> . CADENA
+    (47) expr -> . TRUE
+    (48) expr -> . FALSE
+    (49) expr -> . ID
+
+    NOT             shift and go to state 27
+    MENOS           shift and go to state 26
+    PARENIZQ        shift and go to state 28
+    ENTERO          shift and go to state 29
+    CADENA          shift and go to state 30
+    TRUE            shift and go to state 31
+    FALSE           shift and go to state 32
+    ID              shift and go to state 33
+
+    expr                           shift and go to state 75
+
+state 53
+
+    (32) expr -> expr MULT . expr
+    (30) expr -> . expr MAS expr
+    (31) expr -> . expr MENOS expr
+    (32) expr -> . expr MULT expr
+    (33) expr -> . expr DIV expr
+    (34) expr -> . expr IGUAL expr
+    (35) expr -> . expr DISTINTO expr
+    (36) expr -> . expr MENOR expr
+    (37) expr -> . expr MAYOR expr
+    (38) expr -> . expr MENORIGUAL expr
+    (39) expr -> . expr MAYORIGUAL expr
+    (40) expr -> . expr AND expr
+    (41) expr -> . expr OR expr
+    (42) expr -> . NOT expr
+    (43) expr -> . MENOS expr
+    (44) expr -> . PARENIZQ expr PARENDER
+    (45) expr -> . ENTERO
+    (46) expr -> . CADENA
+    (47) expr -> . TRUE
+    (48) expr -> . FALSE
+    (49) expr -> . ID
+
+    NOT             shift and go to state 27
+    MENOS           shift and go to state 26
+    PARENIZQ        shift and go to state 28
+    ENTERO          shift and go to state 29
+    CADENA          shift and go to state 30
+    TRUE            shift and go to state 31
+    FALSE           shift and go to state 32
+    ID              shift and go to state 33
+
+    expr                           shift and go to state 76
+
+state 54
+
+    (33) expr -> expr DIV . expr
+    (30) expr -> . expr MAS expr
+    (31) expr -> . expr MENOS expr
+    (32) expr -> . expr MULT expr
+    (33) expr -> . expr DIV expr
+    (34) expr -> . expr IGUAL expr
+    (35) expr -> . expr DISTINTO expr
+    (36) expr -> . expr MENOR expr
+    (37) expr -> . expr MAYOR expr
+    (38) expr -> . expr MENORIGUAL expr
+    (39) expr -> . expr MAYORIGUAL expr
+    (40) expr -> . expr AND expr
+    (41) expr -> . expr OR expr
+    (42) expr -> . NOT expr
+    (43) expr -> . MENOS expr
+    (44) expr -> . PARENIZQ expr PARENDER
+    (45) expr -> . ENTERO
+    (46) expr -> . CADENA
+    (47) expr -> . TRUE
+    (48) expr -> . FALSE
+    (49) expr -> . ID
+
+    NOT             shift and go to state 27
+    MENOS           shift and go to state 26
+    PARENIZQ        shift and go to state 28
+    ENTERO          shift and go to state 29
+    CADENA          shift and go to state 30
+    TRUE            shift and go to state 31
+    FALSE           shift and go to state 32
+    ID              shift and go to state 33
+
+    expr                           shift and go to state 77
+
+state 55
+
+    (34) expr -> expr IGUAL . expr
+    (30) expr -> . expr MAS expr
+    (31) expr -> . expr MENOS expr
+    (32) expr -> . expr MULT expr
+    (33) expr -> . expr DIV expr
+    (34) expr -> . expr IGUAL expr
+    (35) expr -> . expr DISTINTO expr
+    (36) expr -> . expr MENOR expr
+    (37) expr -> . expr MAYOR expr
+    (38) expr -> . expr MENORIGUAL expr
+    (39) expr -> . expr MAYORIGUAL expr
+    (40) expr -> . expr AND expr
+    (41) expr -> . expr OR expr
+    (42) expr -> . NOT expr
+    (43) expr -> . MENOS expr
+    (44) expr -> . PARENIZQ expr PARENDER
+    (45) expr -> . ENTERO
+    (46) expr -> . CADENA
+    (47) expr -> . TRUE
+    (48) expr -> . FALSE
+    (49) expr -> . ID
+
+    NOT             shift and go to state 27
+    MENOS           shift and go to state 26
+    PARENIZQ        shift and go to state 28
+    ENTERO          shift and go to state 29
+    CADENA          shift and go to state 30
+    TRUE            shift and go to state 31
+    FALSE           shift and go to state 32
+    ID              shift and go to state 33
+
+    expr                           shift and go to state 78
+
+state 56
+
+    (35) expr -> expr DISTINTO . expr
+    (30) expr -> . expr MAS expr
+    (31) expr -> . expr MENOS expr
+    (32) expr -> . expr MULT expr
+    (33) expr -> . expr DIV expr
+    (34) expr -> . expr IGUAL expr
+    (35) expr -> . expr DISTINTO expr
+    (36) expr -> . expr MENOR expr
+    (37) expr -> . expr MAYOR expr
+    (38) expr -> . expr MENORIGUAL expr
+    (39) expr -> . expr MAYORIGUAL expr
+    (40) expr -> . expr AND expr
+    (41) expr -> . expr OR expr
+    (42) expr -> . NOT expr
+    (43) expr -> . MENOS expr
+    (44) expr -> . PARENIZQ expr PARENDER
+    (45) expr -> . ENTERO
+    (46) expr -> . CADENA
+    (47) expr -> . TRUE
+    (48) expr -> . FALSE
+    (49) expr -> . ID
+
+    NOT             shift and go to state 27
+    MENOS           shift and go to state 26
+    PARENIZQ        shift and go to state 28
+    ENTERO          shift and go to state 29
+    CADENA          shift and go to state 30
+    TRUE            shift and go to state 31
+    FALSE           shift and go to state 32
+    ID              shift and go to state 33
+
+    expr                           shift and go to state 79
+
+state 57
+
+    (36) expr -> expr MENOR . expr
+    (30) expr -> . expr MAS expr
+    (31) expr -> . expr MENOS expr
+    (32) expr -> . expr MULT expr
+    (33) expr -> . expr DIV expr
+    (34) expr -> . expr IGUAL expr
+    (35) expr -> . expr DISTINTO expr
+    (36) expr -> . expr MENOR expr
+    (37) expr -> . expr MAYOR expr
+    (38) expr -> . expr MENORIGUAL expr
+    (39) expr -> . expr MAYORIGUAL expr
+    (40) expr -> . expr AND expr
+    (41) expr -> . expr OR expr
+    (42) expr -> . NOT expr
+    (43) expr -> . MENOS expr
+    (44) expr -> . PARENIZQ expr PARENDER
+    (45) expr -> . ENTERO
+    (46) expr -> . CADENA
+    (47) expr -> . TRUE
+    (48) expr -> . FALSE
+    (49) expr -> . ID
+
+    NOT             shift and go to state 27
+    MENOS           shift and go to state 26
+    PARENIZQ        shift and go to state 28
+    ENTERO          shift and go to state 29
+    CADENA          shift and go to state 30
+    TRUE            shift and go to state 31
+    FALSE           shift and go to state 32
+    ID              shift and go to state 33
+
+    expr                           shift and go to state 80
+
+state 58
+
+    (37) expr -> expr MAYOR . expr
+    (30) expr -> . expr MAS expr
+    (31) expr -> . expr MENOS expr
+    (32) expr -> . expr MULT expr
+    (33) expr -> . expr DIV expr
+    (34) expr -> . expr IGUAL expr
+    (35) expr -> . expr DISTINTO expr
+    (36) expr -> . expr MENOR expr
+    (37) expr -> . expr MAYOR expr
+    (38) expr -> . expr MENORIGUAL expr
+    (39) expr -> . expr MAYORIGUAL expr
+    (40) expr -> . expr AND expr
+    (41) expr -> . expr OR expr
+    (42) expr -> . NOT expr
+    (43) expr -> . MENOS expr
+    (44) expr -> . PARENIZQ expr PARENDER
+    (45) expr -> . ENTERO
+    (46) expr -> . CADENA
+    (47) expr -> . TRUE
+    (48) expr -> . FALSE
+    (49) expr -> . ID
+
+    NOT             shift and go to state 27
+    MENOS           shift and go to state 26
+    PARENIZQ        shift and go to state 28
+    ENTERO          shift and go to state 29
+    CADENA          shift and go to state 30
+    TRUE            shift and go to state 31
+    FALSE           shift and go to state 32
+    ID              shift and go to state 33
+
+    expr                           shift and go to state 81
+
+state 59
+
+    (38) expr -> expr MENORIGUAL . expr
+    (30) expr -> . expr MAS expr
+    (31) expr -> . expr MENOS expr
+    (32) expr -> . expr MULT expr
+    (33) expr -> . expr DIV expr
+    (34) expr -> . expr IGUAL expr
+    (35) expr -> . expr DISTINTO expr
+    (36) expr -> . expr MENOR expr
+    (37) expr -> . expr MAYOR expr
+    (38) expr -> . expr MENORIGUAL expr
+    (39) expr -> . expr MAYORIGUAL expr
+    (40) expr -> . expr AND expr
+    (41) expr -> . expr OR expr
+    (42) expr -> . NOT expr
+    (43) expr -> . MENOS expr
+    (44) expr -> . PARENIZQ expr PARENDER
+    (45) expr -> . ENTERO
+    (46) expr -> . CADENA
+    (47) expr -> . TRUE
+    (48) expr -> . FALSE
+    (49) expr -> . ID
+
+    NOT             shift and go to state 27
+    MENOS           shift and go to state 26
+    PARENIZQ        shift and go to state 28
+    ENTERO          shift and go to state 29
+    CADENA          shift and go to state 30
+    TRUE            shift and go to state 31
+    FALSE           shift and go to state 32
+    ID              shift and go to state 33
+
+    expr                           shift and go to state 82
+
+state 60
+
+    (39) expr -> expr MAYORIGUAL . expr
+    (30) expr -> . expr MAS expr
+    (31) expr -> . expr MENOS expr
+    (32) expr -> . expr MULT expr
+    (33) expr -> . expr DIV expr
+    (34) expr -> . expr IGUAL expr
+    (35) expr -> . expr DISTINTO expr
+    (36) expr -> . expr MENOR expr
+    (37) expr -> . expr MAYOR expr
+    (38) expr -> . expr MENORIGUAL expr
+    (39) expr -> . expr MAYORIGUAL expr
+    (40) expr -> . expr AND expr
+    (41) expr -> . expr OR expr
+    (42) expr -> . NOT expr
+    (43) expr -> . MENOS expr
+    (44) expr -> . PARENIZQ expr PARENDER
+    (45) expr -> . ENTERO
+    (46) expr -> . CADENA
+    (47) expr -> . TRUE
+    (48) expr -> . FALSE
+    (49) expr -> . ID
+
+    NOT             shift and go to state 27
+    MENOS           shift and go to state 26
+    PARENIZQ        shift and go to state 28
+    ENTERO          shift and go to state 29
+    CADENA          shift and go to state 30
+    TRUE            shift and go to state 31
+    FALSE           shift and go to state 32
+    ID              shift and go to state 33
+
+    expr                           shift and go to state 83
+
+state 61
+
+    (40) expr -> expr AND . expr
+    (30) expr -> . expr MAS expr
+    (31) expr -> . expr MENOS expr
+    (32) expr -> . expr MULT expr
+    (33) expr -> . expr DIV expr
+    (34) expr -> . expr IGUAL expr
+    (35) expr -> . expr DISTINTO expr
+    (36) expr -> . expr MENOR expr
+    (37) expr -> . expr MAYOR expr
+    (38) expr -> . expr MENORIGUAL expr
+    (39) expr -> . expr MAYORIGUAL expr
+    (40) expr -> . expr AND expr
+    (41) expr -> . expr OR expr
+    (42) expr -> . NOT expr
+    (43) expr -> . MENOS expr
+    (44) expr -> . PARENIZQ expr PARENDER
+    (45) expr -> . ENTERO
+    (46) expr -> . CADENA
+    (47) expr -> . TRUE
+    (48) expr -> . FALSE
+    (49) expr -> . ID
+
+    NOT             shift and go to state 27
+    MENOS           shift and go to state 26
+    PARENIZQ        shift and go to state 28
+    ENTERO          shift and go to state 29
+    CADENA          shift and go to state 30
+    TRUE            shift and go to state 31
+    FALSE           shift and go to state 32
+    ID              shift and go to state 33
+
+    expr                           shift and go to state 84
+
+state 62
+
+    (41) expr -> expr OR . expr
+    (30) expr -> . expr MAS expr
+    (31) expr -> . expr MENOS expr
+    (32) expr -> . expr MULT expr
+    (33) expr -> . expr DIV expr
+    (34) expr -> . expr IGUAL expr
+    (35) expr -> . expr DISTINTO expr
+    (36) expr -> . expr MENOR expr
+    (37) expr -> . expr MAYOR expr
+    (38) expr -> . expr MENORIGUAL expr
+    (39) expr -> . expr MAYORIGUAL expr
+    (40) expr -> . expr AND expr
+    (41) expr -> . expr OR expr
+    (42) expr -> . NOT expr
+    (43) expr -> . MENOS expr
+    (44) expr -> . PARENIZQ expr PARENDER
+    (45) expr -> . ENTERO
+    (46) expr -> . CADENA
+    (47) expr -> . TRUE
+    (48) expr -> . FALSE
+    (49) expr -> . ID
+
+    NOT             shift and go to state 27
+    MENOS           shift and go to state 26
+    PARENIZQ        shift and go to state 28
+    ENTERO          shift and go to state 29
+    CADENA          shift and go to state 30
+    TRUE            shift and go to state 31
+    FALSE           shift and go to state 32
+    ID              shift and go to state 33
+
+    expr                           shift and go to state 85
+
+state 63
+
+    (43) expr -> MENOS expr .
+    (30) expr -> expr . MAS expr
+    (31) expr -> expr . MENOS expr
+    (32) expr -> expr . MULT expr
+    (33) expr -> expr . DIV expr
+    (34) expr -> expr . IGUAL expr
+    (35) expr -> expr . DISTINTO expr
+    (36) expr -> expr . MENOR expr
+    (37) expr -> expr . MAYOR expr
+    (38) expr -> expr . MENORIGUAL expr
+    (39) expr -> expr . MAYORIGUAL expr
+    (40) expr -> expr . AND expr
+    (41) expr -> expr . OR expr
+
+    THEN            reduce using rule 43 (expr -> MENOS expr .)
+    MAS             reduce using rule 43 (expr -> MENOS expr .)
+    MENOS           reduce using rule 43 (expr -> MENOS expr .)
+    MULT            reduce using rule 43 (expr -> MENOS expr .)
+    DIV             reduce using rule 43 (expr -> MENOS expr .)
+    IGUAL           reduce using rule 43 (expr -> MENOS expr .)
+    DISTINTO        reduce using rule 43 (expr -> MENOS expr .)
+    MENOR           reduce using rule 43 (expr -> MENOS expr .)
+    MAYOR           reduce using rule 43 (expr -> MENOS expr .)
+    MENORIGUAL      reduce using rule 43 (expr -> MENOS expr .)
+    MAYORIGUAL      reduce using rule 43 (expr -> MENOS expr .)
+    AND             reduce using rule 43 (expr -> MENOS expr .)
+    OR              reduce using rule 43 (expr -> MENOS expr .)
+    TIMES           reduce using rule 43 (expr -> MENOS expr .)
+    PUNTOYCOMA      reduce using rule 43 (expr -> MENOS expr .)
+    MBR             reduce using rule 43 (expr -> MENOS expr .)
+    GPT             reduce using rule 43 (expr -> MENOS expr .)
+    PARENDER        reduce using rule 43 (expr -> MENOS expr .)
+
+  ! MAS             [ shift and go to state 51 ]
+  ! MENOS           [ shift and go to state 52 ]
+  ! MULT            [ shift and go to state 53 ]
+  ! DIV             [ shift and go to state 54 ]
+  ! IGUAL           [ shift and go to state 55 ]
+  ! DISTINTO        [ shift and go to state 56 ]
+  ! MENOR           [ shift and go to state 57 ]
+  ! MAYOR           [ shift and go to state 58 ]
+  ! MENORIGUAL      [ shift and go to state 59 ]
+  ! MAYORIGUAL      [ shift and go to state 60 ]
+  ! AND             [ shift and go to state 61 ]
+  ! OR              [ shift and go to state 62 ]
+
+
+state 64
+
+    (42) expr -> NOT expr .
+    (30) expr -> expr . MAS expr
+    (31) expr -> expr . MENOS expr
+    (32) expr -> expr . MULT expr
+    (33) expr -> expr . DIV expr
+    (34) expr -> expr . IGUAL expr
+    (35) expr -> expr . DISTINTO expr
+    (36) expr -> expr . MENOR expr
+    (37) expr -> expr . MAYOR expr
+    (38) expr -> expr . MENORIGUAL expr
+    (39) expr -> expr . MAYORIGUAL expr
+    (40) expr -> expr . AND expr
+    (41) expr -> expr . OR expr
+
+    THEN            reduce using rule 42 (expr -> NOT expr .)
+    AND             reduce using rule 42 (expr -> NOT expr .)
+    OR              reduce using rule 42 (expr -> NOT expr .)
+    TIMES           reduce using rule 42 (expr -> NOT expr .)
+    PUNTOYCOMA      reduce using rule 42 (expr -> NOT expr .)
+    MBR             reduce using rule 42 (expr -> NOT expr .)
+    GPT             reduce using rule 42 (expr -> NOT expr .)
+    PARENDER        reduce using rule 42 (expr -> NOT expr .)
+    MAS             shift and go to state 51
+    MENOS           shift and go to state 52
+    MULT            shift and go to state 53
+    DIV             shift and go to state 54
+    IGUAL           shift and go to state 55
+    DISTINTO        shift and go to state 56
+    MENOR           shift and go to state 57
+    MAYOR           shift and go to state 58
+    MENORIGUAL      shift and go to state 59
+    MAYORIGUAL      shift and go to state 60
+
+  ! MAS             [ reduce using rule 42 (expr -> NOT expr .) ]
+  ! MENOS           [ reduce using rule 42 (expr -> NOT expr .) ]
+  ! MULT            [ reduce using rule 42 (expr -> NOT expr .) ]
+  ! DIV             [ reduce using rule 42 (expr -> NOT expr .) ]
+  ! IGUAL           [ reduce using rule 42 (expr -> NOT expr .) ]
+  ! DISTINTO        [ reduce using rule 42 (expr -> NOT expr .) ]
+  ! MENOR           [ reduce using rule 42 (expr -> NOT expr .) ]
+  ! MAYOR           [ reduce using rule 42 (expr -> NOT expr .) ]
+  ! MENORIGUAL      [ reduce using rule 42 (expr -> NOT expr .) ]
+  ! MAYORIGUAL      [ reduce using rule 42 (expr -> NOT expr .) ]
+  ! AND             [ shift and go to state 61 ]
+  ! OR              [ shift and go to state 62 ]
+
+
+state 65
+
+    (44) expr -> PARENIZQ expr . PARENDER
+    (30) expr -> expr . MAS expr
+    (31) expr -> expr . MENOS expr
+    (32) expr -> expr . MULT expr
+    (33) expr -> expr . DIV expr
+    (34) expr -> expr . IGUAL expr
+    (35) expr -> expr . DISTINTO expr
+    (36) expr -> expr . MENOR expr
+    (37) expr -> expr . MAYOR expr
+    (38) expr -> expr . MENORIGUAL expr
+    (39) expr -> expr . MAYORIGUAL expr
+    (40) expr -> expr . AND expr
+    (41) expr -> expr . OR expr
+
+    PARENDER        shift and go to state 86
+    MAS             shift and go to state 51
+    MENOS           shift and go to state 52
+    MULT            shift and go to state 53
+    DIV             shift and go to state 54
+    IGUAL           shift and go to state 55
+    DISTINTO        shift and go to state 56
+    MENOR           shift and go to state 57
+    MAYOR           shift and go to state 58
+    MENORIGUAL      shift and go to state 59
+    MAYORIGUAL      shift and go to state 60
+    AND             shift and go to state 61
+    OR              shift and go to state 62
+
+
+state 66
+
+    (8) sentencia -> REPEAT expr TIMES . lista_sentencias ENDREPEAT
+    (2) lista_sentencias -> . sentencia
+    (3) lista_sentencias -> . lista_sentencias sentencia
+    (4) sentencia -> . comando PUNTOYCOMA
+    (5) sentencia -> . SET ID ASIGNA expr PUNTOYCOMA
+    (6) sentencia -> . IF expr THEN lista_sentencias ENDIF
+    (7) sentencia -> . IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF
+    (8) sentencia -> . REPEAT expr TIMES lista_sentencias ENDREPEAT
+    (9) sentencia -> . BEGIN lista_sentencias END
+    (10) sentencia -> . error PUNTOYCOMA
+    (11) comando -> . POWER_ON
+    (12) comando -> . RUN_POST
+    (13) comando -> . START_OS
+    (14) comando -> . SHOW_STATUS
+    (15) comando -> . RESET_SYSTEM
+    (16) comando -> . CHECK_CPU expr
+    (17) comando -> . CHECK_RAM expr
+    (18) comando -> . CHECK_DISK expr esquema
+    (19) comando -> . SET_FIRMWARE firmware
+    (20) comando -> . SELECT_BOOT dispositivo
+    (21) comando -> . LOAD_BOOTLOADER GRUB
+    (22) comando -> . LOAD_KERNEL CADENA expr
+
+    SET             shift and go to state 5
+    IF              shift and go to state 6
+    REPEAT          shift and go to state 7
+    BEGIN           shift and go to state 8
+    error           shift and go to state 9
+    POWER_ON        shift and go to state 10
+    RUN_POST        shift and go to state 11
+    START_OS        shift and go to state 12
+    SHOW_STATUS     shift and go to state 13
+    RESET_SYSTEM    shift and go to state 14
+    CHECK_CPU       shift and go to state 15
+    CHECK_RAM       shift and go to state 16
+    CHECK_DISK      shift and go to state 17
+    SET_FIRMWARE    shift and go to state 18
+    SELECT_BOOT     shift and go to state 19
+    LOAD_BOOTLOADER shift and go to state 20
+    LOAD_KERNEL     shift and go to state 21
+
+    lista_sentencias               shift and go to state 87
+    sentencia                      shift and go to state 3
+    comando                        shift and go to state 4
+
+state 67
+
+    (9) sentencia -> BEGIN lista_sentencias END .
+
+    SET             reduce using rule 9 (sentencia -> BEGIN lista_sentencias END .)
+    IF              reduce using rule 9 (sentencia -> BEGIN lista_sentencias END .)
+    REPEAT          reduce using rule 9 (sentencia -> BEGIN lista_sentencias END .)
+    BEGIN           reduce using rule 9 (sentencia -> BEGIN lista_sentencias END .)
+    error           reduce using rule 9 (sentencia -> BEGIN lista_sentencias END .)
+    POWER_ON        reduce using rule 9 (sentencia -> BEGIN lista_sentencias END .)
+    RUN_POST        reduce using rule 9 (sentencia -> BEGIN lista_sentencias END .)
+    START_OS        reduce using rule 9 (sentencia -> BEGIN lista_sentencias END .)
+    SHOW_STATUS     reduce using rule 9 (sentencia -> BEGIN lista_sentencias END .)
+    RESET_SYSTEM    reduce using rule 9 (sentencia -> BEGIN lista_sentencias END .)
+    CHECK_CPU       reduce using rule 9 (sentencia -> BEGIN lista_sentencias END .)
+    CHECK_RAM       reduce using rule 9 (sentencia -> BEGIN lista_sentencias END .)
+    CHECK_DISK      reduce using rule 9 (sentencia -> BEGIN lista_sentencias END .)
+    SET_FIRMWARE    reduce using rule 9 (sentencia -> BEGIN lista_sentencias END .)
+    SELECT_BOOT     reduce using rule 9 (sentencia -> BEGIN lista_sentencias END .)
+    LOAD_BOOTLOADER reduce using rule 9 (sentencia -> BEGIN lista_sentencias END .)
+    LOAD_KERNEL     reduce using rule 9 (sentencia -> BEGIN lista_sentencias END .)
+    $end            reduce using rule 9 (sentencia -> BEGIN lista_sentencias END .)
+    END             reduce using rule 9 (sentencia -> BEGIN lista_sentencias END .)
+    ENDIF           reduce using rule 9 (sentencia -> BEGIN lista_sentencias END .)
+    ELSE            reduce using rule 9 (sentencia -> BEGIN lista_sentencias END .)
+    ENDREPEAT       reduce using rule 9 (sentencia -> BEGIN lista_sentencias END .)
+
+
+state 68
+
+    (18) comando -> CHECK_DISK expr esquema .
+
+    PUNTOYCOMA      reduce using rule 18 (comando -> CHECK_DISK expr esquema .)
+
+
+state 69
+
+    (23) esquema -> MBR .
+
+    PUNTOYCOMA      reduce using rule 23 (esquema -> MBR .)
+
+
+state 70
+
+    (24) esquema -> GPT .
+
+    PUNTOYCOMA      reduce using rule 24 (esquema -> GPT .)
+
+
+state 71
+
+    (22) comando -> LOAD_KERNEL CADENA expr .
+    (30) expr -> expr . MAS expr
+    (31) expr -> expr . MENOS expr
+    (32) expr -> expr . MULT expr
+    (33) expr -> expr . DIV expr
+    (34) expr -> expr . IGUAL expr
+    (35) expr -> expr . DISTINTO expr
+    (36) expr -> expr . MENOR expr
+    (37) expr -> expr . MAYOR expr
+    (38) expr -> expr . MENORIGUAL expr
+    (39) expr -> expr . MAYORIGUAL expr
+    (40) expr -> expr . AND expr
+    (41) expr -> expr . OR expr
+
+    PUNTOYCOMA      reduce using rule 22 (comando -> LOAD_KERNEL CADENA expr .)
+    MAS             shift and go to state 51
+    MENOS           shift and go to state 52
+    MULT            shift and go to state 53
+    DIV             shift and go to state 54
+    IGUAL           shift and go to state 55
+    DISTINTO        shift and go to state 56
+    MENOR           shift and go to state 57
+    MAYOR           shift and go to state 58
+    MENORIGUAL      shift and go to state 59
+    MAYORIGUAL      shift and go to state 60
+    AND             shift and go to state 61
+    OR              shift and go to state 62
+
+
+state 72
+
+    (5) sentencia -> SET ID ASIGNA expr . PUNTOYCOMA
+    (30) expr -> expr . MAS expr
+    (31) expr -> expr . MENOS expr
+    (32) expr -> expr . MULT expr
+    (33) expr -> expr . DIV expr
+    (34) expr -> expr . IGUAL expr
+    (35) expr -> expr . DISTINTO expr
+    (36) expr -> expr . MENOR expr
+    (37) expr -> expr . MAYOR expr
+    (38) expr -> expr . MENORIGUAL expr
+    (39) expr -> expr . MAYORIGUAL expr
+    (40) expr -> expr . AND expr
+    (41) expr -> expr . OR expr
+
+    PUNTOYCOMA      shift and go to state 88
+    MAS             shift and go to state 51
+    MENOS           shift and go to state 52
+    MULT            shift and go to state 53
+    DIV             shift and go to state 54
+    IGUAL           shift and go to state 55
+    DISTINTO        shift and go to state 56
+    MENOR           shift and go to state 57
+    MAYOR           shift and go to state 58
+    MENORIGUAL      shift and go to state 59
+    MAYORIGUAL      shift and go to state 60
+    AND             shift and go to state 61
+    OR              shift and go to state 62
+
+
+state 73
+
+    (6) sentencia -> IF expr THEN lista_sentencias . ENDIF
+    (7) sentencia -> IF expr THEN lista_sentencias . ELSE lista_sentencias ENDIF
+    (3) lista_sentencias -> lista_sentencias . sentencia
+    (4) sentencia -> . comando PUNTOYCOMA
+    (5) sentencia -> . SET ID ASIGNA expr PUNTOYCOMA
+    (6) sentencia -> . IF expr THEN lista_sentencias ENDIF
+    (7) sentencia -> . IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF
+    (8) sentencia -> . REPEAT expr TIMES lista_sentencias ENDREPEAT
+    (9) sentencia -> . BEGIN lista_sentencias END
+    (10) sentencia -> . error PUNTOYCOMA
+    (11) comando -> . POWER_ON
+    (12) comando -> . RUN_POST
+    (13) comando -> . START_OS
+    (14) comando -> . SHOW_STATUS
+    (15) comando -> . RESET_SYSTEM
+    (16) comando -> . CHECK_CPU expr
+    (17) comando -> . CHECK_RAM expr
+    (18) comando -> . CHECK_DISK expr esquema
+    (19) comando -> . SET_FIRMWARE firmware
+    (20) comando -> . SELECT_BOOT dispositivo
+    (21) comando -> . LOAD_BOOTLOADER GRUB
+    (22) comando -> . LOAD_KERNEL CADENA expr
+
+    ENDIF           shift and go to state 89
+    ELSE            shift and go to state 90
+    SET             shift and go to state 5
+    IF              shift and go to state 6
+    REPEAT          shift and go to state 7
+    BEGIN           shift and go to state 8
+    error           shift and go to state 9
+    POWER_ON        shift and go to state 10
+    RUN_POST        shift and go to state 11
+    START_OS        shift and go to state 12
+    SHOW_STATUS     shift and go to state 13
+    RESET_SYSTEM    shift and go to state 14
+    CHECK_CPU       shift and go to state 15
+    CHECK_RAM       shift and go to state 16
+    CHECK_DISK      shift and go to state 17
+    SET_FIRMWARE    shift and go to state 18
+    SELECT_BOOT     shift and go to state 19
+    LOAD_BOOTLOADER shift and go to state 20
+    LOAD_KERNEL     shift and go to state 21
+
+    sentencia                      shift and go to state 22
+    comando                        shift and go to state 4
+
+state 74
+
+    (30) expr -> expr MAS expr .
+    (30) expr -> expr . MAS expr
+    (31) expr -> expr . MENOS expr
+    (32) expr -> expr . MULT expr
+    (33) expr -> expr . DIV expr
+    (34) expr -> expr . IGUAL expr
+    (35) expr -> expr . DISTINTO expr
+    (36) expr -> expr . MENOR expr
+    (37) expr -> expr . MAYOR expr
+    (38) expr -> expr . MENORIGUAL expr
+    (39) expr -> expr . MAYORIGUAL expr
+    (40) expr -> expr . AND expr
+    (41) expr -> expr . OR expr
+
+    THEN            reduce using rule 30 (expr -> expr MAS expr .)
+    MAS             reduce using rule 30 (expr -> expr MAS expr .)
+    MENOS           reduce using rule 30 (expr -> expr MAS expr .)
+    IGUAL           reduce using rule 30 (expr -> expr MAS expr .)
+    DISTINTO        reduce using rule 30 (expr -> expr MAS expr .)
+    MENOR           reduce using rule 30 (expr -> expr MAS expr .)
+    MAYOR           reduce using rule 30 (expr -> expr MAS expr .)
+    MENORIGUAL      reduce using rule 30 (expr -> expr MAS expr .)
+    MAYORIGUAL      reduce using rule 30 (expr -> expr MAS expr .)
+    AND             reduce using rule 30 (expr -> expr MAS expr .)
+    OR              reduce using rule 30 (expr -> expr MAS expr .)
+    TIMES           reduce using rule 30 (expr -> expr MAS expr .)
+    PUNTOYCOMA      reduce using rule 30 (expr -> expr MAS expr .)
+    MBR             reduce using rule 30 (expr -> expr MAS expr .)
+    GPT             reduce using rule 30 (expr -> expr MAS expr .)
+    PARENDER        reduce using rule 30 (expr -> expr MAS expr .)
+    MULT            shift and go to state 53
+    DIV             shift and go to state 54
+
+  ! MULT            [ reduce using rule 30 (expr -> expr MAS expr .) ]
+  ! DIV             [ reduce using rule 30 (expr -> expr MAS expr .) ]
+  ! MAS             [ shift and go to state 51 ]
+  ! MENOS           [ shift and go to state 52 ]
+  ! IGUAL           [ shift and go to state 55 ]
+  ! DISTINTO        [ shift and go to state 56 ]
+  ! MENOR           [ shift and go to state 57 ]
+  ! MAYOR           [ shift and go to state 58 ]
+  ! MENORIGUAL      [ shift and go to state 59 ]
+  ! MAYORIGUAL      [ shift and go to state 60 ]
+  ! AND             [ shift and go to state 61 ]
+  ! OR              [ shift and go to state 62 ]
+
+
+state 75
+
+    (31) expr -> expr MENOS expr .
+    (30) expr -> expr . MAS expr
+    (31) expr -> expr . MENOS expr
+    (32) expr -> expr . MULT expr
+    (33) expr -> expr . DIV expr
+    (34) expr -> expr . IGUAL expr
+    (35) expr -> expr . DISTINTO expr
+    (36) expr -> expr . MENOR expr
+    (37) expr -> expr . MAYOR expr
+    (38) expr -> expr . MENORIGUAL expr
+    (39) expr -> expr . MAYORIGUAL expr
+    (40) expr -> expr . AND expr
+    (41) expr -> expr . OR expr
+
+    THEN            reduce using rule 31 (expr -> expr MENOS expr .)
+    MAS             reduce using rule 31 (expr -> expr MENOS expr .)
+    MENOS           reduce using rule 31 (expr -> expr MENOS expr .)
+    IGUAL           reduce using rule 31 (expr -> expr MENOS expr .)
+    DISTINTO        reduce using rule 31 (expr -> expr MENOS expr .)
+    MENOR           reduce using rule 31 (expr -> expr MENOS expr .)
+    MAYOR           reduce using rule 31 (expr -> expr MENOS expr .)
+    MENORIGUAL      reduce using rule 31 (expr -> expr MENOS expr .)
+    MAYORIGUAL      reduce using rule 31 (expr -> expr MENOS expr .)
+    AND             reduce using rule 31 (expr -> expr MENOS expr .)
+    OR              reduce using rule 31 (expr -> expr MENOS expr .)
+    TIMES           reduce using rule 31 (expr -> expr MENOS expr .)
+    PUNTOYCOMA      reduce using rule 31 (expr -> expr MENOS expr .)
+    MBR             reduce using rule 31 (expr -> expr MENOS expr .)
+    GPT             reduce using rule 31 (expr -> expr MENOS expr .)
+    PARENDER        reduce using rule 31 (expr -> expr MENOS expr .)
+    MULT            shift and go to state 53
+    DIV             shift and go to state 54
+
+  ! MULT            [ reduce using rule 31 (expr -> expr MENOS expr .) ]
+  ! DIV             [ reduce using rule 31 (expr -> expr MENOS expr .) ]
+  ! MAS             [ shift and go to state 51 ]
+  ! MENOS           [ shift and go to state 52 ]
+  ! IGUAL           [ shift and go to state 55 ]
+  ! DISTINTO        [ shift and go to state 56 ]
+  ! MENOR           [ shift and go to state 57 ]
+  ! MAYOR           [ shift and go to state 58 ]
+  ! MENORIGUAL      [ shift and go to state 59 ]
+  ! MAYORIGUAL      [ shift and go to state 60 ]
+  ! AND             [ shift and go to state 61 ]
+  ! OR              [ shift and go to state 62 ]
+
+
+state 76
+
+    (32) expr -> expr MULT expr .
+    (30) expr -> expr . MAS expr
+    (31) expr -> expr . MENOS expr
+    (32) expr -> expr . MULT expr
+    (33) expr -> expr . DIV expr
+    (34) expr -> expr . IGUAL expr
+    (35) expr -> expr . DISTINTO expr
+    (36) expr -> expr . MENOR expr
+    (37) expr -> expr . MAYOR expr
+    (38) expr -> expr . MENORIGUAL expr
+    (39) expr -> expr . MAYORIGUAL expr
+    (40) expr -> expr . AND expr
+    (41) expr -> expr . OR expr
+
+    THEN            reduce using rule 32 (expr -> expr MULT expr .)
+    MAS             reduce using rule 32 (expr -> expr MULT expr .)
+    MENOS           reduce using rule 32 (expr -> expr MULT expr .)
+    MULT            reduce using rule 32 (expr -> expr MULT expr .)
+    DIV             reduce using rule 32 (expr -> expr MULT expr .)
+    IGUAL           reduce using rule 32 (expr -> expr MULT expr .)
+    DISTINTO        reduce using rule 32 (expr -> expr MULT expr .)
+    MENOR           reduce using rule 32 (expr -> expr MULT expr .)
+    MAYOR           reduce using rule 32 (expr -> expr MULT expr .)
+    MENORIGUAL      reduce using rule 32 (expr -> expr MULT expr .)
+    MAYORIGUAL      reduce using rule 32 (expr -> expr MULT expr .)
+    AND             reduce using rule 32 (expr -> expr MULT expr .)
+    OR              reduce using rule 32 (expr -> expr MULT expr .)
+    TIMES           reduce using rule 32 (expr -> expr MULT expr .)
+    PUNTOYCOMA      reduce using rule 32 (expr -> expr MULT expr .)
+    MBR             reduce using rule 32 (expr -> expr MULT expr .)
+    GPT             reduce using rule 32 (expr -> expr MULT expr .)
+    PARENDER        reduce using rule 32 (expr -> expr MULT expr .)
+
+  ! MAS             [ shift and go to state 51 ]
+  ! MENOS           [ shift and go to state 52 ]
+  ! MULT            [ shift and go to state 53 ]
+  ! DIV             [ shift and go to state 54 ]
+  ! IGUAL           [ shift and go to state 55 ]
+  ! DISTINTO        [ shift and go to state 56 ]
+  ! MENOR           [ shift and go to state 57 ]
+  ! MAYOR           [ shift and go to state 58 ]
+  ! MENORIGUAL      [ shift and go to state 59 ]
+  ! MAYORIGUAL      [ shift and go to state 60 ]
+  ! AND             [ shift and go to state 61 ]
+  ! OR              [ shift and go to state 62 ]
+
+
+state 77
+
+    (33) expr -> expr DIV expr .
+    (30) expr -> expr . MAS expr
+    (31) expr -> expr . MENOS expr
+    (32) expr -> expr . MULT expr
+    (33) expr -> expr . DIV expr
+    (34) expr -> expr . IGUAL expr
+    (35) expr -> expr . DISTINTO expr
+    (36) expr -> expr . MENOR expr
+    (37) expr -> expr . MAYOR expr
+    (38) expr -> expr . MENORIGUAL expr
+    (39) expr -> expr . MAYORIGUAL expr
+    (40) expr -> expr . AND expr
+    (41) expr -> expr . OR expr
+
+    THEN            reduce using rule 33 (expr -> expr DIV expr .)
+    MAS             reduce using rule 33 (expr -> expr DIV expr .)
+    MENOS           reduce using rule 33 (expr -> expr DIV expr .)
+    MULT            reduce using rule 33 (expr -> expr DIV expr .)
+    DIV             reduce using rule 33 (expr -> expr DIV expr .)
+    IGUAL           reduce using rule 33 (expr -> expr DIV expr .)
+    DISTINTO        reduce using rule 33 (expr -> expr DIV expr .)
+    MENOR           reduce using rule 33 (expr -> expr DIV expr .)
+    MAYOR           reduce using rule 33 (expr -> expr DIV expr .)
+    MENORIGUAL      reduce using rule 33 (expr -> expr DIV expr .)
+    MAYORIGUAL      reduce using rule 33 (expr -> expr DIV expr .)
+    AND             reduce using rule 33 (expr -> expr DIV expr .)
+    OR              reduce using rule 33 (expr -> expr DIV expr .)
+    TIMES           reduce using rule 33 (expr -> expr DIV expr .)
+    PUNTOYCOMA      reduce using rule 33 (expr -> expr DIV expr .)
+    MBR             reduce using rule 33 (expr -> expr DIV expr .)
+    GPT             reduce using rule 33 (expr -> expr DIV expr .)
+    PARENDER        reduce using rule 33 (expr -> expr DIV expr .)
+
+  ! MAS             [ shift and go to state 51 ]
+  ! MENOS           [ shift and go to state 52 ]
+  ! MULT            [ shift and go to state 53 ]
+  ! DIV             [ shift and go to state 54 ]
+  ! IGUAL           [ shift and go to state 55 ]
+  ! DISTINTO        [ shift and go to state 56 ]
+  ! MENOR           [ shift and go to state 57 ]
+  ! MAYOR           [ shift and go to state 58 ]
+  ! MENORIGUAL      [ shift and go to state 59 ]
+  ! MAYORIGUAL      [ shift and go to state 60 ]
+  ! AND             [ shift and go to state 61 ]
+  ! OR              [ shift and go to state 62 ]
+
+
+state 78
+
+    (34) expr -> expr IGUAL expr .
+    (30) expr -> expr . MAS expr
+    (31) expr -> expr . MENOS expr
+    (32) expr -> expr . MULT expr
+    (33) expr -> expr . DIV expr
+    (34) expr -> expr . IGUAL expr
+    (35) expr -> expr . DISTINTO expr
+    (36) expr -> expr . MENOR expr
+    (37) expr -> expr . MAYOR expr
+    (38) expr -> expr . MENORIGUAL expr
+    (39) expr -> expr . MAYORIGUAL expr
+    (40) expr -> expr . AND expr
+    (41) expr -> expr . OR expr
+
+    THEN            reduce using rule 34 (expr -> expr IGUAL expr .)
+    IGUAL           reduce using rule 34 (expr -> expr IGUAL expr .)
+    DISTINTO        reduce using rule 34 (expr -> expr IGUAL expr .)
+    AND             reduce using rule 34 (expr -> expr IGUAL expr .)
+    OR              reduce using rule 34 (expr -> expr IGUAL expr .)
+    TIMES           reduce using rule 34 (expr -> expr IGUAL expr .)
+    PUNTOYCOMA      reduce using rule 34 (expr -> expr IGUAL expr .)
+    MBR             reduce using rule 34 (expr -> expr IGUAL expr .)
+    GPT             reduce using rule 34 (expr -> expr IGUAL expr .)
+    PARENDER        reduce using rule 34 (expr -> expr IGUAL expr .)
+    MAS             shift and go to state 51
+    MENOS           shift and go to state 52
+    MULT            shift and go to state 53
+    DIV             shift and go to state 54
+    MENOR           shift and go to state 57
+    MAYOR           shift and go to state 58
+    MENORIGUAL      shift and go to state 59
+    MAYORIGUAL      shift and go to state 60
+
+  ! MAS             [ reduce using rule 34 (expr -> expr IGUAL expr .) ]
+  ! MENOS           [ reduce using rule 34 (expr -> expr IGUAL expr .) ]
+  ! MULT            [ reduce using rule 34 (expr -> expr IGUAL expr .) ]
+  ! DIV             [ reduce using rule 34 (expr -> expr IGUAL expr .) ]
+  ! MENOR           [ reduce using rule 34 (expr -> expr IGUAL expr .) ]
+  ! MAYOR           [ reduce using rule 34 (expr -> expr IGUAL expr .) ]
+  ! MENORIGUAL      [ reduce using rule 34 (expr -> expr IGUAL expr .) ]
+  ! MAYORIGUAL      [ reduce using rule 34 (expr -> expr IGUAL expr .) ]
+  ! IGUAL           [ shift and go to state 55 ]
+  ! DISTINTO        [ shift and go to state 56 ]
+  ! AND             [ shift and go to state 61 ]
+  ! OR              [ shift and go to state 62 ]
+
+
+state 79
+
+    (35) expr -> expr DISTINTO expr .
+    (30) expr -> expr . MAS expr
+    (31) expr -> expr . MENOS expr
+    (32) expr -> expr . MULT expr
+    (33) expr -> expr . DIV expr
+    (34) expr -> expr . IGUAL expr
+    (35) expr -> expr . DISTINTO expr
+    (36) expr -> expr . MENOR expr
+    (37) expr -> expr . MAYOR expr
+    (38) expr -> expr . MENORIGUAL expr
+    (39) expr -> expr . MAYORIGUAL expr
+    (40) expr -> expr . AND expr
+    (41) expr -> expr . OR expr
+
+    THEN            reduce using rule 35 (expr -> expr DISTINTO expr .)
+    IGUAL           reduce using rule 35 (expr -> expr DISTINTO expr .)
+    DISTINTO        reduce using rule 35 (expr -> expr DISTINTO expr .)
+    AND             reduce using rule 35 (expr -> expr DISTINTO expr .)
+    OR              reduce using rule 35 (expr -> expr DISTINTO expr .)
+    TIMES           reduce using rule 35 (expr -> expr DISTINTO expr .)
+    PUNTOYCOMA      reduce using rule 35 (expr -> expr DISTINTO expr .)
+    MBR             reduce using rule 35 (expr -> expr DISTINTO expr .)
+    GPT             reduce using rule 35 (expr -> expr DISTINTO expr .)
+    PARENDER        reduce using rule 35 (expr -> expr DISTINTO expr .)
+    MAS             shift and go to state 51
+    MENOS           shift and go to state 52
+    MULT            shift and go to state 53
+    DIV             shift and go to state 54
+    MENOR           shift and go to state 57
+    MAYOR           shift and go to state 58
+    MENORIGUAL      shift and go to state 59
+    MAYORIGUAL      shift and go to state 60
+
+  ! MAS             [ reduce using rule 35 (expr -> expr DISTINTO expr .) ]
+  ! MENOS           [ reduce using rule 35 (expr -> expr DISTINTO expr .) ]
+  ! MULT            [ reduce using rule 35 (expr -> expr DISTINTO expr .) ]
+  ! DIV             [ reduce using rule 35 (expr -> expr DISTINTO expr .) ]
+  ! MENOR           [ reduce using rule 35 (expr -> expr DISTINTO expr .) ]
+  ! MAYOR           [ reduce using rule 35 (expr -> expr DISTINTO expr .) ]
+  ! MENORIGUAL      [ reduce using rule 35 (expr -> expr DISTINTO expr .) ]
+  ! MAYORIGUAL      [ reduce using rule 35 (expr -> expr DISTINTO expr .) ]
+  ! IGUAL           [ shift and go to state 55 ]
+  ! DISTINTO        [ shift and go to state 56 ]
+  ! AND             [ shift and go to state 61 ]
+  ! OR              [ shift and go to state 62 ]
+
+
+state 80
+
+    (36) expr -> expr MENOR expr .
+    (30) expr -> expr . MAS expr
+    (31) expr -> expr . MENOS expr
+    (32) expr -> expr . MULT expr
+    (33) expr -> expr . DIV expr
+    (34) expr -> expr . IGUAL expr
+    (35) expr -> expr . DISTINTO expr
+    (36) expr -> expr . MENOR expr
+    (37) expr -> expr . MAYOR expr
+    (38) expr -> expr . MENORIGUAL expr
+    (39) expr -> expr . MAYORIGUAL expr
+    (40) expr -> expr . AND expr
+    (41) expr -> expr . OR expr
+
+    THEN            reduce using rule 36 (expr -> expr MENOR expr .)
+    IGUAL           reduce using rule 36 (expr -> expr MENOR expr .)
+    DISTINTO        reduce using rule 36 (expr -> expr MENOR expr .)
+    MENOR           reduce using rule 36 (expr -> expr MENOR expr .)
+    MAYOR           reduce using rule 36 (expr -> expr MENOR expr .)
+    MENORIGUAL      reduce using rule 36 (expr -> expr MENOR expr .)
+    MAYORIGUAL      reduce using rule 36 (expr -> expr MENOR expr .)
+    AND             reduce using rule 36 (expr -> expr MENOR expr .)
+    OR              reduce using rule 36 (expr -> expr MENOR expr .)
+    TIMES           reduce using rule 36 (expr -> expr MENOR expr .)
+    PUNTOYCOMA      reduce using rule 36 (expr -> expr MENOR expr .)
+    MBR             reduce using rule 36 (expr -> expr MENOR expr .)
+    GPT             reduce using rule 36 (expr -> expr MENOR expr .)
+    PARENDER        reduce using rule 36 (expr -> expr MENOR expr .)
+    MAS             shift and go to state 51
+    MENOS           shift and go to state 52
+    MULT            shift and go to state 53
+    DIV             shift and go to state 54
+
+  ! MAS             [ reduce using rule 36 (expr -> expr MENOR expr .) ]
+  ! MENOS           [ reduce using rule 36 (expr -> expr MENOR expr .) ]
+  ! MULT            [ reduce using rule 36 (expr -> expr MENOR expr .) ]
+  ! DIV             [ reduce using rule 36 (expr -> expr MENOR expr .) ]
+  ! IGUAL           [ shift and go to state 55 ]
+  ! DISTINTO        [ shift and go to state 56 ]
+  ! MENOR           [ shift and go to state 57 ]
+  ! MAYOR           [ shift and go to state 58 ]
+  ! MENORIGUAL      [ shift and go to state 59 ]
+  ! MAYORIGUAL      [ shift and go to state 60 ]
+  ! AND             [ shift and go to state 61 ]
+  ! OR              [ shift and go to state 62 ]
+
+
+state 81
+
+    (37) expr -> expr MAYOR expr .
+    (30) expr -> expr . MAS expr
+    (31) expr -> expr . MENOS expr
+    (32) expr -> expr . MULT expr
+    (33) expr -> expr . DIV expr
+    (34) expr -> expr . IGUAL expr
+    (35) expr -> expr . DISTINTO expr
+    (36) expr -> expr . MENOR expr
+    (37) expr -> expr . MAYOR expr
+    (38) expr -> expr . MENORIGUAL expr
+    (39) expr -> expr . MAYORIGUAL expr
+    (40) expr -> expr . AND expr
+    (41) expr -> expr . OR expr
+
+    THEN            reduce using rule 37 (expr -> expr MAYOR expr .)
+    IGUAL           reduce using rule 37 (expr -> expr MAYOR expr .)
+    DISTINTO        reduce using rule 37 (expr -> expr MAYOR expr .)
+    MENOR           reduce using rule 37 (expr -> expr MAYOR expr .)
+    MAYOR           reduce using rule 37 (expr -> expr MAYOR expr .)
+    MENORIGUAL      reduce using rule 37 (expr -> expr MAYOR expr .)
+    MAYORIGUAL      reduce using rule 37 (expr -> expr MAYOR expr .)
+    AND             reduce using rule 37 (expr -> expr MAYOR expr .)
+    OR              reduce using rule 37 (expr -> expr MAYOR expr .)
+    TIMES           reduce using rule 37 (expr -> expr MAYOR expr .)
+    PUNTOYCOMA      reduce using rule 37 (expr -> expr MAYOR expr .)
+    MBR             reduce using rule 37 (expr -> expr MAYOR expr .)
+    GPT             reduce using rule 37 (expr -> expr MAYOR expr .)
+    PARENDER        reduce using rule 37 (expr -> expr MAYOR expr .)
+    MAS             shift and go to state 51
+    MENOS           shift and go to state 52
+    MULT            shift and go to state 53
+    DIV             shift and go to state 54
+
+  ! MAS             [ reduce using rule 37 (expr -> expr MAYOR expr .) ]
+  ! MENOS           [ reduce using rule 37 (expr -> expr MAYOR expr .) ]
+  ! MULT            [ reduce using rule 37 (expr -> expr MAYOR expr .) ]
+  ! DIV             [ reduce using rule 37 (expr -> expr MAYOR expr .) ]
+  ! IGUAL           [ shift and go to state 55 ]
+  ! DISTINTO        [ shift and go to state 56 ]
+  ! MENOR           [ shift and go to state 57 ]
+  ! MAYOR           [ shift and go to state 58 ]
+  ! MENORIGUAL      [ shift and go to state 59 ]
+  ! MAYORIGUAL      [ shift and go to state 60 ]
+  ! AND             [ shift and go to state 61 ]
+  ! OR              [ shift and go to state 62 ]
+
+
+state 82
+
+    (38) expr -> expr MENORIGUAL expr .
+    (30) expr -> expr . MAS expr
+    (31) expr -> expr . MENOS expr
+    (32) expr -> expr . MULT expr
+    (33) expr -> expr . DIV expr
+    (34) expr -> expr . IGUAL expr
+    (35) expr -> expr . DISTINTO expr
+    (36) expr -> expr . MENOR expr
+    (37) expr -> expr . MAYOR expr
+    (38) expr -> expr . MENORIGUAL expr
+    (39) expr -> expr . MAYORIGUAL expr
+    (40) expr -> expr . AND expr
+    (41) expr -> expr . OR expr
+
+    THEN            reduce using rule 38 (expr -> expr MENORIGUAL expr .)
+    IGUAL           reduce using rule 38 (expr -> expr MENORIGUAL expr .)
+    DISTINTO        reduce using rule 38 (expr -> expr MENORIGUAL expr .)
+    MENOR           reduce using rule 38 (expr -> expr MENORIGUAL expr .)
+    MAYOR           reduce using rule 38 (expr -> expr MENORIGUAL expr .)
+    MENORIGUAL      reduce using rule 38 (expr -> expr MENORIGUAL expr .)
+    MAYORIGUAL      reduce using rule 38 (expr -> expr MENORIGUAL expr .)
+    AND             reduce using rule 38 (expr -> expr MENORIGUAL expr .)
+    OR              reduce using rule 38 (expr -> expr MENORIGUAL expr .)
+    TIMES           reduce using rule 38 (expr -> expr MENORIGUAL expr .)
+    PUNTOYCOMA      reduce using rule 38 (expr -> expr MENORIGUAL expr .)
+    MBR             reduce using rule 38 (expr -> expr MENORIGUAL expr .)
+    GPT             reduce using rule 38 (expr -> expr MENORIGUAL expr .)
+    PARENDER        reduce using rule 38 (expr -> expr MENORIGUAL expr .)
+    MAS             shift and go to state 51
+    MENOS           shift and go to state 52
+    MULT            shift and go to state 53
+    DIV             shift and go to state 54
+
+  ! MAS             [ reduce using rule 38 (expr -> expr MENORIGUAL expr .) ]
+  ! MENOS           [ reduce using rule 38 (expr -> expr MENORIGUAL expr .) ]
+  ! MULT            [ reduce using rule 38 (expr -> expr MENORIGUAL expr .) ]
+  ! DIV             [ reduce using rule 38 (expr -> expr MENORIGUAL expr .) ]
+  ! IGUAL           [ shift and go to state 55 ]
+  ! DISTINTO        [ shift and go to state 56 ]
+  ! MENOR           [ shift and go to state 57 ]
+  ! MAYOR           [ shift and go to state 58 ]
+  ! MENORIGUAL      [ shift and go to state 59 ]
+  ! MAYORIGUAL      [ shift and go to state 60 ]
+  ! AND             [ shift and go to state 61 ]
+  ! OR              [ shift and go to state 62 ]
+
+
+state 83
+
+    (39) expr -> expr MAYORIGUAL expr .
+    (30) expr -> expr . MAS expr
+    (31) expr -> expr . MENOS expr
+    (32) expr -> expr . MULT expr
+    (33) expr -> expr . DIV expr
+    (34) expr -> expr . IGUAL expr
+    (35) expr -> expr . DISTINTO expr
+    (36) expr -> expr . MENOR expr
+    (37) expr -> expr . MAYOR expr
+    (38) expr -> expr . MENORIGUAL expr
+    (39) expr -> expr . MAYORIGUAL expr
+    (40) expr -> expr . AND expr
+    (41) expr -> expr . OR expr
+
+    THEN            reduce using rule 39 (expr -> expr MAYORIGUAL expr .)
+    IGUAL           reduce using rule 39 (expr -> expr MAYORIGUAL expr .)
+    DISTINTO        reduce using rule 39 (expr -> expr MAYORIGUAL expr .)
+    MENOR           reduce using rule 39 (expr -> expr MAYORIGUAL expr .)
+    MAYOR           reduce using rule 39 (expr -> expr MAYORIGUAL expr .)
+    MENORIGUAL      reduce using rule 39 (expr -> expr MAYORIGUAL expr .)
+    MAYORIGUAL      reduce using rule 39 (expr -> expr MAYORIGUAL expr .)
+    AND             reduce using rule 39 (expr -> expr MAYORIGUAL expr .)
+    OR              reduce using rule 39 (expr -> expr MAYORIGUAL expr .)
+    TIMES           reduce using rule 39 (expr -> expr MAYORIGUAL expr .)
+    PUNTOYCOMA      reduce using rule 39 (expr -> expr MAYORIGUAL expr .)
+    MBR             reduce using rule 39 (expr -> expr MAYORIGUAL expr .)
+    GPT             reduce using rule 39 (expr -> expr MAYORIGUAL expr .)
+    PARENDER        reduce using rule 39 (expr -> expr MAYORIGUAL expr .)
+    MAS             shift and go to state 51
+    MENOS           shift and go to state 52
+    MULT            shift and go to state 53
+    DIV             shift and go to state 54
+
+  ! MAS             [ reduce using rule 39 (expr -> expr MAYORIGUAL expr .) ]
+  ! MENOS           [ reduce using rule 39 (expr -> expr MAYORIGUAL expr .) ]
+  ! MULT            [ reduce using rule 39 (expr -> expr MAYORIGUAL expr .) ]
+  ! DIV             [ reduce using rule 39 (expr -> expr MAYORIGUAL expr .) ]
+  ! IGUAL           [ shift and go to state 55 ]
+  ! DISTINTO        [ shift and go to state 56 ]
+  ! MENOR           [ shift and go to state 57 ]
+  ! MAYOR           [ shift and go to state 58 ]
+  ! MENORIGUAL      [ shift and go to state 59 ]
+  ! MAYORIGUAL      [ shift and go to state 60 ]
+  ! AND             [ shift and go to state 61 ]
+  ! OR              [ shift and go to state 62 ]
+
+
+state 84
+
+    (40) expr -> expr AND expr .
+    (30) expr -> expr . MAS expr
+    (31) expr -> expr . MENOS expr
+    (32) expr -> expr . MULT expr
+    (33) expr -> expr . DIV expr
+    (34) expr -> expr . IGUAL expr
+    (35) expr -> expr . DISTINTO expr
+    (36) expr -> expr . MENOR expr
+    (37) expr -> expr . MAYOR expr
+    (38) expr -> expr . MENORIGUAL expr
+    (39) expr -> expr . MAYORIGUAL expr
+    (40) expr -> expr . AND expr
+    (41) expr -> expr . OR expr
+
+    THEN            reduce using rule 40 (expr -> expr AND expr .)
+    AND             reduce using rule 40 (expr -> expr AND expr .)
+    OR              reduce using rule 40 (expr -> expr AND expr .)
+    TIMES           reduce using rule 40 (expr -> expr AND expr .)
+    PUNTOYCOMA      reduce using rule 40 (expr -> expr AND expr .)
+    MBR             reduce using rule 40 (expr -> expr AND expr .)
+    GPT             reduce using rule 40 (expr -> expr AND expr .)
+    PARENDER        reduce using rule 40 (expr -> expr AND expr .)
+    MAS             shift and go to state 51
+    MENOS           shift and go to state 52
+    MULT            shift and go to state 53
+    DIV             shift and go to state 54
+    IGUAL           shift and go to state 55
+    DISTINTO        shift and go to state 56
+    MENOR           shift and go to state 57
+    MAYOR           shift and go to state 58
+    MENORIGUAL      shift and go to state 59
+    MAYORIGUAL      shift and go to state 60
+
+  ! MAS             [ reduce using rule 40 (expr -> expr AND expr .) ]
+  ! MENOS           [ reduce using rule 40 (expr -> expr AND expr .) ]
+  ! MULT            [ reduce using rule 40 (expr -> expr AND expr .) ]
+  ! DIV             [ reduce using rule 40 (expr -> expr AND expr .) ]
+  ! IGUAL           [ reduce using rule 40 (expr -> expr AND expr .) ]
+  ! DISTINTO        [ reduce using rule 40 (expr -> expr AND expr .) ]
+  ! MENOR           [ reduce using rule 40 (expr -> expr AND expr .) ]
+  ! MAYOR           [ reduce using rule 40 (expr -> expr AND expr .) ]
+  ! MENORIGUAL      [ reduce using rule 40 (expr -> expr AND expr .) ]
+  ! MAYORIGUAL      [ reduce using rule 40 (expr -> expr AND expr .) ]
+  ! AND             [ shift and go to state 61 ]
+  ! OR              [ shift and go to state 62 ]
+
+
+state 85
+
+    (41) expr -> expr OR expr .
+    (30) expr -> expr . MAS expr
+    (31) expr -> expr . MENOS expr
+    (32) expr -> expr . MULT expr
+    (33) expr -> expr . DIV expr
+    (34) expr -> expr . IGUAL expr
+    (35) expr -> expr . DISTINTO expr
+    (36) expr -> expr . MENOR expr
+    (37) expr -> expr . MAYOR expr
+    (38) expr -> expr . MENORIGUAL expr
+    (39) expr -> expr . MAYORIGUAL expr
+    (40) expr -> expr . AND expr
+    (41) expr -> expr . OR expr
+
+    THEN            reduce using rule 41 (expr -> expr OR expr .)
+    OR              reduce using rule 41 (expr -> expr OR expr .)
+    TIMES           reduce using rule 41 (expr -> expr OR expr .)
+    PUNTOYCOMA      reduce using rule 41 (expr -> expr OR expr .)
+    MBR             reduce using rule 41 (expr -> expr OR expr .)
+    GPT             reduce using rule 41 (expr -> expr OR expr .)
+    PARENDER        reduce using rule 41 (expr -> expr OR expr .)
+    MAS             shift and go to state 51
+    MENOS           shift and go to state 52
+    MULT            shift and go to state 53
+    DIV             shift and go to state 54
+    IGUAL           shift and go to state 55
+    DISTINTO        shift and go to state 56
+    MENOR           shift and go to state 57
+    MAYOR           shift and go to state 58
+    MENORIGUAL      shift and go to state 59
+    MAYORIGUAL      shift and go to state 60
+    AND             shift and go to state 61
+
+  ! MAS             [ reduce using rule 41 (expr -> expr OR expr .) ]
+  ! MENOS           [ reduce using rule 41 (expr -> expr OR expr .) ]
+  ! MULT            [ reduce using rule 41 (expr -> expr OR expr .) ]
+  ! DIV             [ reduce using rule 41 (expr -> expr OR expr .) ]
+  ! IGUAL           [ reduce using rule 41 (expr -> expr OR expr .) ]
+  ! DISTINTO        [ reduce using rule 41 (expr -> expr OR expr .) ]
+  ! MENOR           [ reduce using rule 41 (expr -> expr OR expr .) ]
+  ! MAYOR           [ reduce using rule 41 (expr -> expr OR expr .) ]
+  ! MENORIGUAL      [ reduce using rule 41 (expr -> expr OR expr .) ]
+  ! MAYORIGUAL      [ reduce using rule 41 (expr -> expr OR expr .) ]
+  ! AND             [ reduce using rule 41 (expr -> expr OR expr .) ]
+  ! OR              [ shift and go to state 62 ]
+
+
+state 86
+
+    (44) expr -> PARENIZQ expr PARENDER .
+
+    THEN            reduce using rule 44 (expr -> PARENIZQ expr PARENDER .)
+    MAS             reduce using rule 44 (expr -> PARENIZQ expr PARENDER .)
+    MENOS           reduce using rule 44 (expr -> PARENIZQ expr PARENDER .)
+    MULT            reduce using rule 44 (expr -> PARENIZQ expr PARENDER .)
+    DIV             reduce using rule 44 (expr -> PARENIZQ expr PARENDER .)
+    IGUAL           reduce using rule 44 (expr -> PARENIZQ expr PARENDER .)
+    DISTINTO        reduce using rule 44 (expr -> PARENIZQ expr PARENDER .)
+    MENOR           reduce using rule 44 (expr -> PARENIZQ expr PARENDER .)
+    MAYOR           reduce using rule 44 (expr -> PARENIZQ expr PARENDER .)
+    MENORIGUAL      reduce using rule 44 (expr -> PARENIZQ expr PARENDER .)
+    MAYORIGUAL      reduce using rule 44 (expr -> PARENIZQ expr PARENDER .)
+    AND             reduce using rule 44 (expr -> PARENIZQ expr PARENDER .)
+    OR              reduce using rule 44 (expr -> PARENIZQ expr PARENDER .)
+    TIMES           reduce using rule 44 (expr -> PARENIZQ expr PARENDER .)
+    PUNTOYCOMA      reduce using rule 44 (expr -> PARENIZQ expr PARENDER .)
+    MBR             reduce using rule 44 (expr -> PARENIZQ expr PARENDER .)
+    GPT             reduce using rule 44 (expr -> PARENIZQ expr PARENDER .)
+    PARENDER        reduce using rule 44 (expr -> PARENIZQ expr PARENDER .)
+
+
+state 87
+
+    (8) sentencia -> REPEAT expr TIMES lista_sentencias . ENDREPEAT
+    (3) lista_sentencias -> lista_sentencias . sentencia
+    (4) sentencia -> . comando PUNTOYCOMA
+    (5) sentencia -> . SET ID ASIGNA expr PUNTOYCOMA
+    (6) sentencia -> . IF expr THEN lista_sentencias ENDIF
+    (7) sentencia -> . IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF
+    (8) sentencia -> . REPEAT expr TIMES lista_sentencias ENDREPEAT
+    (9) sentencia -> . BEGIN lista_sentencias END
+    (10) sentencia -> . error PUNTOYCOMA
+    (11) comando -> . POWER_ON
+    (12) comando -> . RUN_POST
+    (13) comando -> . START_OS
+    (14) comando -> . SHOW_STATUS
+    (15) comando -> . RESET_SYSTEM
+    (16) comando -> . CHECK_CPU expr
+    (17) comando -> . CHECK_RAM expr
+    (18) comando -> . CHECK_DISK expr esquema
+    (19) comando -> . SET_FIRMWARE firmware
+    (20) comando -> . SELECT_BOOT dispositivo
+    (21) comando -> . LOAD_BOOTLOADER GRUB
+    (22) comando -> . LOAD_KERNEL CADENA expr
+
+    ENDREPEAT       shift and go to state 91
+    SET             shift and go to state 5
+    IF              shift and go to state 6
+    REPEAT          shift and go to state 7
+    BEGIN           shift and go to state 8
+    error           shift and go to state 9
+    POWER_ON        shift and go to state 10
+    RUN_POST        shift and go to state 11
+    START_OS        shift and go to state 12
+    SHOW_STATUS     shift and go to state 13
+    RESET_SYSTEM    shift and go to state 14
+    CHECK_CPU       shift and go to state 15
+    CHECK_RAM       shift and go to state 16
+    CHECK_DISK      shift and go to state 17
+    SET_FIRMWARE    shift and go to state 18
+    SELECT_BOOT     shift and go to state 19
+    LOAD_BOOTLOADER shift and go to state 20
+    LOAD_KERNEL     shift and go to state 21
+
+    sentencia                      shift and go to state 22
+    comando                        shift and go to state 4
+
+state 88
+
+    (5) sentencia -> SET ID ASIGNA expr PUNTOYCOMA .
+
+    SET             reduce using rule 5 (sentencia -> SET ID ASIGNA expr PUNTOYCOMA .)
+    IF              reduce using rule 5 (sentencia -> SET ID ASIGNA expr PUNTOYCOMA .)
+    REPEAT          reduce using rule 5 (sentencia -> SET ID ASIGNA expr PUNTOYCOMA .)
+    BEGIN           reduce using rule 5 (sentencia -> SET ID ASIGNA expr PUNTOYCOMA .)
+    error           reduce using rule 5 (sentencia -> SET ID ASIGNA expr PUNTOYCOMA .)
+    POWER_ON        reduce using rule 5 (sentencia -> SET ID ASIGNA expr PUNTOYCOMA .)
+    RUN_POST        reduce using rule 5 (sentencia -> SET ID ASIGNA expr PUNTOYCOMA .)
+    START_OS        reduce using rule 5 (sentencia -> SET ID ASIGNA expr PUNTOYCOMA .)
+    SHOW_STATUS     reduce using rule 5 (sentencia -> SET ID ASIGNA expr PUNTOYCOMA .)
+    RESET_SYSTEM    reduce using rule 5 (sentencia -> SET ID ASIGNA expr PUNTOYCOMA .)
+    CHECK_CPU       reduce using rule 5 (sentencia -> SET ID ASIGNA expr PUNTOYCOMA .)
+    CHECK_RAM       reduce using rule 5 (sentencia -> SET ID ASIGNA expr PUNTOYCOMA .)
+    CHECK_DISK      reduce using rule 5 (sentencia -> SET ID ASIGNA expr PUNTOYCOMA .)
+    SET_FIRMWARE    reduce using rule 5 (sentencia -> SET ID ASIGNA expr PUNTOYCOMA .)
+    SELECT_BOOT     reduce using rule 5 (sentencia -> SET ID ASIGNA expr PUNTOYCOMA .)
+    LOAD_BOOTLOADER reduce using rule 5 (sentencia -> SET ID ASIGNA expr PUNTOYCOMA .)
+    LOAD_KERNEL     reduce using rule 5 (sentencia -> SET ID ASIGNA expr PUNTOYCOMA .)
+    $end            reduce using rule 5 (sentencia -> SET ID ASIGNA expr PUNTOYCOMA .)
+    END             reduce using rule 5 (sentencia -> SET ID ASIGNA expr PUNTOYCOMA .)
+    ENDIF           reduce using rule 5 (sentencia -> SET ID ASIGNA expr PUNTOYCOMA .)
+    ELSE            reduce using rule 5 (sentencia -> SET ID ASIGNA expr PUNTOYCOMA .)
+    ENDREPEAT       reduce using rule 5 (sentencia -> SET ID ASIGNA expr PUNTOYCOMA .)
+
+
+state 89
+
+    (6) sentencia -> IF expr THEN lista_sentencias ENDIF .
+
+    SET             reduce using rule 6 (sentencia -> IF expr THEN lista_sentencias ENDIF .)
+    IF              reduce using rule 6 (sentencia -> IF expr THEN lista_sentencias ENDIF .)
+    REPEAT          reduce using rule 6 (sentencia -> IF expr THEN lista_sentencias ENDIF .)
+    BEGIN           reduce using rule 6 (sentencia -> IF expr THEN lista_sentencias ENDIF .)
+    error           reduce using rule 6 (sentencia -> IF expr THEN lista_sentencias ENDIF .)
+    POWER_ON        reduce using rule 6 (sentencia -> IF expr THEN lista_sentencias ENDIF .)
+    RUN_POST        reduce using rule 6 (sentencia -> IF expr THEN lista_sentencias ENDIF .)
+    START_OS        reduce using rule 6 (sentencia -> IF expr THEN lista_sentencias ENDIF .)
+    SHOW_STATUS     reduce using rule 6 (sentencia -> IF expr THEN lista_sentencias ENDIF .)
+    RESET_SYSTEM    reduce using rule 6 (sentencia -> IF expr THEN lista_sentencias ENDIF .)
+    CHECK_CPU       reduce using rule 6 (sentencia -> IF expr THEN lista_sentencias ENDIF .)
+    CHECK_RAM       reduce using rule 6 (sentencia -> IF expr THEN lista_sentencias ENDIF .)
+    CHECK_DISK      reduce using rule 6 (sentencia -> IF expr THEN lista_sentencias ENDIF .)
+    SET_FIRMWARE    reduce using rule 6 (sentencia -> IF expr THEN lista_sentencias ENDIF .)
+    SELECT_BOOT     reduce using rule 6 (sentencia -> IF expr THEN lista_sentencias ENDIF .)
+    LOAD_BOOTLOADER reduce using rule 6 (sentencia -> IF expr THEN lista_sentencias ENDIF .)
+    LOAD_KERNEL     reduce using rule 6 (sentencia -> IF expr THEN lista_sentencias ENDIF .)
+    $end            reduce using rule 6 (sentencia -> IF expr THEN lista_sentencias ENDIF .)
+    END             reduce using rule 6 (sentencia -> IF expr THEN lista_sentencias ENDIF .)
+    ENDIF           reduce using rule 6 (sentencia -> IF expr THEN lista_sentencias ENDIF .)
+    ELSE            reduce using rule 6 (sentencia -> IF expr THEN lista_sentencias ENDIF .)
+    ENDREPEAT       reduce using rule 6 (sentencia -> IF expr THEN lista_sentencias ENDIF .)
+
+
+state 90
+
+    (7) sentencia -> IF expr THEN lista_sentencias ELSE . lista_sentencias ENDIF
+    (2) lista_sentencias -> . sentencia
+    (3) lista_sentencias -> . lista_sentencias sentencia
+    (4) sentencia -> . comando PUNTOYCOMA
+    (5) sentencia -> . SET ID ASIGNA expr PUNTOYCOMA
+    (6) sentencia -> . IF expr THEN lista_sentencias ENDIF
+    (7) sentencia -> . IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF
+    (8) sentencia -> . REPEAT expr TIMES lista_sentencias ENDREPEAT
+    (9) sentencia -> . BEGIN lista_sentencias END
+    (10) sentencia -> . error PUNTOYCOMA
+    (11) comando -> . POWER_ON
+    (12) comando -> . RUN_POST
+    (13) comando -> . START_OS
+    (14) comando -> . SHOW_STATUS
+    (15) comando -> . RESET_SYSTEM
+    (16) comando -> . CHECK_CPU expr
+    (17) comando -> . CHECK_RAM expr
+    (18) comando -> . CHECK_DISK expr esquema
+    (19) comando -> . SET_FIRMWARE firmware
+    (20) comando -> . SELECT_BOOT dispositivo
+    (21) comando -> . LOAD_BOOTLOADER GRUB
+    (22) comando -> . LOAD_KERNEL CADENA expr
+
+    SET             shift and go to state 5
+    IF              shift and go to state 6
+    REPEAT          shift and go to state 7
+    BEGIN           shift and go to state 8
+    error           shift and go to state 9
+    POWER_ON        shift and go to state 10
+    RUN_POST        shift and go to state 11
+    START_OS        shift and go to state 12
+    SHOW_STATUS     shift and go to state 13
+    RESET_SYSTEM    shift and go to state 14
+    CHECK_CPU       shift and go to state 15
+    CHECK_RAM       shift and go to state 16
+    CHECK_DISK      shift and go to state 17
+    SET_FIRMWARE    shift and go to state 18
+    SELECT_BOOT     shift and go to state 19
+    LOAD_BOOTLOADER shift and go to state 20
+    LOAD_KERNEL     shift and go to state 21
+
+    lista_sentencias               shift and go to state 92
+    sentencia                      shift and go to state 3
+    comando                        shift and go to state 4
+
+state 91
+
+    (8) sentencia -> REPEAT expr TIMES lista_sentencias ENDREPEAT .
+
+    SET             reduce using rule 8 (sentencia -> REPEAT expr TIMES lista_sentencias ENDREPEAT .)
+    IF              reduce using rule 8 (sentencia -> REPEAT expr TIMES lista_sentencias ENDREPEAT .)
+    REPEAT          reduce using rule 8 (sentencia -> REPEAT expr TIMES lista_sentencias ENDREPEAT .)
+    BEGIN           reduce using rule 8 (sentencia -> REPEAT expr TIMES lista_sentencias ENDREPEAT .)
+    error           reduce using rule 8 (sentencia -> REPEAT expr TIMES lista_sentencias ENDREPEAT .)
+    POWER_ON        reduce using rule 8 (sentencia -> REPEAT expr TIMES lista_sentencias ENDREPEAT .)
+    RUN_POST        reduce using rule 8 (sentencia -> REPEAT expr TIMES lista_sentencias ENDREPEAT .)
+    START_OS        reduce using rule 8 (sentencia -> REPEAT expr TIMES lista_sentencias ENDREPEAT .)
+    SHOW_STATUS     reduce using rule 8 (sentencia -> REPEAT expr TIMES lista_sentencias ENDREPEAT .)
+    RESET_SYSTEM    reduce using rule 8 (sentencia -> REPEAT expr TIMES lista_sentencias ENDREPEAT .)
+    CHECK_CPU       reduce using rule 8 (sentencia -> REPEAT expr TIMES lista_sentencias ENDREPEAT .)
+    CHECK_RAM       reduce using rule 8 (sentencia -> REPEAT expr TIMES lista_sentencias ENDREPEAT .)
+    CHECK_DISK      reduce using rule 8 (sentencia -> REPEAT expr TIMES lista_sentencias ENDREPEAT .)
+    SET_FIRMWARE    reduce using rule 8 (sentencia -> REPEAT expr TIMES lista_sentencias ENDREPEAT .)
+    SELECT_BOOT     reduce using rule 8 (sentencia -> REPEAT expr TIMES lista_sentencias ENDREPEAT .)
+    LOAD_BOOTLOADER reduce using rule 8 (sentencia -> REPEAT expr TIMES lista_sentencias ENDREPEAT .)
+    LOAD_KERNEL     reduce using rule 8 (sentencia -> REPEAT expr TIMES lista_sentencias ENDREPEAT .)
+    $end            reduce using rule 8 (sentencia -> REPEAT expr TIMES lista_sentencias ENDREPEAT .)
+    END             reduce using rule 8 (sentencia -> REPEAT expr TIMES lista_sentencias ENDREPEAT .)
+    ENDIF           reduce using rule 8 (sentencia -> REPEAT expr TIMES lista_sentencias ENDREPEAT .)
+    ELSE            reduce using rule 8 (sentencia -> REPEAT expr TIMES lista_sentencias ENDREPEAT .)
+    ENDREPEAT       reduce using rule 8 (sentencia -> REPEAT expr TIMES lista_sentencias ENDREPEAT .)
+
+
+state 92
+
+    (7) sentencia -> IF expr THEN lista_sentencias ELSE lista_sentencias . ENDIF
+    (3) lista_sentencias -> lista_sentencias . sentencia
+    (4) sentencia -> . comando PUNTOYCOMA
+    (5) sentencia -> . SET ID ASIGNA expr PUNTOYCOMA
+    (6) sentencia -> . IF expr THEN lista_sentencias ENDIF
+    (7) sentencia -> . IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF
+    (8) sentencia -> . REPEAT expr TIMES lista_sentencias ENDREPEAT
+    (9) sentencia -> . BEGIN lista_sentencias END
+    (10) sentencia -> . error PUNTOYCOMA
+    (11) comando -> . POWER_ON
+    (12) comando -> . RUN_POST
+    (13) comando -> . START_OS
+    (14) comando -> . SHOW_STATUS
+    (15) comando -> . RESET_SYSTEM
+    (16) comando -> . CHECK_CPU expr
+    (17) comando -> . CHECK_RAM expr
+    (18) comando -> . CHECK_DISK expr esquema
+    (19) comando -> . SET_FIRMWARE firmware
+    (20) comando -> . SELECT_BOOT dispositivo
+    (21) comando -> . LOAD_BOOTLOADER GRUB
+    (22) comando -> . LOAD_KERNEL CADENA expr
+
+    ENDIF           shift and go to state 93
+    SET             shift and go to state 5
+    IF              shift and go to state 6
+    REPEAT          shift and go to state 7
+    BEGIN           shift and go to state 8
+    error           shift and go to state 9
+    POWER_ON        shift and go to state 10
+    RUN_POST        shift and go to state 11
+    START_OS        shift and go to state 12
+    SHOW_STATUS     shift and go to state 13
+    RESET_SYSTEM    shift and go to state 14
+    CHECK_CPU       shift and go to state 15
+    CHECK_RAM       shift and go to state 16
+    CHECK_DISK      shift and go to state 17
+    SET_FIRMWARE    shift and go to state 18
+    SELECT_BOOT     shift and go to state 19
+    LOAD_BOOTLOADER shift and go to state 20
+    LOAD_KERNEL     shift and go to state 21
+
+    sentencia                      shift and go to state 22
+    comando                        shift and go to state 4
+
+state 93
+
+    (7) sentencia -> IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF .
+
+    SET             reduce using rule 7 (sentencia -> IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF .)
+    IF              reduce using rule 7 (sentencia -> IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF .)
+    REPEAT          reduce using rule 7 (sentencia -> IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF .)
+    BEGIN           reduce using rule 7 (sentencia -> IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF .)
+    error           reduce using rule 7 (sentencia -> IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF .)
+    POWER_ON        reduce using rule 7 (sentencia -> IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF .)
+    RUN_POST        reduce using rule 7 (sentencia -> IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF .)
+    START_OS        reduce using rule 7 (sentencia -> IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF .)
+    SHOW_STATUS     reduce using rule 7 (sentencia -> IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF .)
+    RESET_SYSTEM    reduce using rule 7 (sentencia -> IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF .)
+    CHECK_CPU       reduce using rule 7 (sentencia -> IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF .)
+    CHECK_RAM       reduce using rule 7 (sentencia -> IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF .)
+    CHECK_DISK      reduce using rule 7 (sentencia -> IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF .)
+    SET_FIRMWARE    reduce using rule 7 (sentencia -> IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF .)
+    SELECT_BOOT     reduce using rule 7 (sentencia -> IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF .)
+    LOAD_BOOTLOADER reduce using rule 7 (sentencia -> IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF .)
+    LOAD_KERNEL     reduce using rule 7 (sentencia -> IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF .)
+    $end            reduce using rule 7 (sentencia -> IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF .)
+    END             reduce using rule 7 (sentencia -> IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF .)
+    ENDIF           reduce using rule 7 (sentencia -> IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF .)
+    ELSE            reduce using rule 7 (sentencia -> IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF .)
+    ENDREPEAT       reduce using rule 7 (sentencia -> IF expr THEN lista_sentencias ELSE lista_sentencias ENDIF .)
+

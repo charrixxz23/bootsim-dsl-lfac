@@ -1,0 +1,46 @@
+(* gramatica normativa de bootsim dsl (borrador del plan, f03).
+   los terminales entre comillas son palabras reservadas o simbolos; ID, ENTERO y CADENA son tokens con patron.
+   el archivo comparar_gramatica.py la expande a bnf y la compara con las reglas de parser_borrador.py. *)
+
+programa          = lista_sentencias ;
+
+lista_sentencias  = sentencia , { sentencia } ;
+
+sentencia         = comando , ";"
+                  | "SET" , ID , "=" , expr , ";"
+                  | "IF" , expr , "THEN" , lista_sentencias , [ "ELSE" , lista_sentencias ] , "ENDIF"
+                  | "REPEAT" , expr , "TIMES" , lista_sentencias , "ENDREPEAT"
+                  | "BEGIN" , lista_sentencias , "END" ;
+
+comando           = "POWER_ON" | "RUN_POST" | "START_OS" | "SHOW_STATUS" | "RESET_SYSTEM"
+                  | "CHECK_CPU" , expr
+                  | "CHECK_RAM" , expr
+                  | "CHECK_DISK" , expr , esquema
+                  | "SET_FIRMWARE" , firmware
+                  | "SELECT_BOOT" , dispositivo
+                  | "LOAD_BOOTLOADER" , "GRUB"
+                  | "LOAD_KERNEL" , CADENA , expr ;
+
+esquema           = "MBR" | "GPT" ;
+firmware          = "BIOS" | "UEFI" ;
+dispositivo       = "DISK" | "USB" | "NETWORK" ;
+
+expr              = expr , ( "+" | "-" | "*" | "/" | "==" | "!=" | "<" | ">" | "<=" | ">=" | "AND" | "OR" ) , expr
+                  | "NOT" , expr
+                  | "-" , expr
+                  | "(" , expr , ")"
+                  | ENTERO
+                  | CADENA
+                  | "TRUE"
+                  | "FALSE"
+                  | ID ;
+
+---precedencia---
+left OR
+left AND
+right NOT
+left IGUAL DISTINTO
+nonassoc MENOR MAYOR MENORIGUAL MAYORIGUAL
+left MAS MENOS
+left MULT DIV
+right UMENOS

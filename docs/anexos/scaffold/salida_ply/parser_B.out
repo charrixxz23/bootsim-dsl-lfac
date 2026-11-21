@@ -1,0 +1,124 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> sentencia
+Rule 1     sentencia -> ID ASIGNA NUM
+Rule 2     sentencia -> IF ID THEN sentencia
+Rule 3     sentencia -> IF ID THEN sentencia ELSE sentencia
+
+Terminals, with rules where they appear
+
+ASIGNA               : 1
+ELSE                 : 3
+ID                   : 1 2 3
+IF                   : 2 3
+NUM                  : 1
+THEN                 : 2 3
+error                : 
+
+Nonterminals, with rules where they appear
+
+sentencia            : 2 3 3 0
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . sentencia
+    (1) sentencia -> . ID ASIGNA NUM
+    (2) sentencia -> . IF ID THEN sentencia
+    (3) sentencia -> . IF ID THEN sentencia ELSE sentencia
+
+    ID              shift and go to state 2
+    IF              shift and go to state 3
+
+    sentencia                      shift and go to state 1
+
+state 1
+
+    (0) S' -> sentencia .
+
+
+
+state 2
+
+    (1) sentencia -> ID . ASIGNA NUM
+
+    ASIGNA          shift and go to state 4
+
+
+state 3
+
+    (2) sentencia -> IF . ID THEN sentencia
+    (3) sentencia -> IF . ID THEN sentencia ELSE sentencia
+
+    ID              shift and go to state 5
+
+
+state 4
+
+    (1) sentencia -> ID ASIGNA . NUM
+
+    NUM             shift and go to state 6
+
+
+state 5
+
+    (2) sentencia -> IF ID . THEN sentencia
+    (3) sentencia -> IF ID . THEN sentencia ELSE sentencia
+
+    THEN            shift and go to state 7
+
+
+state 6
+
+    (1) sentencia -> ID ASIGNA NUM .
+
+    $end            reduce using rule 1 (sentencia -> ID ASIGNA NUM .)
+    ELSE            reduce using rule 1 (sentencia -> ID ASIGNA NUM .)
+
+
+state 7
+
+    (2) sentencia -> IF ID THEN . sentencia
+    (3) sentencia -> IF ID THEN . sentencia ELSE sentencia
+    (1) sentencia -> . ID ASIGNA NUM
+    (2) sentencia -> . IF ID THEN sentencia
+    (3) sentencia -> . IF ID THEN sentencia ELSE sentencia
+
+    ID              shift and go to state 2
+    IF              shift and go to state 3
+
+    sentencia                      shift and go to state 8
+
+state 8
+
+    (2) sentencia -> IF ID THEN sentencia .
+    (3) sentencia -> IF ID THEN sentencia . ELSE sentencia
+
+    $end            reduce using rule 2 (sentencia -> IF ID THEN sentencia .)
+    ELSE            shift and go to state 9
+
+  ! ELSE            [ reduce using rule 2 (sentencia -> IF ID THEN sentencia .) ]
+
+
+state 9
+
+    (3) sentencia -> IF ID THEN sentencia ELSE . sentencia
+    (1) sentencia -> . ID ASIGNA NUM
+    (2) sentencia -> . IF ID THEN sentencia
+    (3) sentencia -> . IF ID THEN sentencia ELSE sentencia
+
+    ID              shift and go to state 2
+    IF              shift and go to state 3
+
+    sentencia                      shift and go to state 10
+
+state 10
+
+    (3) sentencia -> IF ID THEN sentencia ELSE sentencia .
+
+    $end            reduce using rule 3 (sentencia -> IF ID THEN sentencia ELSE sentencia .)
+    ELSE            reduce using rule 3 (sentencia -> IF ID THEN sentencia ELSE sentencia .)
+

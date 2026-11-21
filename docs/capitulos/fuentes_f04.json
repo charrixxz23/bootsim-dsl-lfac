@@ -1,0 +1,545 @@
+{
+ "nota": "generado para f04; lo lee scripts/verificar_citas.py. las citas estan en ingles tal como aparecen en cada pagina.",
+ "fuentes": [
+  {
+   "id": "W-POST",
+   "titulo": "Wikipedia, «Power-on self-test»",
+   "url": "https://en.wikipedia.org/wiki/Power-on_self-test",
+   "tipo": "secundaria"
+  },
+  {
+   "id": "W-BOOT",
+   "titulo": "Wikipedia, «Booting»",
+   "url": "https://en.wikipedia.org/wiki/Booting",
+   "tipo": "secundaria"
+  },
+  {
+   "id": "W-RV",
+   "titulo": "Wikipedia, «Reset vector»",
+   "url": "https://en.wikipedia.org/wiki/Reset_vector",
+   "tipo": "secundaria"
+  },
+  {
+   "id": "W-PG",
+   "titulo": "Wikipedia, «Power good signal»",
+   "url": "https://en.wikipedia.org/wiki/Power_good_signal",
+   "tipo": "secundaria"
+  },
+  {
+   "id": "W-ATX",
+   "titulo": "Wikipedia, «ATX»",
+   "url": "https://en.wikipedia.org/wiki/ATX",
+   "tipo": "secundaria"
+  },
+  {
+   "id": "W-BIOS",
+   "titulo": "Wikipedia, «BIOS»",
+   "url": "https://en.wikipedia.org/wiki/BIOS",
+   "tipo": "secundaria"
+  },
+  {
+   "id": "W-UEFI",
+   "titulo": "Wikipedia, «Unified Extensible Firmware Interface»",
+   "url": "https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface",
+   "tipo": "secundaria"
+  },
+  {
+   "id": "W-ESP",
+   "titulo": "Wikipedia, «EFI system partition»",
+   "url": "https://en.wikipedia.org/wiki/EFI_system_partition",
+   "tipo": "secundaria"
+  },
+  {
+   "id": "W-MBR",
+   "titulo": "Wikipedia, «Master boot record»",
+   "url": "https://en.wikipedia.org/wiki/Master_boot_record",
+   "tipo": "secundaria"
+  },
+  {
+   "id": "W-GPT",
+   "titulo": "Wikipedia, «GUID Partition Table»",
+   "url": "https://en.wikipedia.org/wiki/GUID_Partition_Table",
+   "tipo": "secundaria"
+  },
+  {
+   "id": "W-GRUB",
+   "titulo": "Wikipedia, «GNU GRUB»",
+   "url": "https://en.wikipedia.org/wiki/GNU_GRUB",
+   "tipo": "secundaria"
+  },
+  {
+   "id": "W-KP",
+   "titulo": "Wikipedia, «Kernel panic»",
+   "url": "https://en.wikipedia.org/wiki/Kernel_panic",
+   "tipo": "secundaria"
+  },
+  {
+   "id": "A-BOOT",
+   "titulo": "ArchWiki, «Arch boot process»",
+   "url": "https://wiki.archlinux.org/title/Arch_boot_process",
+   "tipo": "documentación de una distribución (comunitaria)"
+  },
+  {
+   "id": "MS-FAQ",
+   "titulo": "Microsoft Learn, «Windows and GPT FAQ»",
+   "url": "https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/windows-and-gpt-faq",
+   "tipo": "fabricante"
+  },
+  {
+   "id": "MS-MODO",
+   "titulo": "Microsoft Learn, «Boot to UEFI Mode or legacy BIOS mode»",
+   "url": "https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/boot-to-uefi-mode-or-legacy-bios-mode",
+   "tipo": "fabricante"
+  },
+  {
+   "id": "K1",
+   "titulo": "Documentación del kernel, «Ramfs, rootfs and initramfs»",
+   "url": "https://docs.kernel.org/filesystems/ramfs-rootfs-initramfs.html",
+   "tipo": "proyecto (primaria)"
+  },
+  {
+   "id": "G-BIOS",
+   "titulo": "Manual de GNU GRUB, «BIOS installation»",
+   "url": "https://www.gnu.org/software/grub/manual/grub/html_node/BIOS-installation.html",
+   "tipo": "proyecto (primaria)"
+  },
+  {
+   "id": "UEFI-SPEC",
+   "titulo": "Especificación UEFI, capítulo 3 (Boot Manager)",
+   "url": "https://uefi.org/specs/UEFI/2.10/03_Boot_Manager.html",
+   "tipo": "oficial; se espera que no se pueda leer (HTTP 403 en F03)"
+  }
+ ],
+ "citas": [
+  {
+   "id": "c01",
+   "fuente": "W-POST",
+   "texto": "A power-on self-test (POST) is a process performed by firmware or software routines immediately after a computer or other digital electronic device is powered on."
+  },
+  {
+   "id": "c02",
+   "fuente": "W-POST",
+   "texto": "POST routines are part of a computer's pre-boot sequence. If they complete successfully, the bootstrap loader code is invoked to load an operating system."
+  },
+  {
+   "id": "c03",
+   "fuente": "W-POST",
+   "texto": "In IBM PC compatible computers, the main duties of POST are handled by the BIOS or UEFI"
+  },
+  {
+   "id": "c04",
+   "fuente": "W-POST",
+   "texto": "The BIOS begins its POST when the CPU is reset. The first memory location the CPU tries to execute is known as the reset vector."
+  },
+  {
+   "id": "c05",
+   "fuente": "W-POST",
+   "texto": "initialize, size, and verify system main memory"
+  },
+  {
+   "id": "c06",
+   "fuente": "W-POST",
+   "texto": "identify, organize, and select which devices are available for booting"
+  },
+  {
+   "id": "c07",
+   "fuente": "W-POST",
+   "texto": "In earlier BIOSes, up to around the turn of the millennium, the POST would perform a thorough test of all devices, including a complete memory test."
+  },
+  {
+   "id": "c08",
+   "fuente": "W-POST",
+   "texto": "POST beep codes vary from manufacturer to manufacturer."
+  },
+  {
+   "id": "c09",
+   "fuente": "W-POST",
+   "texto": "The actual numeric codes for the possible stages and error conditions differ from one BIOS supplier to another."
+  },
+  {
+   "id": "c10",
+   "fuente": "W-POST",
+   "texto": "continuous beeping Motherboard does not detect a RAM module"
+  },
+  {
+   "id": "c11",
+   "fuente": "W-BOOT",
+   "texto": "This program runs a power-on self-test (POST) to check and initialize required devices such as main memory (DRAM), the PCI bus and the PCI devices (including running embedded option ROMs)."
+  },
+  {
+   "id": "c12",
+   "fuente": "W-BOOT",
+   "texto": "One of the most involved steps is setting up DRAM over SPD, further complicated by the fact that, at this point, memory is very limited."
+  },
+  {
+   "id": "c13",
+   "fuente": "W-BOOT",
+   "texto": "goes through a pre-configured list of non-volatile storage devices (\"boot device sequence\") until it finds one that is bootable."
+  },
+  {
+   "id": "c14",
+   "fuente": "W-BOOT",
+   "texto": "Once the BIOS has found a bootable device it loads the boot sector to linear address 7C00h"
+  },
+  {
+   "id": "c15",
+   "fuente": "W-BOOT",
+   "texto": "The boot sector code is the first-stage boot loader."
+  },
+  {
+   "id": "c16",
+   "fuente": "W-BOOT",
+   "texto": "must fit into the first 446 bytes of the Master Boot Record"
+  },
+  {
+   "id": "c17",
+   "fuente": "W-RV",
+   "texto": "the reset vector is the default location a central processing unit will go to find the first instruction it will execute after a reset."
+  },
+  {
+   "id": "c18",
+   "fuente": "W-RV",
+   "texto": "The reset vector for the Intel 80386 and later x86 processors is physical address FFFFFFF0h (16 bytes below 4 GB)."
+  },
+  {
+   "id": "c19",
+   "fuente": "W-PG",
+   "texto": "The ATX specification defines the Power-Good signal as a +5-volt (V) signal generated in the power supply when it has passed its internal self-tests and the outputs have stabilized."
+  },
+  {
+   "id": "c20",
+   "fuente": "W-PG",
+   "texto": "The signal is then sent to the motherboard, where it is received by the processor timer chip that controls the reset line to the processor."
+  },
+  {
+   "id": "c21",
+   "fuente": "W-PG",
+   "texto": "This normally takes between 0.1 and 0.5 seconds after the power supply is switched on."
+  },
+  {
+   "id": "c22",
+   "fuente": "W-ATX",
+   "texto": "When the line is connected to ground (by the motherboard), the power supply turns on."
+  },
+  {
+   "id": "c23",
+   "fuente": "W-ATX",
+   "texto": "+5 VSB (+5 V standby) supplies power even when the rest of the supply wire lines are off."
+  },
+  {
+   "id": "c24",
+   "fuente": "W-ATX",
+   "texto": "PWR_OK (\"power good\") is an output from the power supply that indicates that its output has stabilized and is ready for use."
+  },
+  {
+   "id": "c25",
+   "fuente": "W-BIOS",
+   "texto": "BIOS or the Basic Input/Output System is a type of firmware used to provide runtime services for operating systems and programs and to perform hardware initialization during the booting process (power-on startup)."
+  },
+  {
+   "id": "c26",
+   "fuente": "W-BIOS",
+   "texto": "On a computer using BIOS firmware, the firmware comes pre-installed on the computer's motherboard."
+  },
+  {
+   "id": "c27",
+   "fuente": "W-BIOS",
+   "texto": "The POST identifies, tests and initializes system devices such as the CPU, chipset, RAM, motherboard, video card, keyboard, mouse, hard disk drive, optical disc drive and other hardware, including integrated peripherals."
+  },
+  {
+   "id": "c28",
+   "fuente": "W-BIOS",
+   "texto": "The BIOS uses the boot devices set in Nonvolatile BIOS memory (CMOS)"
+  },
+  {
+   "id": "c29",
+   "fuente": "W-BIOS",
+   "texto": "The BIOS checks each device in order to see if it is bootable by attempting to load the first sector (boot sector). If the sector cannot be read, the BIOS proceeds to the next device."
+  },
+  {
+   "id": "c30",
+   "fuente": "W-BIOS",
+   "texto": "Intel phased out providing support for booting from the BIOS interface from 2020 to 2024 depending on the platform."
+  },
+  {
+   "id": "c31",
+   "fuente": "W-UEFI",
+   "texto": "Unlike the legacy PC BIOS, UEFI does not rely on boot sectors on the computer's data storage, defining instead a boot manager as part of the UEFI specification."
+  },
+  {
+   "id": "c32",
+   "fuente": "W-UEFI",
+   "texto": "When a computer is powered on, the boot manager checks the boot configuration and, based on its settings, then executes the specified OS boot loader or operating system kernel."
+  },
+  {
+   "id": "c33",
+   "fuente": "W-UEFI",
+   "texto": "The boot configuration is defined by variables stored in the computer's persistent NVRAM storage"
+  },
+  {
+   "id": "c34",
+   "fuente": "W-UEFI",
+   "texto": "UEFI executes independent programs known as UEFI applications, which are stored as files on the EFI system partition."
+  },
+  {
+   "id": "c35",
+   "fuente": "W-UEFI",
+   "texto": "UEFI-MBR capability is required by the UEFI specification"
+  },
+  {
+   "id": "c36",
+   "fuente": "W-UEFI",
+   "texto": "some UEFI firmware implementations immediately switch to BIOS-based CSM booting"
+  },
+  {
+   "id": "c37",
+   "fuente": "W-UEFI",
+   "texto": "handle early hardware initialization tasks such as main memory initialization (initialize memory controller and DRAM)"
+  },
+  {
+   "id": "c38",
+   "fuente": "W-UEFI",
+   "texto": "In this stage, boot devices are initialized, and the operating system boot loaders (such as Windows Boot Manager) are started."
+  },
+  {
+   "id": "c39",
+   "fuente": "W-UEFI",
+   "texto": "This is the first stage of the UEFI boot"
+  },
+  {
+   "id": "c40",
+   "fuente": "W-UEFI",
+   "texto": "the OS may set the BootOrder and Boot#### variables under the EFI_GLOBAL_VARIABLE namespace to influence the UEFI boot manager's future choices."
+  },
+  {
+   "id": "c41",
+   "fuente": "W-UEFI",
+   "texto": "the file path to the OS loader on an x86-64 system is \\efi\\boot\\bootx64.efi"
+  },
+  {
+   "id": "c42",
+   "fuente": "W-ESP",
+   "texto": "When a computer is booted, UEFI firmware loads files stored on the ESP to start operating systems and various utilities."
+  },
+  {
+   "id": "c43",
+   "fuente": "W-ESP",
+   "texto": "The EFI system partition is formatted with a file system whose specification is based on the FAT file system"
+  },
+  {
+   "id": "c44",
+   "fuente": "W-MBR",
+   "texto": "The MBR consists of 512 or more bytes located in the first sector of the drive."
+  },
+  {
+   "id": "c45",
+   "fuente": "W-GRUB",
+   "texto": "The boot loader itself is split into multiple stages so that it fits in the MBR boot scheme."
+  },
+  {
+   "id": "c46",
+   "fuente": "W-KP",
+   "texto": "A kernel may also go into panic() if it is unable to locate a root file system."
+  },
+  {
+   "id": "c47",
+   "fuente": "A-BOOT",
+   "texto": "The firmware is the very first program that is executed once the system is switched on."
+  },
+  {
+   "id": "c48",
+   "fuente": "A-BOOT",
+   "texto": "UEFI does not launch any boot code from the Master Boot Record (MBR) whether it exists or not, instead booting relies on boot entries in the NVRAM."
+  },
+  {
+   "id": "c49",
+   "fuente": "A-BOOT",
+   "texto": "BIOS launches the first 440 bytes (the Master Boot Record bootstrap code area) of the first disk in the BIOS disk order."
+  },
+  {
+   "id": "c50",
+   "fuente": "A-BOOT",
+   "texto": "After POST, BIOS initializes the hardware required for booting (disk, keyboard controllers etc.)."
+  },
+  {
+   "id": "c51",
+   "fuente": "A-BOOT",
+   "texto": "the firmware looks for an EFI system partition on that disk and tries to find an EFI application in the fallback boot path \\EFI\\BOOT\\BOOTx64.EFI"
+  },
+  {
+   "id": "c52",
+   "fuente": "A-BOOT",
+   "texto": "A boot loader is a piece of software started by the firmware"
+  },
+  {
+   "id": "c53",
+   "fuente": "A-BOOT",
+   "texto": "The UEFI specification has support for legacy BIOS booting with its Compatibility Support Module (CSM)."
+  },
+  {
+   "id": "c54",
+   "fuente": "A-BOOT",
+   "texto": "Intel is phasing out support for CSM, relying on the feature may not be feasible in the future."
+  },
+  {
+   "id": "c55",
+   "fuente": "A-BOOT",
+   "texto": "If Secure Boot is enabled, the boot process will verify authenticity of the EFI binary by signature."
+  },
+  {
+   "id": "c56",
+   "fuente": "MS-MODO",
+   "texto": "In general, install Windows using the newer UEFI mode, as it includes more security features than the legacy BIOS mode."
+  },
+  {
+   "id": "c57",
+   "fuente": "MS-FAQ",
+   "texto": "Windows does not support booting UEFI from MBR disks or 0xEF partitions."
+  },
+  {
+   "id": "c58",
+   "fuente": "K1",
+   "texto": "the kernel checks to see if rootfs contains a file \"init\", and if so it executes it as PID 1."
+  },
+  {
+   "id": "c59",
+   "fuente": "G-BIOS",
+   "texto": "it is possible to reserve a whole partition for GRUB, called the BIOS Boot Partition."
+  },
+  {
+   "id": "c60",
+   "fuente": "A-BOOT",
+   "texto": "It is responsible for loading the kernel with the wanted kernel parameters and any external initramfs images."
+  },
+  {
+   "id": "c61",
+   "fuente": "W-BOOT",
+   "texto": "Booting was first described in the 1950s as the \"bootstrap technique\""
+  },
+  {
+   "id": "c62",
+   "fuente": "W-BOOT",
+   "texto": "derives from the phrase to pull oneself up by one's bootstraps."
+  },
+  {
+   "id": "c63",
+   "fuente": "W-BOOT",
+   "texto": "All computing systems are state machines, and a reboot may be the only method to return to a designated initial state from an unintended, fault state."
+  },
+  {
+   "id": "c64",
+   "fuente": "W-UEFI",
+   "texto": "These are minimal PEI drivers that are responsible for initialization of hardware components, such as permanent memory, CPU, chipset and motherboard."
+  },
+  {
+   "id": "c65",
+   "fuente": "W-BIOS",
+   "texto": "the BIOS calls interrupt 19h to start boot processing."
+  },
+  {
+   "id": "c66",
+   "fuente": "W-BIOS",
+   "texto": "some BIOSes will also check for the boot sector signature 0x55 0xAA in the last two bytes of the sector"
+  },
+  {
+   "id": "c67",
+   "fuente": "A-BOOT",
+   "texto": "GPT on BIOS systems is possible, using either \"hybrid booting\" with Hybrid MBR, or the new GPT-only protocol."
+  },
+  {
+   "id": "c68",
+   "fuente": "W-POST",
+   "texto": "5 Processor failure"
+  },
+  {
+   "id": "c69",
+   "fuente": "W-POST",
+   "texto": "No beep Power supply, system board problem, disconnected CPU, or disconnected speaker"
+  },
+  {
+   "id": "c70",
+   "fuente": "W-POST",
+   "texto": "The original IBM BIOS made POST diagnostic information available by outputting a number to I/O port 0x80"
+  },
+  {
+   "id": "c71",
+   "fuente": "MS-FAQ",
+   "texto": "UEFI specifies booting from either GPT or MBR."
+  },
+  {
+   "id": "c72",
+   "fuente": "A-BOOT",
+   "texto": "Originally created for the IBM PC to handle hardware initialization and the boot process, it has been replaced progressively since 2010 by UEFI"
+  },
+  {
+   "id": "c73",
+   "fuente": "W-UEFI",
+   "texto": "This is the stage between boot device selection and hand-off to the OS."
+  },
+  {
+   "id": "c74",
+   "fuente": "W-GPT",
+   "texto": "It is part of the Unified Extensible Firmware Interface (UEFI) standard."
+  },
+  {
+   "id": "c75",
+   "fuente": "W-BOOT",
+   "texto": "if most software is loaded onto a computer by other software already running on the computer, some mechanism must exist to load the initial software onto the computer."
+  },
+  {
+   "id": "c76",
+   "fuente": "W-PG",
+   "texto": "Cheaper and/or lower quality power supplies do not follow the ATX specification of a separate monitoring circuit; they instead wire the power good output to one of the 5 V lines."
+  },
+  {
+   "id": "c77",
+   "fuente": "W-BOOT",
+   "texto": "This memory location typically contains a jump instruction that transfers execution to the location of the firmware (UEFI or BIOS) start-up program."
+  },
+  {
+   "id": "c78",
+   "fuente": "W-POST",
+   "texto": "verify CPU registers verify the integrity of the BIOS code itself verify some basic components like DMA, timer, interrupt controller"
+  },
+  {
+   "id": "c79",
+   "fuente": "W-POST",
+   "texto": "the mainframe- and minicomputer-inspired high-reliability features such as parity memory and the thorough memory test in every POST were dropped from most models."
+  },
+  {
+   "id": "c80",
+   "fuente": "W-BOOT",
+   "texto": "usually pointing to the firmware (UEFI or BIOS) entry point inside the ROM."
+  },
+  {
+   "id": "c81",
+   "fuente": "W-UEFI",
+   "texto": "It initializes a temporary memory (often CPU cache-as-RAM (CAR), or SoC on-chip boot processor)"
+  },
+  {
+   "id": "c82",
+   "fuente": "W-UEFI",
+   "texto": "With main memory now available, CPU, chipset, mainboard and other I/O devices are initialized in DXE and BDS."
+  },
+  {
+   "id": "c83",
+   "fuente": "W-UEFI",
+   "texto": "The UEFI hands off to the operating system (OS) after ExitBootServices() is executed."
+  },
+  {
+   "id": "c84",
+   "fuente": "W-POST",
+   "texto": "an interface card that shows port 0x80 output on a small display"
+  },
+  {
+   "id": "c85",
+   "fuente": "K1",
+   "texto": "All 2.6 Linux kernels contain a gzipped \"cpio\" format archive, which is extracted into rootfs when the kernel boots up."
+  },
+  {
+   "id": "c86",
+   "fuente": "W-POST",
+   "texto": "POST processes may set the initial state of the device and detect if any hardware components are non-functional."
+  }
+ ]
+}

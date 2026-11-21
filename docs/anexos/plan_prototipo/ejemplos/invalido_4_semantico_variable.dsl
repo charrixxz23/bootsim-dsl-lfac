@@ -1,0 +1,3 @@
+POWER_ON;
+CHECK_RAM memoria_total;
+SHOW_STATUS;
