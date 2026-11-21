@@ -1,0 +1,12 @@
+#!/bin/sh
+# ejecuta bootsim dsl en linux o mac: ./run archivo.dsl [--debug]
+# (si no tiene permiso de ejecucion: chmod +x run, o bien sh run archivo.dsl)
+aqui="$(cd "$(dirname "$0")" && pwd)"
+# se prueba que el interprete funcione de verdad (en algunos sistemas python3 existe pero es solo un acceso directo roto)
+for interprete in python3 python; do
+    if "$interprete" -c "import sys" >/dev/null 2>&1; then
+        exec "$interprete" "$aqui/main.py" "$@"
+    fi
+done
+echo "error: no se encontró Python 3.10 o superior (probé python3 y python)" >&2
+exit 70
