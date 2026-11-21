@@ -60,7 +60,7 @@ simulador.py (recorre el árbol sobre una máquina de estados)  ──►  resum
 
 ## Requisitos e instalación
 
-- Python **3.10 o superior** (probado a mano con 3.12 en Windows y con 3.14 en Ubuntu bajo WSL; el flujo de GitHub Actions ejecuta las pruebas con 3.10 y 3.12 en Linux y Windows).
+- Python **3.10 o superior** (probado a mano con 3.12 en Windows y con 3.14 en Ubuntu bajo WSL; el flujo de GitHub Actions ejecuta las pruebas con 3.10 y 3.12 en Linux y Windows; su primera corrida, el 2026-11-21, terminó en verde en las cuatro combinaciones).
 - PLY 3.11, la biblioteca que construye el lexer y el parser:
 
 ```
