@@ -575,12 +575,14 @@ La declaración de IA final (F11) debe mencionar también la ayuda anterior de C
 - **Dónde:** `docs/BITACORA_EN_CURSO.md`; se consolida en `bitacora_ddr.docx` en F11.
 - **Campos** (consigna 6.5): ID y fecha; decisión; alternativas (mínimo dos); uso de IA; criterio de decisión; verificación; revisión crítica.
 - **Identificadores:** `B-01`, `B-02`, … correlativos. Hasta ahora: B-01 y B-02 (Anexo A); B-03 a B-05 (Anexo B); B-06 a B-09 (Anexo C, primera versión); B-10 a B-12 (revisión técnica de F03).
-- **Quién y cuándo:** quien toma la decisión la anota **el mismo día**, con el prompt textual si usó IA y con la evidencia. Alexandra consolida y revisa el formato, pero no reconstruye entradas de memoria. Una vez por semana los cinco repasan la bitácora.
+- **Quién y cuándo:** quien toma la decisión la anota **el mismo día**, con el prompt textual si usó IA y con la evidencia. Alexandra consolida y revisa el formato, pero no reconstruye entradas de memoria. Una vez por semana todo el equipo repasa la bitácora (los cinco originales y, desde el 2026-11-21, Marc Chavarría).
 - **Regla:** no se inventan entradas ni errores de IA. Si al entregar no hay dos fallos auténticos, la fase de bitácora queda abierta y se hacen más pruebas reales.
 
 ---
 
 ## 16. Reparto de trabajo y roles de la defensa
+
+> **Registro histórico (reparto aprobado con cinco integrantes).** Desde el 2026-11-21 el equipo son seis; el reparto vigente está en la sección 16.1 y en `docs/EQUIPO_Y_ROLES.md`. Esta sección se conserva tal como se aprobó.
 
 Son dos cosas distintas:
 
@@ -608,6 +610,21 @@ Los seis roles de la consigna: 1 Lexer y tokens · 2 Gramática y precedencia ·
 **Carga.** Juan defiende tres roles porque son su responsabilidad según el índice; en dos de ellos (semántica y simulación) otra persona explica una parte. **Alternativa para decidir:** que Jorge defienda el rol 5 completo (simulación y pruebas) y Juan solo los roles 3 y 4. Es una decisión del equipo; la consigna dice que el reparto no cambia a última hora.
 
 **Revisión cruzada** antes de cerrar cada fase: lexer (revisa Víctor), parser (Richard), AST y semántica (Víctor), simulador (Richard); pruebas (las ejecutan Jorge y Alexandra). Cada persona dispone de 2 a 3 minutos en el video y responde una pregunta cruzada sobre otra parte. La consigna indica que con cinco personas el sexto rol lo asume quien mejor lo explique: se propone a Alexandra, pendiente de que ella lo acepte. **Nadie ha aprobado este reparto.**
+
+### 16.1 Actualización (2026-11-21): equipo de seis integrantes
+
+Se incorpora **Marc Chavarría** (la consigna admite grupos de 5 o 6). Se mantiene lo que cada quien construye y se agrega la responsabilidad de Marc: **integración, pruebas, auditoría técnica y preparación de la defensa**. Los seis roles de la consigna se reparten **uno principal por persona** (propuesta pendiente de que el equipo la confirme; ninguna tarea de Marc se ha realizado todavía):
+
+| Persona | Rol principal de la defensa y el video | Ayuda a explicar |
+| --- | --- | --- |
+| Richard Smith | 1. Lexer y tokens | Rol 4: el porqué de las reglas del arranque |
+| Víctor Sánchez | 2. Gramática y precedencia | Rol 3: cómo cada regla `p_` crea su nodo |
+| Juan González | 3. AST y recorrido | Roles 4 y 5, en la parte de código |
+| Jorge González | 4. Semántica | Rol 5: qué demuestra cada programa de prueba; Rol 1: errores léxicos |
+| Marc Chavarría | 5. Simulación y pruebas | Audita los demás roles |
+| Alexandra Esteves | 6. Bitácora e IA | Todos: reúne las entradas de cada quien |
+
+Cambios frente al reparto de cinco: Juan pasa de defender los roles 3, 4 y 5 a defender el 3; el rol 4 pasa a Jorge y el rol 5 a Marc. **Alternativa para decidir:** Jorge en el rol 5 (parte de pruebas) y Marc en el rol 4. La consigna indica que el reparto no cambia a última hora, así que conviene decidirlo pronto. Además: video de los seis (orden y tiempos propuestos en `docs/EQUIPO_Y_ROLES.md`, sección 5), seis reflexiones con una pregunta guía distinta para cada quien y seis firmas en la declaración de IA. La revisión cruzada se mantiene y **Marc ejecuta la auditoría técnica final** antes de cerrar F10 y F12.
 
 ---
 
@@ -676,7 +693,7 @@ Las fases del gestor son secuenciales. El calendario es ajustado: quedan 16 día
 | 8. Entregables | ZIP, informe, código, pruebas, bitácora, reflexiones, declaración, video | 17 | planeado (F10–F12); nada de eso existe todavía |
 | Declaración de IA | firmada, honesta | 14 | pendiente (F11); firmas humanas |
 
-La consigna menciona la firma de «los cuatro integrantes» y en otros puntos pide grupos de 5 o 6. Este equipo es de cinco; se pedirán cinco firmas.
+La consigna menciona la firma de «los cuatro integrantes» y en otros puntos pide grupos de 5 o 6. Este equipo era de cinco y **desde el 2026-11-21 es de seis; se pedirán seis firmas** (nombre, cédula y firma de cada integrante, que completa cada persona).
 
 ---
 

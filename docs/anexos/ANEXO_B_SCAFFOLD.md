@@ -201,7 +201,7 @@ Mi primera versión de la validación corregida actualizaba la etapa aunque hubi
 - Qué hace `%prec` y por qué la regla de menor precedencia pierde frente al token `ELSE`.
 - Cómo se leen los archivos `parser.out`.
 
-**Preguntas cruzadas posibles** (para que los cinco las practiquen):
+**Preguntas cruzadas posibles** (para que los seis las practiquen):
 - ¿Qué pasaría con el árbol del caso `IF a THEN IF b THEN x = 1 ELSE x = 2` si PLY eligiera *reduce*?
 - ¿Por qué la validación "las etapas existen" no alcanza para un arranque?
 - ¿Por qué `lex.lex()` no avisó del defecto 4?

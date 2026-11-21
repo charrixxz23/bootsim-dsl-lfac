@@ -18,5 +18,15 @@
 ## Alexandra Esteves — Capitulo 6, cierre e integracion
 6.1 Conclusiones. 6.2 Prevencion. 6.3 Mantenimiento. 6.4 BIOS/UEFI. 6.5 Respaldos. 6.6 Uso BootSim. 6.7 Referencias. 6.8 Formato. 6.9 Anexos. 6.10 Entrega Teams.
 
+## Marc Chavarría — Integración, pruebas y auditoría técnica (incorporado el 2026-11-21)
+Responsabilidad transversal, sin capítulo propio. Se asigna al incorporarse; **todavía no hay aportes suyos registrados** (ver `docs/EQUIPO_Y_ROLES.md`).
+- **Integración:** proyecto reproducible de principio a fin (instalación, cinco suites, diez programas, GitHub Actions); integración del informe final junto con Alexandra (cap. 6.8 Formato y 6.9 Anexos) y armado del ZIP de Teams (6.10).
+- **Pruebas:** repetición independiente de las pruebas y de los diez programas (apoya 5.1 a 5.6, escritos por Juan y Jorge) y programas propios con resultado esperado calculado antes de ejecutarlos.
+- **Auditoría técnica:** lista de comprobación por fase contra la consigna y la rúbrica; verificación de los posibles fallos de IA de la bitácora; auditoría final antes de entregar.
+- **Defensa:** banco de preguntas cruzadas, ensayo y coordinación del video con los seis.
+
 ## Anexos
-A Assess; B Scaffold; C Plan; D ANTLR opcional. Bitacora DDR, declaracion IA, reflexiones propias de cada integrante, video, pruebas y evidencias.
+A Assess; B Scaffold; C Plan; D ANTLR opcional. Bitacora DDR, declaracion IA, reflexiones propias de cada integrante (seis), video, pruebas y evidencias.
+
+---
+**Nota de actualización (2026-11-21):** el índice se aprobó con cinco integrantes. Desde esta fecha el equipo son **seis**: se agrega la sección de Marc Chavarría y se mantienen sin cambios los capítulos y responsables aprobados. El reparto de roles de defensa está en `docs/EQUIPO_Y_ROLES.md`.

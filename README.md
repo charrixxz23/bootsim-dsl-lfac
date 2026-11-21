@@ -138,8 +138,11 @@ Equipo del grupo 1IL-143:
 | Juan González | AST, semántica, simulación y errores |
 | Jorge González | introducción, problema, objetivos, glosario y pruebas explicadas |
 | Alexandra Esteves | conclusiones, mantenimiento, consolidación y formato |
+| Marc Chavarría | integración, pruebas, auditoría técnica y preparación de la defensa |
 
-Los cinco deben entender el proyecto completo.
+Los seis deben entender el proyecto completo. Roles de la defensa y reparto del video: [`docs/EQUIPO_Y_ROLES.md`](docs/EQUIPO_Y_ROLES.md).
+
+**Nota sobre Marc Chavarría.** Se incorporó al equipo el 2026-11-21, cuando las fases F01 a F09 ya estaban hechas. Las responsabilidades de la tabla son las que se le **asignaron** al incorporarse; el código, las pruebas y los commits de este repositorio hasta esa fecha **no incluyen aportes suyos**, y los suyos se registrarán cuando existan. Quien quiera figurar como colaborador de GitHub lo hará con su propia cuenta.
 
 ## Declaración transparente sobre el uso de inteligencia artificial
 

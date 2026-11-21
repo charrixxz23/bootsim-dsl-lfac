@@ -1,6 +1,6 @@
 # Anexo C — Plan de diseño de BootSim DSL
 
-**UTP · LFAC 1IL-143 · II semestre 2026 · Equipo:** Richard Smith, Víctor Sánchez, Juan González, Jorge González, Alexandra Esteves
+**UTP · LFAC 1IL-143 · II semestre 2026 · Equipo:** Richard Smith, Víctor Sánchez, Juan González, Jorge González, Alexandra Esteves y Marc Chavarría
 **Versión para el docente (1–2 páginas).** Detalle completo en `ANEXO_C_ESPECIFICACION_TECNICA.md`. Estado: borrador de IA, **sin aprobar por el equipo**.
 
 ## 1. Sistema y justificación
@@ -57,9 +57,10 @@ Variable sin asignar · orden de las etapas · límites de componentes (CPU 1–
 | --- | --- | --- | --- |
 | Richard Smith | POST, BIOS/UEFI, lexer | Lexer y tokens | Semántica (el porqué de las reglas del arranque) |
 | Víctor Sánchez | GRUB, MBR/GPT, kernel, gramática, parser | Gramática y precedencia | AST (cómo el parser crea los nodos) |
-| Juan González | AST, semántica, simulación, errores | AST, semántica y simulación | — |
-| Jorge González | Introducción, glosario, pruebas explicadas | Pruebas: esperado frente a observado | Tokens y errores léxicos |
+| Juan González | AST, semántica, simulación, errores | AST y recorrido | Semántica y simulación (el código) |
+| Jorge González | Introducción, glosario, pruebas explicadas | Semántica (validaciones y mensajes) | Pruebas: esperado frente a observado; errores léxicos |
 | Alexandra Esteves | Conclusiones, mantenimiento, consolidación, formato | Bitácora e IA | Reúne las entradas de todos |
+| Marc Chavarría | Integración, pruebas, auditoría técnica, preparación de la defensa | Simulación y pruebas | Audita los demás roles |
 
 | Fechas | Trabajo |
 | --- | --- |
@@ -70,3 +71,5 @@ Variable sin asignar · orden de las etapas · límites de componentes (CPU 1–
 | 7 dic | Margen; entrega en Teams antes de las 11:59 p. m. |
 
 El reparto de roles y las decisiones de diseño son **propuestas pendientes de revisión humana**; no hay firmas ni aprobaciones.
+
+**Actualización (2026-11-21):** el equipo pasó de cinco a seis integrantes (Marc Chavarría). La columna «Defiende» da un rol principal por persona; el reparto original de cinco, con Juan defendiendo tres roles, se conserva en `ANEXO_C_ESPECIFICACION_TECNICA.md` (sección 16) y el detalle vigente está en `docs/EQUIPO_Y_ROLES.md`. Propuesta pendiente de confirmar.

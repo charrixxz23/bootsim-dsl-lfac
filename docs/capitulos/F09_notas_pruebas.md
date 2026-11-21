@@ -1,6 +1,6 @@
 # F09 — Notas de los diez programas de prueba
 
-Responsables: Juan González (pruebas técnicas y simulación) y Jorge González (explicación de ejemplos y evidencias). Estas notas las redactó la IA (Claude Code, `claude-sonnet-5-5`) como material de estudio; ningún integrante del equipo las ha revisado ni ha repetido las pruebas todavía. El texto que se entrega al informe está en `docs/capitulos/05_pruebas.md`.
+Responsables de F09: Juan González (pruebas técnicas y simulación) y Jorge González (explicación de ejemplos y evidencias). *(Nota del 2026-11-21: Marc Chavarría se incorporó después de cerrar F09; no participó en ella y sus tareas de repetición e integración están en la sección 7.)* Estas notas las redactó la IA (Claude Code, `claude-sonnet-5-5`) como material de estudio; ningún integrante del equipo las ha revisado ni ha repetido las pruebas todavía. El texto que se entrega al informe está en `docs/capitulos/05_pruebas.md`.
 
 ## 1. Qué hay
 
@@ -55,24 +55,26 @@ Posibles fallos de IA **sin verificar por el equipo**: los puntos 1, 2 y 3 (el 1
 - (f) **El script `scripts/capturar_terminal.ps1`** es solo para Windows: ¿se deja en el repositorio o se retira antes de entregar?
 - (g) **Archivos de F08** (`evidencias/f08_programas/`, `evidencias/f08_*`) siguen en `evidencias/`: confirmar si van al paquete final.
 
-## 6. Guía de demostración para Juan y Jorge (unos 8 a 10 minutos)
+## 6. Guía de demostración (unos 8 a 10 minutos; actualizada para el equipo de seis)
+
+> **Actualización del 2026-11-21.** Esta guía se escribió para Juan y Jorge, que eran los responsables de F09. Con la incorporación de Marc Chavarría (el equipo son seis) la columna «Quién» sigue los roles de `docs/EQUIPO_Y_ROLES.md`: Richard presenta el error léxico, Víctor los sintácticos, Jorge los semánticos, Juan lo que muestra el árbol y Marc la ejecución de los programas válidos. Es una **propuesta pendiente de confirmar**; Marc todavía no ha ensayado ni ejecutado esta guía.
 
 Preparación: abrir CMD en la carpeta del proyecto y comprobar que `python codigo\main.py --help` funciona. Si algo falla en directo, abrir las capturas de `evidencias/capturas/`. Para mostrar el código de salida: `echo %ERRORLEVEL%` justo después de cada comando.
 
 | # | Quién | Comando | Qué decir (en simple) | Qué señalar |
 | --- | --- | --- | --- | --- |
-| 1 | Jorge | `python codigo\main.py pruebas\validos\valido_01.dsl` | «El arranque de manual: cada comando solo vale en su etapa y aquí van en orden.» | Los estados `APAGADO → ... → SO_ACTIVO`; `echo %ERRORLEVEL%` = 0 |
+| 1 | Marc | `python codigo\main.py pruebas\validos\valido_01.dsl` | «El arranque de manual: cada comando solo vale en su etapa y aquí van en orden.» | Los estados `APAGADO → ... → SO_ACTIVO`; `echo %ERRORLEVEL%` = 0 |
 | 2 | Juan | `python codigo\main.py pruebas\validos\valido_02.dsl --debug` | «El programa hace cuentas con variables; mira la tabla de variables al final.» | `memoria = 12`, `resta = -3` (la división trunca hacia cero) |
 | 3 | Juan | `python codigo\main.py pruebas\validos\valido_03.dsl --debug` | «El `IF` decide: ram vale 8, así que corre el `ELSE`.» | La traza «la condición vale FALSE, se ejecuta la rama ELSE» y `firmware=BIOS` |
-| 4 | Jorge | `python codigo\main.py pruebas\validos\valido_04.dsl` | «Los `REPEAT` repiten; el de cero vueltas no hace nada.» | 7 líneas `SHOW_STATUS` y `ram=8 GB` |
-| 5 | Juan | `python codigo\main.py pruebas\validos\valido_05.dsl` | «Aquí el arranque falla a propósito y se recupera. Es válido: solo hubo avisos.» | Avisos `S5` y `A2`, `ERROR SIMULADO`, `RECHAZADO`, `RESET_SYSTEM`, la variable que se conserva y `SO_ACTIVO` |
-| 6 | Jorge | `python codigo\main.py pruebas\invalidos\invalido_01.dsl` | «El lexer no conoce el `@`.» | `[léxico] línea 3, columna 13`; «no se simuló nada»; código 1 |
-| 7 | Jorge | `python codigo\main.py pruebas\invalidos\invalido_02.dsl` | «A `CHECK_DISK` le falta el esquema: error de forma.» | `[sintáctico] línea 4, columna 15 ... se esperaba MBR o GPT` |
-| 8 | Juan | `python codigo\main.py pruebas\invalidos\invalido_03.dsl` | «Un `REPEAT` se cierra con `ENDREPEAT`; el parser dice cuál quedó abierto.» | «falta ENDREPEAT para cerrar el REPEAT abierto en la línea 3» |
-| 9 | Juan | `python codigo\main.py pruebas\invalidos\invalido_04.dsl --debug` | «Bien escrito pero sin sentido: variable sin valor y tipos mezclados. Fíjense que aquí sí hay árbol.» | `S1` y `S4`; el árbol completo en `--debug`; ninguna simulación |
+| 4 | Marc | `python codigo\main.py pruebas\validos\valido_04.dsl` | «Los `REPEAT` repiten; el de cero vueltas no hace nada.» | 7 líneas `SHOW_STATUS` y `ram=8 GB` |
+| 5 | Marc | `python codigo\main.py pruebas\validos\valido_05.dsl` | «Aquí el arranque falla a propósito y se recupera. Es válido: solo hubo avisos.» | Avisos `S5` y `A2`, `ERROR SIMULADO`, `RECHAZADO`, `RESET_SYSTEM`, la variable que se conserva y `SO_ACTIVO` |
+| 6 | Richard | `python codigo\main.py pruebas\invalidos\invalido_01.dsl` | «El lexer no conoce el `@`.» | `[léxico] línea 3, columna 13`; «no se simuló nada»; código 1 |
+| 7 | Víctor | `python codigo\main.py pruebas\invalidos\invalido_02.dsl` | «A `CHECK_DISK` le falta el esquema: error de forma.» | `[sintáctico] línea 4, columna 15 ... se esperaba MBR o GPT` |
+| 8 | Víctor | `python codigo\main.py pruebas\invalidos\invalido_03.dsl` | «Un `REPEAT` se cierra con `ENDREPEAT`; el parser dice cuál quedó abierto.» | «falta ENDREPEAT para cerrar el REPEAT abierto en la línea 3» |
+| 9 | Jorge | `python codigo\main.py pruebas\invalidos\invalido_04.dsl --debug` | «Bien escrito pero sin sentido: variable sin valor y tipos mezclados. Fíjense que aquí sí hay árbol.» | `S1` y `S4`; el árbol completo en `--debug`; ninguna simulación |
 | 10 | Jorge | `python codigo\main.py pruebas\invalidos\invalido_05.dsl` | «Límites y orden: 100 núcleos, 2048 GB, y un `LOAD_KERNEL` sin gestor.» | Cuatro errores con su línea y columna |
 
-Cierre sugerido (Juan): `python codigo\probar_programas.py` (unos 20 segundos) para mostrar «132 pruebas, 0 distintas de lo esperado», y explicar que las pruebas las diseñó la IA y que el equipo debe repetirlas.
+Cierre sugerido (Marc, que prepara la defensa; Juan responde las dudas del código): `python codigo\probar_programas.py` (unos 20 segundos) para mostrar «132 pruebas, 0 distintas de lo esperado», y explicar que las pruebas las diseñó la IA y que el equipo debe repetirlas.
 
 Preguntas que pueden hacerles y respuesta corta:
 
@@ -84,6 +86,7 @@ Preguntas que pueden hacerles y respuesta corta:
 
 ## 7. Qué debe repetir cada uno por su cuenta
 
+- **Marc:** ejecutar de forma independiente `python codigo\probar_programas.py`, `python codigo\probar_simulador.py` y los diez comandos de la guía, recalcular a mano tres resultados esperados de `pruebas/` y anotar lo que encuentre (es parte de su responsabilidad de pruebas y auditoría).
 - **Juan:** `python codigo\probar_programas.py`, `python codigo\controles_negativos_programas.py` y `python codigo\probar_simulador.py`; explicar con sus palabras por qué una excepción no cuenta como prueba superada.
 - **Jorge:** ejecutar los diez comandos de la guía, leer `docs\capitulos\05_pruebas.md` y reescribir con sus palabras la explicación de cada caso; tomar sus propias capturas con `evidencias/capturas/LEEME.md` si el informe las pide.
 
