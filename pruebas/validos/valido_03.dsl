@@ -1,0 +1,27 @@
+# valido 3: IF/THEN/ELSE con BEGIN/END y un IF dentro de otro
+SET ram = 8;
+SET usa_uefi = ram >= 16;
+POWER_ON;
+IF usa_uefi THEN
+  BEGIN
+    SET_FIRMWARE UEFI;
+    CHECK_DISK 512 GPT;
+  END
+ELSE
+  BEGIN
+    SET_FIRMWARE BIOS;
+    CHECK_DISK 512 MBR;
+    IF ram < 4 THEN
+      CHECK_CPU 1;
+    ELSE
+      CHECK_CPU 4;
+    ENDIF
+  END
+ENDIF
+CHECK_RAM ram;
+RUN_POST;
+SELECT_BOOT DISK;
+LOAD_BOOTLOADER GRUB;
+LOAD_KERNEL "linux-5.15" TRUE;
+START_OS;
+SHOW_STATUS;
