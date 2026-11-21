@@ -1,0 +1,69 @@
+# ---------------------------------------------------------------
+# bootsim-dsl-lfac: que NO se publica en github (ver .claude/skills/bootsim-lfac/references/PUBLICACION.md)
+# estos archivos siguen en la carpeta de trabajo del equipo; solo no se suben.
+# ---------------------------------------------------------------
+
+# claves, credenciales y tokens
+.env
+.env.*
+*.pem
+*.key
+*.pfx
+*.p12
+*.crt
+id_rsa*
+id_ed25519*
+credentials*
+secrets*
+*token*.txt
+.netrc
+
+# temporales, cachés y basura del sistema
+__pycache__/
+*.py[cod]
+*.tmp
+*.temp
+*.bak
+*.orig
+*.log
+~$*
+.~lock.*
+Thumbs.db
+desktop.ini
+.DS_Store
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+env/
+
+# carpetas de editores
+.vscode/
+.idea/
+
+# reflexiones personales, declaraciones firmadas, video y paquete de teams (documentos privados o de entrega aparte)
+reflexiones/
+declaracion_ia*
+declaracion*firmada*
+firmas/
+video*
+lab_final*.zip
+*.zip
+
+# consigna del profesor (material del curso)
+referencias/
+
+# proceso de trabajo con IA y su control de avance (siguen en la carpeta local)
+.claude/
+CLAUDE.md
+control/
+PROMPT_INICIAL_CLAUDE.txt
+PRUEBAS_DEL_PAQUETE.md
+README_INICIO.md
+scripts/gestor.py
+scripts/orquestar_claude.py
+scripts/empaquetar.py
+
+# archivos de apoyo del propio equipo que no deben subirse por error
+*.local
+settings.local.json
