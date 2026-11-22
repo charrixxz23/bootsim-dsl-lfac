@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="es" data-tema="oscuro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BootSim DSL: el arranque de una PC, simulado</title>
+<meta name="description" content="BootSim DSL es un lenguaje pequeño para describir el arranque de una computadora y un simulador que lo ejecuta en texto. La demostración corre el código Python original dentro de tu navegador.">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#070a12">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23121a2c'/%3E%3Cpath d='M9 22V10l6 6 6-6v12' fill='none' stroke='%237c9cff' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/estilo.css">
+<script>
+  // el tema se decide antes de pintar para que no parpadee
+  try {
+    var t = localStorage.getItem('bootsim-tema');
+    if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'claro' : 'oscuro';
+    document.documentElement.dataset.tema = t;
+  } catch (e) {}
+  // la aparicion suave al desplazarse solo se activa si el navegador sabe hacerla; si algo falla, a los 4 s todo se muestra
+  if ('IntersectionObserver' in window) {
+    document.documentElement.classList.add('js');
+    window.__temporizadorAparicion = setTimeout(function () { document.documentElement.classList.add('todo-visto'); }, 4000);   // app.js lo cancela al arrancar
+  }
+</script>
+</head>
+<body>
+<a class="saltar" href="#demo">Saltar a la demostración</a>
+
+<header class="cabecera" id="cabecera">
+  <div class="contenedor cabecera__fila">
+    <a class="marca" href="#inicio" aria-label="BootSim DSL, inicio">
+      <svg class="marca__icono" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" class="marca__fondo"/><path d="M9 22V10l6 6 6-6v12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>BootSim <b>DSL</b></span>
+    </a>
+    <nav class="menu" aria-label="Secciones">
+      <a href="#demo">Demostración</a>
+      <a href="#funcionamiento">Cómo funciona</a>
+      <a href="#lenguaje">El lenguaje</a>
+      <a href="#fidelidad">Fidelidad</a>
+      <a href="#equipo">Equipo</a>
+    </nav>
+    <div class="cabecera__acciones">
+      <button class="boton-icono" id="boton-tema" type="button" aria-label="Cambiar entre tema claro y oscuro" title="Cambiar tema">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path class="sol" d="M12 4V2m0 20v-2m8-8h2M2 12h2m13.7-5.7 1.4-1.4M4.9 19.1l1.4-1.4m0-11.4L4.9 4.9m14.2 14.2-1.4-1.4M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <a class="boton boton--fantasma" href="https://github.com/charrixxz23/bootsim-dsl-lfac" rel="noopener">Código en GitHub</a>
+    </div>
+  </div>
+</header>
+
+<main id="inicio">
+<!-- portada -->
+<section class="heroe">
+  <div class="heroe__fondo" aria-hidden="true"></div>
+  <div class="contenedor heroe__rejilla">
+    <div class="heroe__texto">
+      <p class="sobretitulo reveal">Lenguajes Formales, Autómatas y Compiladores · UTP · 2026</p>
+      <h1 class="reveal">Escribe cómo arranca una computadora. <span class="degradado">Míralo arrancar.</span></h1>
+      <p class="heroe__bajada reveal">BootSim DSL es un lenguaje pequeño hecho para un solo trabajo: describir el arranque de una PC, desde que se pulsa el botón hasta que el sistema operativo queda activo, y simularlo en texto <strong>sin tocar tu equipo real</strong>.</p>
+      <p class="heroe__nota reveal">DSL significa «lenguaje específico de dominio»: un lenguaje que sirve para un solo tema en lugar de para todo.</p>
+      <div class="heroe__acciones reveal">
+        <a class="boton boton--primario" href="#demo">Probar la demostración
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-4 4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="boton boton--fantasma" href="#funcionamiento">Cómo está hecho</a>
+      </div>
+      <p class="estado-motor reveal" id="estado-motor" role="status" aria-live="polite">
+        <span class="punto punto--espera" aria-hidden="true"></span><span id="estado-motor-texto">Preparando el motor de Python…</span>
+      </p>
+    </div>
+
+    <figure class="heroe__visual reveal" aria-label="Ilustración: los siete estados normales del arranque, de APAGADO a SO_ACTIVO">
+      <div class="post">
+        <div class="post__barra"><i></i><i></i><i></i><span>POST · ilustración</span></div>
+        <ol class="post__lista" id="post-lista">
+          <li data-i="0"><span>APAGADO</span><em>el equipo no tiene corriente</em></li>
+          <li data-i="1"><span>ENCENDIDO</span><em>se leen CPU, RAM y disco</em></li>
+          <li data-i="2"><span>POST_OK</span><em>el autodiagnóstico pasó</em></li>
+          <li data-i="3"><span>DISPOSITIVO_ELEGIDO</span><em>se escoge de dónde arrancar</em></li>
+          <li data-i="4"><span>GESTOR_CARGADO</span><em>entra GRUB</em></li>
+          <li data-i="5"><span>KERNEL_CARGADO</span><em>el núcleo está en memoria</em></li>
+          <li data-i="6"><span>SO_ACTIVO</span><em>el sistema operativo corre</em></li>
+        </ol>
+      </div>
+      <figcaption>Los siete estados normales del arranque simulado. Tres estados más modelan fallos. La demostración de abajo los recorre con tus programas.</figcaption>
+    </figure>
+  </div>
+
+  <div class="contenedor">
+    <dl class="cifras reveal" id="cifras">
+      <div><dt>Comandos del lenguaje</dt><dd id="cifra-comandos">12</dd></div>
+      <div><dt>Estados del arranque</dt><dd id="cifra-estados">7 + 3</dd></div>
+      <div><dt>Código reutilizado</dt><dd>100 %</dd><small>el mismo Python de la terminal</small></div>
+      <div><dt>Salidas idénticas a la terminal</dt><dd id="cifra-paridad">…</dd><small id="cifra-paridad-nota"></small></div>
+    </dl>
+  </div>
+</section>
+
+<!-- demostración -->
+<section class="seccion" id="demo" aria-labelledby="t-demo">
+  <div class="contenedor">
+    <header class="seccion__cabeza reveal">
+      <p class="sobretitulo">Demostración</p>
+      <h2 id="t-demo">Escribe un programa y ejecútalo</h2>
+      <p>Aquí corre el código Python original del proyecto (lexer, parser, semántica y simulador) dentro de tu navegador. Elige un ejemplo válido o uno con errores, cambia lo que quieras y pulsa <kbd>Ejecutar</kbd>. Nada sale de tu computadora.</p>
+    </header>
+
+    <div class="demo reveal">
+      <div class="panel panel--editor">
+        <div class="barra">
+          <label class="selector"><span class="solo-lectores">Ejemplo</span>
+            <select id="ejemplos" aria-label="Elegir un programa de ejemplo"><option>Cargando ejemplos…</option></select>
+          </label>
+          <label class="interruptor" title="Equivale a python codigo/main.py ARCHIVO --debug">
+            <input type="checkbox" id="opcion-debug"><span class="interruptor__pista" aria-hidden="true"></span><span>--debug</span>
+          </label>
+          <button class="boton boton--primario boton--chico" id="boton-ejecutar" type="button" disabled>
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 4.5v11l9-5.5-9-5.5Z" fill="currentColor"/></svg>Ejecutar <span class="atajo">Ctrl ⏎</span>
+          </button>
+        </div>
+        <div class="editor" id="editor">
+          <div class="editor__numeros" id="editor-numeros" aria-hidden="true"></div>
+          <div class="editor__area">
+            <pre class="editor__fondo" id="editor-fondo" aria-hidden="true"></pre>
+            <textarea id="editor-texto" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Programa en BootSim DSL" wrap="off"></textarea>
+          </div>
+        </div>
+        <div class="editor__pie">
+          <span id="editor-posicion">línea 1, columna 1</span>
+          <span id="editor-estado" class="chip chip--neutro">sin ejecutar</span>
+        </div>
+        <div class="diagnosticos" id="diagnosticos" aria-live="polite"></div>
+      </div>
+
+      <div class="panel panel--resultado">
+        <div class="resultado__cabeza">
+          <div class="veredicto" id="veredicto" role="status" aria-live="polite">
+            <span class="veredicto__marca" id="veredicto-marca"></span>
+            <div><strong id="veredicto-titulo">Esperando un programa</strong><span id="veredicto-detalle">Pulsa Ejecutar para ver el resultado.</span></div>
+          </div>
+        </div>
+        <div class="pestanas" role="tablist" aria-label="Resultados del análisis">
+          <button role="tab" id="pestana-estados" aria-controls="vista-estados" aria-selected="true" type="button">Estados</button>
+          <button role="tab" id="pestana-salida" aria-controls="vista-salida" aria-selected="false" type="button" tabindex="-1">Salida</button>
+          <button role="tab" id="pestana-tokens" aria-controls="vista-tokens" aria-selected="false" type="button" tabindex="-1">Tokens</button>
+          <button role="tab" id="pestana-arbol" aria-controls="vista-arbol" aria-selected="false" type="button" tabindex="-1">Árbol</button>
+          <button role="tab" id="pestana-semantica" aria-controls="vista-semantica" aria-selected="false" type="button" tabindex="-1">Semántica</button>
+        </div>
+
+        <div class="vista" id="vista-estados" role="tabpanel" aria-labelledby="pestana-estados">
+          <div class="maquina" id="maquina"></div>
+          <div class="reproductor" id="reproductor" hidden>
+            <button class="boton-icono" id="rep-anterior" type="button" aria-label="Paso anterior"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M13 4.5v11L5 10l8-5.5Z" fill="currentColor"/></svg></button>
+            <button class="boton-icono boton-icono--grande" id="rep-play" type="button" aria-label="Reproducir"><svg viewBox="0 0 20 20" aria-hidden="true"><path id="rep-play-icono" d="M6 4.5v11l9-5.5-9-5.5Z" fill="currentColor"/></svg></button>
+            <button class="boton-icono" id="rep-siguiente" type="button" aria-label="Paso siguiente"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 4.5v11L15 10 7 4.5Z" fill="currentColor"/></svg></button>
+            <input type="range" id="rep-barra" min="0" max="0" value="0" aria-label="Paso de la simulación">
+            <span id="rep-contador" class="mono">0 / 0</span>
+          </div>
+          <div class="paso-actual" id="paso-actual" aria-live="polite"></div>
+          <ol class="linea-tiempo" id="linea-tiempo" aria-label="Comandos ejecutados"></ol>
+        </div>
+
+        <div class="vista" id="vista-salida" role="tabpanel" aria-labelledby="pestana-salida" hidden>
+          <p class="vista__nota" id="salida-nota"></p>
+          <div class="codigo-caja"><button class="copiar" type="button" id="copiar-salida">Copiar</button><pre class="codigo" id="salida-texto" tabindex="0"></pre></div>
+        </div>
+        <div class="vista" id="vista-tokens" role="tabpanel" aria-labelledby="pestana-tokens" hidden>
+          <p class="vista__nota">Un <strong>token</strong> es una pieza con nombre en la que el lexer corta el texto. Pulsa una fila para ir a esa posición del programa.</p>
+          <div class="tabla-caja"><table class="tabla" id="tabla-tokens"><thead><tr><th>Posición</th><th>Token</th><th>Valor</th></tr></thead><tbody></tbody></table></div>
+        </div>
+        <div class="vista" id="vista-arbol" role="tabpanel" aria-labelledby="pestana-arbol" hidden>
+          <p class="vista__nota">El <strong>árbol sintáctico</strong> (AST) es el programa convertido en ramas. Cada nodo guarda su posición <span class="mono">[línea:columna]</span>.</p>
+          <div class="arbol" id="arbol" tabindex="0"></div>
+        </div>
+        <div class="vista" id="vista-semantica" role="tabpanel" aria-labelledby="pestana-semantica" hidden>
+          <p class="vista__nota">La <strong>semántica</strong> revisa que lo bien escrito tenga sentido, sin ejecutar nada. Un <em>error</em> impide simular; un <em>aviso</em> solo advierte.</p>
+          <div id="semantica-contenido"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- como funciona -->
+<section class="seccion seccion--alterna" id="funcionamiento" aria-labelledby="t-func">
+  <div class="contenedor">
+    <header class="seccion__cabeza reveal">
+      <p class="sobretitulo">Cómo funciona</p>
+      <h2 id="t-func">Cinco piezas, una detrás de otra</h2>
+      <p>Un compilador no hace magia: divide el trabajo. Estas son las piezas de BootSim y el archivo de Python que hace cada una.</p>
+    </header>
+    <ol class="tuberia">
+      <li class="tarjeta reveal"><span class="tarjeta__n">1</span><h3>Lexer</h3><p>Lee el texto y lo corta en piezas con nombre (los <em>tokens</em>): <code>POWER_ON</code>, el número <code>8</code>, un punto y coma. Si ve algo que el lenguaje no tiene, anota el error con su línea y columna y sigue.</p><a href="https://github.com/charrixxz23/bootsim-dsl-lfac/blob/main/codigo/lexer.py" rel="noopener"><code>lexer.py</code></a></li>
+      <li class="tarjeta reveal"><span class="tarjeta__n">2</span><h3>Parser</h3><p>Comprueba que las piezas vengan en un orden permitido, como la gramática de una frase. Lo genera PLY, una biblioteca de Python, a partir de reglas escritas en el código.</p><a href="https://github.com/charrixxz23/bootsim-dsl-lfac/blob/main/codigo/parser.py" rel="noopener"><code>parser.py</code></a></li>
+      <li class="tarjeta reveal"><span class="tarjeta__n">3</span><h3>Árbol (AST)</h3><p>El programa convertido en un árbol: cada comando es una rama y recuerda su posición en el texto. Sirve de punto de encuentro para las dos pasadas siguientes.</p><a href="https://github.com/charrixxz23/bootsim-dsl-lfac/blob/main/codigo/ast_nodos.py" rel="noopener"><code>ast_nodos.py</code></a></li>
+      <li class="tarjeta reveal"><span class="tarjeta__n">4</span><h3>Semántica</h3><p>Primera pasada sobre el árbol: ¿cada variable tiene valor?, ¿los comandos van en el orden del arranque?, ¿la RAM y el disco están dentro de sus límites? No ejecuta nada.</p><a href="https://github.com/charrixxz23/bootsim-dsl-lfac/blob/main/codigo/semantica.py" rel="noopener"><code>semantica.py</code></a></li>
+      <li class="tarjeta reveal"><span class="tarjeta__n">5</span><h3>Simulador</h3><p>Segunda pasada: recorre el árbol y mueve una computadora de mentira entre estados. Solo cambia variables de Python: no toca discos, particiones ni firmware reales.</p><a href="https://github.com/charrixxz23/bootsim-dsl-lfac/blob/main/codigo/simulador.py" rel="noopener"><code>simulador.py</code></a></li>
+    </ol>
+    <p class="pie-seccion reveal">Si el lexer, el parser o la semántica encuentran un error, el programa se rechaza y <strong>no se simula nada</strong>. Un fallo del arranque simulado (por ejemplo, RAM en cero) es distinto: el programa está bien escrito, y lo que falla es la computadora de mentira.</p>
+  </div>
+</section>
+
+<!-- lenguaje -->
+<section class="seccion" id="lenguaje" aria-labelledby="t-len">
+  <div class="contenedor">
+    <header class="seccion__cabeza reveal">
+      <p class="sobretitulo">El lenguaje</p>
+      <h2 id="t-len">Doce comandos y unas pocas reglas</h2>
+      <p>Esta tabla se lee del propio código del simulador cuando carga la página; no está escrita a mano. Cada comando solo vale en su etapa del arranque.</p>
+    </header>
+    <div class="tabla-caja tabla-caja--libre reveal"><table class="tabla tabla--comandos" id="tabla-comandos"><thead><tr><th>Comando</th><th>Argumentos</th><th>Se usa en</th><th>Deja el equipo en</th><th>Límites</th></tr></thead><tbody><tr><td colspan="5" class="vacio">Disponible cuando el motor de Python termine de cargar.</td></tr></tbody></table></div>
+    <div class="reglas-rejilla">
+      <article class="tarjeta reveal"><h3>Variables y datos</h3><p>Se asignan con <code>SET n = 8;</code>. Hay tres tipos: entero, booleano (<code>TRUE</code> o <code>FALSE</code>) y texto entre comillas. Los comentarios empiezan con <code>#</code> o <code>//</code>.</p></article>
+      <article class="tarjeta reveal"><h3>Decisiones y repeticiones</h3><p><code>IF … THEN … ELSE … ENDIF</code> elige un camino. <code>REPEAT 3 TIMES … ENDREPEAT</code> repite. <code>BEGIN … END</code> agrupa varias sentencias. Cada estructura se cierra con su propia palabra, así que no existe el «ELSE colgante».</p></article>
+      <article class="tarjeta reveal"><h3>Operadores</h3><p>De menor a mayor prioridad: <code>OR</code>, <code>AND</code>, <code>NOT</code>, <code>==</code> <code>!=</code>, <code>&lt;</code> <code>&gt;</code> <code>&lt;=</code> <code>&gt;=</code>, <code>+</code> <code>-</code>, <code>*</code> <code>/</code> y el menos unario. Los comparadores de orden no se encadenan: <code>a &lt; b &lt; c</code> es un error.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- fidelidad -->
+<section class="seccion seccion--alterna" id="fidelidad" aria-labelledby="t-fid">
+  <div class="contenedor">
+    <header class="seccion__cabeza reveal">
+      <p class="sobretitulo">Fidelidad</p>
+      <h2 id="t-fid">Lo que ves es lo que se probó</h2>
+      <p>Una demostración web puede mentir con facilidad: basta con reescribir el simulador en otro lenguaje y que «se parezca». Aquí no se hace. La página usa los mismos archivos de Python y la misma versión de PLY (3.11) que la terminal, y cada publicación los compara.</p>
+    </header>
+    <div class="fidelidad reveal">
+      <div class="fidelidad__resultado" id="fidelidad-resultado">
+        <p class="vacio">El informe de comparación se carga con la página.</p>
+      </div>
+      <div class="fidelidad__texto">
+        <h3>Cómo se comprueba</h3>
+        <p>El mismo programa se ejecuta de dos maneras: con <code>python codigo/main.py</code> en una terminal y con el código que corre en el navegador (Pyodide, un Python compilado a WebAssembly). Se comparan el código de salida, la salida normal y la de errores, carácter por carácter.</p>
+        <p>Los casos son todos los programas <code>.dsl</code> del repositorio, variantes con errores hechas por azar repetible (siempre las mismas) y unos pocos archivos especiales (vacío, con BOM, en latin-1, inexistente…), cada uno con y sin <code>--debug</code>. Las cantidades exactas están en el resultado de la izquierda.</p>
+        <pre class="codigo codigo--corto">python sitio/construir.py
+node sitio/pruebas/paridad.mjs</pre>
+        <h3>Límites que conviene conocer</h3>
+        <ul class="lista-limites">
+          <li>El navegador usa Python 3.13; la terminal se probó con Python 3.10 y 3.12. Las salidas coinciden, pero son versiones distintas.</li>
+          <li>La página no prueba cómo la consola de Windows dibuja las tildes (eso depende de la terminal, no del lenguaje).</li>
+          <li>La primera carga baja unos 13 MB (el motor de Python); después el navegador los guarda.</li>
+          <li>Las pruebas automáticas del proyecto las diseñó la IA; el equipo todavía no las ha repetido por su cuenta.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- equipo -->
+<section class="seccion" id="equipo" aria-labelledby="t-eq">
+  <div class="contenedor">
+    <header class="seccion__cabeza reveal">
+      <p class="sobretitulo">Equipo y transparencia</p>
+      <h2 id="t-eq">Quiénes y con qué ayuda</h2>
+      <p>Proyecto final de Lenguajes Formales, Autómatas y Compiladores, grupo 1IL-143, segundo semestre de 2026. Licenciatura en Ingeniería de Sistemas y Computación, Facultad de Ingeniería de Sistemas Computacionales, Universidad Tecnológica de Panamá.</p>
+    </header>
+    <div class="instituciones reveal">
+      <img src="img/logo_utp.png" width="72" height="72" alt="Logo de la Universidad Tecnológica de Panamá">
+      <img src="img/logo_fisc.png" width="72" height="72" alt="Logo de la Facultad de Ingeniería de Sistemas Computacionales">
+    </div>
+    <ul class="equipo">
+      <li class="reveal"><b>Richard Smith</b><span>POST, BIOS/UEFI y lexer</span></li>
+      <li class="reveal"><b>Víctor Sánchez</b><span>GRUB, MBR/GPT, kernel, gramática y parser</span></li>
+      <li class="reveal"><b>Juan González</b><span>AST, semántica, simulación y errores</span></li>
+      <li class="reveal"><b>Jorge González</b><span>introducción, problema, objetivos, glosario y pruebas explicadas</span></li>
+      <li class="reveal"><b>Alexandra Esteves</b><span>conclusiones, mantenimiento, consolidación y formato</span></li>
+      <li class="reveal"><b>Marc Chavarría</b><span>integración, pruebas, auditoría técnica y preparación de la defensa</span></li>
+    </ul>
+    <p class="pie-seccion reveal">Las responsabilidades son las asignadas en el reparto del equipo. Marc Chavarría se incorporó el 2026-11-21, con las fases de diseño, lexer, parser, semántica y simulación ya hechas; sus responsabilidades se presentan como asignadas y se registrarán cuando existan.</p>
+
+    <aside class="aviso-ia reveal" aria-labelledby="t-ia">
+      <h3 id="t-ia">Uso de inteligencia artificial</h3>
+      <ul>
+        <li><strong>ChatGPT</strong> ayudó a elaborar el índice del proyecto, a diseñar la <em>Skill</em> de trabajo y a orquestar el plan por fases.</li>
+        <li><strong>Claude Code</strong> desarrolló, bajo la dirección del equipo y por fases, el código, las pruebas y la documentación. También se usó para esta página.</li>
+        <li>La revisión humana del código y de los textos <strong>está pendiente</strong>. Las pruebas y los resultados son reales y se pueden repetir, pero el equipo aún no los ha repetido. Las firmas, las reflexiones y las revisiones son del equipo y no las genera ninguna herramienta.</li>
+        <li>Todavía no hay licencia elegida: es una decisión del equipo.</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+</main>
+
+<footer class="pie">
+  <div class="contenedor pie__fila">
+    <p>BootSim DSL · proyecto académico · UTP · 1IL-143 · 2026</p>
+    <p><a href="https://github.com/charrixxz23/bootsim-dsl-lfac" rel="noopener">Repositorio</a> · <a href="https://github.com/charrixxz23/bootsim-dsl-lfac/blob/main/docs/BITACORA_EN_CURSO.md" rel="noopener">Bitácora de decisiones</a> · <span id="pie-version" class="mono"></span></p>
+  </div>
+</footer>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

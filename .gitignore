@@ -67,3 +67,8 @@ scripts/empaquetar.py
 # archivos de apoyo del propio equipo que no deben subirse por error
 *.local
 settings.local.json
+
+# pagina web (sitio/): lo que genera la construccion y las capturas temporales de las pruebas del navegador
+sitio/dist/
+sitio/node_modules/
+.playwright-mcp/

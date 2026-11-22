@@ -1,0 +1,76 @@
+name: sitio
+
+# construye la pagina de demostracion (sitio/), comprueba que el navegador (pyodide) y la terminal dan la misma salida y,
+# solo en la rama main, la publica en github pages. en ramas y pull requests solo construye y comprueba.
+# requisito unico: en el repositorio, Settings > Pages > Source = "GitHub Actions" (lo activa una persona del equipo).
+on:
+  push:
+    paths: ['sitio/**', 'codigo/**', 'pruebas/**', 'assets/logos/**', '.github/workflows/sitio.yml']
+  pull_request:
+    paths: ['sitio/**', 'codigo/**', 'pruebas/**', 'assets/logos/**', '.github/workflows/sitio.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sitio-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  construir:
+    name: construir y comprobar la paridad
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: bajar el codigo
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: instalar python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+
+      - name: instalar node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+
+      - name: instalar dependencias (ply 3.11 y pyodide 0.29.3, versiones fijas)
+        run: |
+          python -m pip install -r codigo/requirements.txt
+          npm ci --prefix sitio
+
+      - name: armar sitio/dist con el codigo original
+        run: python sitio/construir.py
+
+      - name: paridad entre la terminal y el navegador
+        run: node sitio/pruebas/paridad.mjs
+
+      - name: preparar github pages
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+
+      - name: subir el sitio
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: sitio/dist
+
+  publicar:
+    name: publicar en github pages
+    needs: construir
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    steps:
+      - name: desplegar
+        id: despliegue
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

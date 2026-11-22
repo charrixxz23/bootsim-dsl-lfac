@@ -111,16 +111,21 @@ Imágenes reales de CMD de Windows (cómo se tomaron y sus límites: [`evidencia
 | --- |
 | ![invalido_05 en CMD](evidencias/capturas/09_error_semantico_limites_y_orden.png) |
 
+## Demostración en el navegador
+
+La carpeta [`sitio/`](sitio/LEEME.md) contiene una página para GitHub Pages que ejecuta **este mismo código Python** (con PLY 3.11) dentro del navegador, mediante Pyodide. Permite elegir los diez programas de ejemplo o escribir uno propio, y muestra la salida exacta de la terminal, los tokens, el árbol, la semántica y un diagrama animado de los estados del arranque. Cada publicación compara la salida del navegador con la de la terminal; cómo se hace y qué límites tiene está en [`sitio/LEEME.md`](sitio/LEEME.md). Dirección prevista, cuando el equipo active Pages: `https://charrixxz23.github.io/bootsim-dsl-lfac/`.
+
 ## Estructura del repositorio
 
 ```
 assets/logos/        logos de la UTP y de la FISC
 codigo/              lexer, parser, AST, semántica, simulador, línea de comandos y pruebas
 pruebas/             los diez programas .dsl (5 válidos y 5 inválidos)
+sitio/               página de demostración (Pyodide) y su prueba de paridad con la terminal
 docs/                capítulos, anexos, bitácora de decisiones e índice
 evidencias/          salidas reales de las pruebas, mutaciones, comparaciones y capturas
 scripts/             captura de pantalla de CMD y comprobación de formato de documentos Word
-.github/workflows/   pruebas automáticas
+.github/workflows/   pruebas automáticas y publicación de la página
 ```
 
 ## Estado
