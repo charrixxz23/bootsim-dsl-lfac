@@ -1,15 +1,19 @@
 name: sitio
 
-# construye la pagina de demostracion (sitio/), comprueba que el navegador (pyodide) y la terminal dan la misma salida y,
-# solo en la rama main, la publica en github pages. en ramas y pull requests solo construye y comprueba.
-# requisito unico: en el repositorio, Settings > Pages > Source = "GitHub Actions" (lo activa una persona del equipo).
+# construye la pagina de demostracion (sitio/), comprueba que el navegador (pyodide) y la terminal dan la misma salida, revisa que lo que se
+# va a publicar no tenga nada privado y, solo en la rama main, lo publica en github pages.
+# en ramas y pull requests solo construye y comprueba: no publica nada.
+# la paridad corre en linux y en windows; el sitio que se publica sale del trabajo de linux.
+# requisito unico, de una persona del equipo: en el repositorio, Settings > Pages > Source = "GitHub Actions".
 on:
   push:
+    branches: [main]
     paths: ['sitio/**', 'codigo/**', 'pruebas/**', 'assets/logos/**', '.github/workflows/sitio.yml']
   pull_request:
     paths: ['sitio/**', 'codigo/**', 'pruebas/**', 'assets/logos/**', '.github/workflows/sitio.yml']
   workflow_dispatch:
 
+# permisos minimos para todo el flujo; el trabajo "publicar" pide solo los suyos
 permissions:
   contents: read
 
@@ -19,9 +23,16 @@ concurrency:
 
 jobs:
   construir:
-    name: construir y comprobar la paridad
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
+    name: construir y comprobar (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: bajar el codigo
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -49,19 +60,19 @@ jobs:
       - name: paridad entre la terminal y el navegador
         run: node sitio/pruebas/paridad.mjs
 
-      - name: preparar github pages
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+      - name: revisar lo que se va a publicar (archivos, privacidad, rutas, codigo y paridad)
+        run: python sitio/pruebas/comprobar_dist.py --exigir-paridad
 
+      # solo el sitio construido en linux se publica, y solo desde main
       - name: subir el sitio
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        if: matrix.os == 'ubuntu-latest' && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: sitio/dist
 
   publicar:
     name: publicar en github pages
-    needs: construir
+    needs: construir   # si cualquiera de las dos plataformas falla, no se publica
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:

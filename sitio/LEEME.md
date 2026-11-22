@@ -10,6 +10,7 @@ Una página web que ejecuta **el código Python original** de BootSim DSL dentro
 | `py/puente.py` | Puente fino entre la página y `main.py`. Llama a `main.main()` y a las funciones reales para sacar tokens, árbol, diagnósticos y eventos. No contiene reglas del lenguaje. |
 | `construir.py` | Arma `sitio/dist/`: copia los módulos de `codigo/`, PLY, Pyodide, los diez programas de `pruebas/` y los logos. El código de BootSim **no se duplica en Git**: se toma de `codigo/` en cada construcción. |
 | `pruebas/paridad.mjs` | Ejecuta los mismos programas con la terminal y con Pyodide y compara código de salida, salida normal y salida de errores. |
+| `pruebas/comprobar_dist.py` | Revisa `sitio/dist/` antes de publicar: solo archivos esperados, nada privado (documentos, correos, rutas locales, claves), rutas relativas, enlaces solo a sitios permitidos, código idéntico al de `codigo/` y paridad sin diferencias. |
 | `package.json` y `package-lock.json` | Fijan `pyodide` en la versión 0.29.3. |
 
 ## Cómo construirla y probarla
@@ -19,6 +20,7 @@ pip install -r codigo/requirements.txt
 npm ci --prefix sitio
 python sitio/construir.py
 node sitio/pruebas/paridad.mjs          # debe terminar con «salidas idénticas: N de N»
+python sitio/pruebas/comprobar_dist.py --exigir-paridad
 python -m http.server 8000 --directory sitio/dist
 ```
 
@@ -48,6 +50,6 @@ Resultado de la corrida local del 2026-11-21 (Windows, Python 3.12.10 en la term
 
 ## Publicación
 
-El flujo `.github/workflows/sitio.yml` construye y compara en cada cambio. Solo en la rama `main` publica en GitHub Pages. **Requisito previo, de una persona del equipo:** en el repositorio, *Settings → Pages → Source = GitHub Actions*. Hasta entonces el flujo construye y prueba, pero no publica. La dirección esperada es `https://charrixxz23.github.io/bootsim-dsl-lfac/`.
+El flujo `.github/workflows/sitio.yml` construye y compara en cada cambio, en **Linux y en Windows**, y ejecuta `comprobar_dist.py`. Si falla cualquiera de esos pasos en cualquiera de las dos plataformas, no se publica. Solo en la rama `main` publica en GitHub Pages, y el sitio publicado sale del trabajo de Linux. Usa los permisos mínimos: `contents: read` en general y `pages: write` e `id-token: write` solo en el trabajo que despliega. **Requisito previo, de una persona del equipo:** en el repositorio, *Settings → Pages → Source = GitHub Actions*. Hasta entonces el flujo construye y prueba, pero no publica. La dirección esperada es `https://charrixxz23.github.io/bootsim-dsl-lfac/`.
 
 La página no incluye documentos privados (informe completo, declaración de IA, reflexiones, firmas). Los créditos y la declaración de uso de IA coinciden con los del `README.md`.

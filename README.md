@@ -113,7 +113,7 @@ Imágenes reales de CMD de Windows (cómo se tomaron y sus límites: [`evidencia
 
 ## Demostración en el navegador
 
-La carpeta [`sitio/`](sitio/LEEME.md) contiene una página para GitHub Pages que ejecuta **este mismo código Python** (con PLY 3.11) dentro del navegador, mediante Pyodide. Permite elegir los diez programas de ejemplo o escribir uno propio, y muestra la salida exacta de la terminal, los tokens, el árbol, la semántica y un diagrama animado de los estados del arranque. Cada publicación compara la salida del navegador con la de la terminal; cómo se hace y qué límites tiene está en [`sitio/LEEME.md`](sitio/LEEME.md). Dirección prevista, cuando el equipo active Pages: `https://charrixxz23.github.io/bootsim-dsl-lfac/`.
+La carpeta [`sitio/`](sitio/LEEME.md) contiene una página para GitHub Pages que ejecuta **este mismo código Python** (con PLY 3.11) dentro del navegador, mediante Pyodide. Permite elegir los diez programas de ejemplo o escribir uno propio, y muestra la salida exacta de la terminal, los tokens, el árbol, la semántica y un diagrama animado de los estados del arranque. El flujo de publicación compara la salida del navegador con la de la terminal (en Linux y en Windows) y no publica si difieren; cómo se hace y qué límites tiene está en [`sitio/LEEME.md`](sitio/LEEME.md). Dirección prevista, cuando el equipo active Pages: `https://charrixxz23.github.io/bootsim-dsl-lfac/`.
 
 ## Estructura del repositorio
 
