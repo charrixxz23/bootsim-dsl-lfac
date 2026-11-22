@@ -18,7 +18,7 @@ export function crearMaquina(contenedor, reglas) {
 
   const svg = el('svg', { viewBox: '0 0 860 384', role: 'img', 'aria-label': 'Máquina de estados del arranque simulado' });
   const defs = el('defs');
-  for (const [id, color] of [['punta', 'var(--linea-fuerte)'], ['punta-ok', 'var(--ok)'], ['punta-error', 'var(--error)'], ['punta-reinicio', 'var(--aviso)']]) {
+  for (const [id, color] of [['punta', 'var(--borde-fuerte)'], ['punta-ok', 'var(--primario)'], ['punta-error', 'var(--error)'], ['punta-reinicio', '#B7791F']]) {
     const m = el('marker', { id, viewBox: '0 0 10 10', refX: '8.5', refY: '5', markerWidth: '7', markerHeight: '7', orient: 'auto-start-reverse' });
     m.appendChild(el('path', { d: 'M1 1.5 9 5 1 8.5Z', fill: color }));
     defs.appendChild(m);

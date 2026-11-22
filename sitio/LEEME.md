@@ -6,12 +6,12 @@ Una página web que ejecuta **el código Python original** de BootSim DSL dentro
 
 | Ruta | Para qué sirve |
 | --- | --- |
-| `web/` | La página: `index.html`, `css/estilo.css` y `js/` (interfaz, editor, diagrama de estados y el *worker* que corre Pyodide). |
+| `web/` | La página: `index.html`, `css/estilo.css` y `js/` (`pagina.js` para el menú y las animaciones; `app.js`, `editor.js` y `estados.js` para el simulador; `worker.js` para Pyodide). El estilo está explicado en [`DISENO.md`](DISENO.md). |
 | `py/puente.py` | Puente fino entre la página y `main.py`. Llama a `main.main()` y a las funciones reales para sacar tokens, árbol, diagnósticos y eventos. No contiene reglas del lenguaje. |
-| `construir.py` | Arma `sitio/dist/`: copia los módulos de `codigo/`, PLY, Pyodide, los diez programas de `pruebas/` y los logos. El código de BootSim **no se duplica en Git**: se toma de `codigo/` en cada construcción. |
+| `construir.py` | Arma `sitio/dist/`: copia los módulos de `codigo/`, PLY, Pyodide, las tipografías con su licencia, los diez programas de `pruebas/` y los logos. El código de BootSim **no se duplica en Git**: se toma de `codigo/` en cada construcción. |
 | `pruebas/paridad.mjs` | Ejecuta los mismos programas con la terminal y con Pyodide y compara código de salida, salida normal y salida de errores. |
 | `pruebas/comprobar_dist.py` | Revisa `sitio/dist/` antes de publicar: solo archivos esperados, nada privado (documentos, correos, rutas locales, claves), rutas relativas, enlaces solo a sitios permitidos, código idéntico al de `codigo/` y paridad sin diferencias. |
-| `package.json` y `package-lock.json` | Fijan `pyodide` en la versión 0.29.3. |
+| `package.json` y `package-lock.json` | Fijan `pyodide` 0.29.3 y las tres tipografías (`@fontsource-variable/*`, licencia SIL OFL 1.1), que se sirven desde el propio sitio. |
 
 ## Cómo construirla y probarla
 

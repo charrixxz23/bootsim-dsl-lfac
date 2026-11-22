@@ -18,34 +18,6 @@ function crear(etiqueta, clase, texto, hijos = []) {
 }
 const plural = (n, uno, varios) => `${n} ${n === 1 ? uno : varios}`;
 
-// ---------- tema ----------
-$('boton-tema').addEventListener('click', () => {
-  const nuevo = document.documentElement.dataset.tema === 'claro' ? 'oscuro' : 'claro';
-  document.documentElement.dataset.tema = nuevo;
-  guardar('bootsim-tema', nuevo);
-});
-
-// ---------- aparicion al desplazarse ----------
-{
-  const observador = new IntersectionObserver((entradas) => {
-    for (const e of entradas) if (e.isIntersecting) { e.target.classList.add('visto'); observador.unobserve(e.target); }
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-  document.querySelectorAll('.reveal').forEach((n) => observador.observe(n));
-}
-
-// ---------- ilustracion de la portada ----------
-{
-  const items = [...document.querySelectorAll('#post-lista li')];
-  const mostrar = (k) => items.forEach((li, i) => { li.classList.toggle('activo', i === k); li.classList.toggle('hecho', i < k); });
-  if (sinMovimiento) mostrar(items.length - 1);
-  else {
-    let k = 0;
-    mostrar(0);
-    // recorre los siete estados, deja un instante todos "hechos" y vuelve a empezar
-    setInterval(() => { k = (k + 1) % (items.length + 2); mostrar(k < items.length ? k : k === items.length ? items.length : -1); }, 950);
-  }
-}
-
 // ---------- editor ----------
 const editor = crearEditor({
   texto: $('editor-texto'), fondo: $('editor-fondo'), numeros: $('editor-numeros'), posicion: $('editor-posicion'),
@@ -56,12 +28,19 @@ let ejemploActual = null;
 let reglas = null;
 let maquina = null;
 let listo = false;
+let pendienteProbar = null;
+
+function nombreEditor(ruta) { $('editor-archivo').textContent = ruta ? ruta.split('/').pop() : 'programa.dsl'; }
+
+function marcarChip(id) {
+  document.querySelectorAll('#ejemplos .chip-ej').forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.id === id)));
+}
 
 function alEditar() {
   if (ejemploActual && editor.leer() !== ejemploActual.texto) {
-    const sel = $('ejemplos');
-    const propio = sel.querySelector('option[value=""]');
-    if (propio) { propio.hidden = false; sel.value = ''; }
+    marcarChip(null);
+    $('ejemplo-titulo').textContent = 'Programa propio (editado). Los ejemplos de arriba lo reemplazan.';
+    nombreEditor(null);
   }
   editor.marcar([]);
   editor.activar(0);
@@ -74,32 +53,35 @@ async function cargarEjemplos() {
   try {
     ejemplos = await (await fetch('ejemplos.json')).json();
   } catch (e) {
-    $('ejemplos').replaceChildren(crear('option', '', 'No se pudieron cargar los ejemplos'));
+    $('ejemplo-titulo').textContent = 'No se pudieron cargar los ejemplos.';
     return;
   }
-  const sel = $('ejemplos');
-  sel.replaceChildren();
-  const propio = crear('option', '', 'Programa propio (editado)');
-  propio.value = '';
-  propio.hidden = true;
-  sel.append(propio);
-  for (const [tipo, titulo] of [['valido', 'Programas válidos'], ['invalido', 'Programas con errores']]) {
-    const grupo = document.createElement('optgroup');
-    grupo.label = titulo;
-    for (const e of ejemplos.filter((x) => x.tipo === tipo)) {
-      const o = crear('option', '', `${e.id.replace('_', ' ')} · ${e.titulo}`);
-      o.value = e.id;
-      grupo.append(o);
-    }
-    sel.append(grupo);
+  $('cifra-ejemplos').textContent = String(ejemplos.length);
+  for (const tipo of ['valido', 'invalido']) {
+    const caja = document.querySelector(`#ejemplos .ejemplos__chips[data-tipo="${tipo}"]`);
+    caja.replaceChildren(...ejemplos.filter((x) => x.tipo === tipo).map((e, i) => {
+      const b = crear('button', 'chip-ej', String(i + 1));
+      b.type = 'button';
+      b.dataset.id = e.id;
+      b.setAttribute('aria-pressed', 'false');
+      b.setAttribute('aria-label', `${e.id.replace('_', ' ')}: ${e.titulo}`);
+      b.title = `${e.id.replace('_', ' ')}: ${e.titulo}`;
+      b.addEventListener('click', () => elegirEjemplo(e.id, true));
+      return b;
+    }));
   }
   elegirEjemplo(ejemplos[0].id, false);
+  if (pendienteProbar) { const id = pendienteProbar; pendienteProbar = null; elegirEjemplo(id, true); }
 }
 
 function elegirEjemplo(id, ejecutarAhora) {
-  ejemploActual = ejemplos.find((e) => e.id === id);
-  $('ejemplos').value = id;
-  editor.poner(ejemploActual.texto);
+  const e = ejemplos.find((x) => x.id === id);
+  if (!e) return;
+  ejemploActual = e;
+  marcarChip(id);
+  $('ejemplo-titulo').textContent = `${id.replace('_', ' ')} · ${e.titulo}`;
+  nombreEditor(e.ruta);
+  editor.poner(e.texto);
   editor.marcar([]);
   editor.activar(0);
   const chip = $('editor-estado');
@@ -107,7 +89,13 @@ function elegirEjemplo(id, ejecutarAhora) {
   chip.textContent = 'sin ejecutar';
   if (ejecutarAhora) ejecutar();
 }
-$('ejemplos').addEventListener('change', (e) => { if (e.target.value) elegirEjemplo(e.target.value, true); });
+// desde el recorrido del arranque: "Verlo en el simulador"
+document.addEventListener('bootsim:probar', (ev) => {
+  if (ejemplos.length && listo) elegirEjemplo(ev.detail.id, true);
+  else if (ejemplos.length) elegirEjemplo(ev.detail.id, false);
+  else pendienteProbar = ev.detail.id;
+});
+
 
 // ---------- motor (worker con pyodide) ----------
 const worker = new Worker(new URL('./worker.js', import.meta.url), { type: 'module' });
@@ -452,20 +440,18 @@ function llenarTablaComandos(r) {
   }
 }
 
-// ---------- fidelidad ----------
+// ---------- resultados (informe de paridad) ----------
 async function cargarFidelidad() {
   const caja = $('fidelidad-resultado');
   try {
     const [p, v] = await Promise.all([fetch('paridad.json', { cache: 'no-store' }).then((r) => { if (!r.ok) throw new Error('sin informe'); return r.json(); }),
       fetch('version.json').then((r) => r.json()).catch(() => null)]);
     const bien = p.diferencias.length === 0;
-    $('cifra-paridad').textContent = `${p.identicas} / ${p.comparaciones}`;
-    $('cifra-paridad-nota').textContent = 'terminal contra navegador';
     const fila = (a, b) => crear('li', '', undefined, [crear('span', '', a), crear('span', '', b)]);
     const grupos = Object.entries(p.por_grupo).map(([g, n]) => `${n / 2} ${g}`).join(', ');
     caja.replaceChildren(
       crear('p', `fid-cifra ${bien ? 'fid-ok' : 'fid-mal'}`, undefined, [document.createTextNode(`${p.identicas} / ${p.comparaciones}`), crear('small', '', 'salidas idénticas')]),
-      crear('p', '', bien ? 'Cada programa dio el mismo código de salida, la misma salida normal y la misma salida de errores en la terminal y en el navegador.' : `Hay ${p.diferencias.length} diferencias. No se presenta esta demostración como equivalente: revisa el informe.`),
+      crear('p', '', bien ? 'Cada programa dio el mismo código de salida, la misma salida normal y la misma salida de errores en la terminal y en el navegador.' : `Hay ${p.diferencias.length} diferencias entre la terminal y el navegador. Revisa el informe antes de fiarte de esta demostración.`),
       crear('ul', 'fid-lista', undefined, [
         fila('Casos', `${p.casos} (${grupos})`),
         fila('Terminal', `Python ${p.python_de_la_terminal} + PLY ${p.ply_de_la_terminal}`),
@@ -478,8 +464,6 @@ async function cargarFidelidad() {
     );
     if (v) $('pie-version').textContent = `Pyodide ${v.pyodide} · PLY ${v.ply}`;
   } catch (e) {
-    $('cifra-paridad').textContent = '—';
-    $('cifra-paridad-nota').textContent = 'no medido en esta copia';
     caja.replaceChildren(crear('p', 'vacio', 'Esta copia de la página se construyó sin ejecutar la comparación, así que no hay cifra que mostrar. No se inventa ninguna.'));
   }
 }

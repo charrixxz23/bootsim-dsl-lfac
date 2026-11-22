@@ -17,8 +17,8 @@ RAIZ = Path(__file__).resolve().parent.parent.parent
 DIST = RAIZ / 'sitio' / 'dist'
 EXIGIR_PARIDAD = '--exigir-paridad' in sys.argv
 
-ENTRADAS = {'index.html', 'css', 'js', 'py', 'pyodide', 'img', 'ejemplos.json', 'version.json', 'paridad.json'}
-EXTENSIONES = {'.html', '.css', '.js', '.mjs', '.py', '.json', '.png', '.wasm', '.zip'}
+ENTRADAS = {'index.html', 'css', 'js', 'py', 'pyodide', 'img', 'fonts', 'ejemplos.json', 'version.json', 'paridad.json'}
+EXTENSIONES = {'.html', '.css', '.js', '.mjs', '.py', '.json', '.png', '.wasm', '.zip', '.woff2', '.txt'}
 NOMBRES_PROHIBIDOS = re.compile(r'declaraci|reflexi|firma|cedula|c[eé]dula|bitacora_ddr|informe|guia_|pendientes|evidencias|secret|token|\.env|credential|\.docx|\.pdf', re.I)
 # contenido propio de la pagina (pyodide se excluye: son archivos de terceros, ya fijados por version)
 PRIVADO = [
@@ -96,6 +96,13 @@ for p in propios:
             externos.append(f'{p.relative_to(DIST)}: {m.group(0)[:60]}')
 comprobar(not absolutas, f'ninguna ruta empieza con / ({absolutas[:3]})')
 comprobar(not externos, f'solo se enlaza a sitios permitidos, sin CDN ni terceros ({externos[:3]})')
+
+print('3b. fuentes con su licencia')
+fuentes_dist = sorted(p.name for p in (DIST / 'fonts').iterdir()) if (DIST / 'fonts').exists() else []
+comprobar(sum(n.endswith('.woff2') for n in fuentes_dist) == 3 and sum(n.endswith('-OFL.txt') for n in fuentes_dist) == 3,
+          f'hay 3 fuentes y 3 textos de licencia OFL ({fuentes_dist})')
+comprobar(all('SIL OPEN FONT LICENSE' in (DIST / 'fonts' / n).read_text(encoding='utf-8').upper() for n in fuentes_dist if n.endswith('-OFL.txt')),
+          'cada licencia es la SIL Open Font License')
 
 print('4. el codigo de python publicado es el del repositorio')
 manifiesto = json.loads((DIST / 'py' / 'manifest.json').read_text(encoding='utf-8'))
