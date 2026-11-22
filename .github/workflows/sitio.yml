@@ -1,0 +1,87 @@
+name: sitio
+
+# construye la pagina de demostracion (sitio/), comprueba que el navegador (pyodide) y la terminal dan la misma salida, revisa que lo que se
+# va a publicar no tenga nada privado y, solo en la rama main, lo publica en github pages.
+# en ramas y pull requests solo construye y comprueba: no publica nada.
+# la paridad corre en linux y en windows; el sitio que se publica sale del trabajo de linux.
+# requisito unico, de una persona del equipo: en el repositorio, Settings > Pages > Source = "GitHub Actions".
+on:
+  push:
+    branches: [main]
+    paths: ['sitio/**', 'codigo/**', 'pruebas/**', 'assets/logos/**', '.github/workflows/sitio.yml']
+  pull_request:
+    paths: ['sitio/**', 'codigo/**', 'pruebas/**', 'assets/logos/**', '.github/workflows/sitio.yml']
+  workflow_dispatch:
+
+# permisos minimos para todo el flujo; el trabajo "publicar" pide solo los suyos
+permissions:
+  contents: read
+
+concurrency:
+  group: sitio-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  construir:
+    name: construir y comprobar (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: bajar el codigo
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: instalar python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+
+      - name: instalar node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+
+      - name: instalar dependencias (ply 3.11 y pyodide 0.29.3, versiones fijas)
+        run: |
+          python -m pip install -r codigo/requirements.txt
+          npm ci --prefix sitio
+
+      - name: armar sitio/dist con el codigo original
+        run: python sitio/construir.py
+
+      - name: paridad entre la terminal y el navegador
+        run: node sitio/pruebas/paridad.mjs
+
+      - name: revisar lo que se va a publicar (archivos, privacidad, rutas, codigo y paridad)
+        run: python sitio/pruebas/comprobar_dist.py --exigir-paridad
+
+      # solo el sitio construido en linux se publica, y solo desde main
+      - name: subir el sitio
+        if: matrix.os == 'ubuntu-latest' && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: sitio/dist
+
+  publicar:
+    name: publicar en github pages
+    needs: construir   # si cualquiera de las dos plataformas falla, no se publica
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    steps:
+      - name: desplegar
+        id: despliegue
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

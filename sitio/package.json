@@ -1,0 +1,17 @@
+{
+  "name": "bootsim-sitio",
+  "version": "0.1.0",
+  "private": true,
+  "description": "pagina de demostracion de bootsim dsl (pyodide + el codigo python original)",
+  "type": "module",
+  "scripts": {
+    "construir": "python construir.py",
+    "paridad": "node pruebas/paridad.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/dm-sans": "5.3.0",
+    "@fontsource-variable/jetbrains-mono": "5.3.0",
+    "@fontsource-variable/plus-jakarta-sans": "5.3.0",
+    "pyodide": "0.29.3"
+  }
+}

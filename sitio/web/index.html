@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BootSim DSL: descubre cómo arranca una computadora</title>
+<meta name="description" content="Escribe instrucciones, explora cada etapa y observa el resultado de un sistema de arranque simulado. BootSim DSL corre en tu navegador con el código Python original del proyecto.">
+<meta name="theme-color" content="#E9F8FA">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%2314B8C8'/%3E%3Cpath d='M9 22V10l7 7 7-7v12' fill='none' stroke='%230B3F46' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preload" href="fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/dm-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/estilo.css">
+<script>
+  // la aparicion suave solo se activa si el navegador sabe hacerla; si algo falla, a los 4 s todo se muestra
+  if ('IntersectionObserver' in window) {
+    document.documentElement.classList.add('js');
+    window.__temporizadorAparicion = setTimeout(function () { document.documentElement.classList.add('todo-visto'); }, 4000);
+  }
+</script>
+</head>
+<body>
+<a class="saltar" href="#simulador">Saltar al simulador</a>
+
+<!-- símbolos reutilizables: pictogramas de cada etapa -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="g-power" viewBox="0 0 32 32"><path d="M16 4v11M9.5 8.6a10 10 0 1 0 13 0" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+    <symbol id="g-post" viewBox="0 0 32 32"><rect x="8" y="8" width="16" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M12 4v4m8-4v4M12 24v4m8-4v4M4 12h4m-4 8h4m16-8h4m-4 8h4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="m13 16 2.2 2.4L19.5 14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="g-firmware" viewBox="0 0 32 32"><rect x="5" y="9" width="22" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M9 13h6M9 17h10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M10 9V6m6 3V6m6 3V6M10 26v-3m6 3v-3m6 3v-3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+    <symbol id="g-grub" viewBox="0 0 32 32"><rect x="5" y="6" width="22" height="20" rx="3.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M10 12h12M10 16.5h12M10 21h7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="21.5" cy="21" r="1.6" fill="currentColor"/></symbol>
+    <symbol id="g-kernel" viewBox="0 0 32 32"><path d="M16 4.5 26 10v12l-10 5.5L6 22V10Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><circle cx="16" cy="16" r="3.6" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M16 12.4V4.5M19.1 17.8 26 22M12.9 17.8 6 22" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+    <symbol id="g-os" viewBox="0 0 32 32"><rect x="4" y="6" width="24" height="17" rx="3" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M11 28h10M16 23v5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M9 12h5v5H9zm9 0h5v5h-5z" fill="currentColor" opacity=".35"/></symbol>
+    <symbol id="g-flecha" viewBox="0 0 20 20"><path d="M4 10h11m-4-4 4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<header class="cabecera" id="cabecera">
+  <div class="contenedor cabecera__fila">
+    <a class="marca" href="#inicio" aria-label="BootSim DSL, inicio">
+      <span class="marca__icono" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M9 22V10l7 7 7-7v12" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span class="marca__texto">BootSim <b>DSL</b></span>
+    </a>
+    <nav class="menu" id="menu" aria-label="Secciones">
+      <a href="#inicio">Inicio</a>
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#simulador">Simulador</a>
+      <a href="#arquitectura">Arquitectura</a>
+      <a href="#equipo">Equipo</a>
+      <a href="#resultados">Resultados</a>
+      <a class="menu__laboratorio" href="#simulador">Laboratorio <svg viewBox="0 0 20 20" aria-hidden="true"><use href="#g-flecha"/></svg></a>
+    </nav>
+    <a class="boton boton--oscuro cabecera__cta" href="#simulador">Laboratorio <svg viewBox="0 0 20 20" aria-hidden="true"><use href="#g-flecha"/></svg></a>
+    <button class="boton-menu" id="boton-menu" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir el menú">
+      <span class="boton-menu__barras" aria-hidden="true"><i></i><i></i><i></i></span>
+    </button>
+  </div>
+</header>
+
+<main>
+<!-- portada -->
+<section class="heroe" id="inicio" aria-labelledby="t-heroe">
+  <div class="contenedor heroe__rejilla">
+    <div class="heroe__texto">
+      <p class="etiqueta-inst reveal"><span class="punto-inst" aria-hidden="true"></span>Proyecto universitario · Universidad Tecnológica de Panamá</p>
+      <h1 id="t-heroe" class="reveal">Descubre cómo arranca una <span class="resalte">computadora</span></h1>
+      <p class="heroe__bajada reveal">Escribe instrucciones, explora cada etapa y observa el resultado de un sistema de arranque simulado.</p>
+      <div class="heroe__acciones reveal">
+        <a class="boton boton--primario boton--grande" href="#simulador">Probar simulador <svg viewBox="0 0 20 20" aria-hidden="true"><use href="#g-flecha"/></svg></a>
+        <a class="boton boton--claro boton--grande" href="#como-funciona">Conocer el proyecto</a>
+      </div>
+      <ul class="datos-mini reveal" aria-label="Datos del proyecto">
+        <li><b id="cifra-comandos">12</b> comandos</li>
+        <li><b id="cifra-estados">7 + 3</b> estados</li>
+        <li><b id="cifra-ejemplos">10</b> programas de ejemplo</li>
+      </ul>
+      <p class="estado-motor reveal" id="estado-motor" role="status" aria-live="polite"><span class="punto punto--espera" aria-hidden="true"></span><span id="estado-motor-texto">Preparando el motor de Python…</span></p>
+    </div>
+
+    <figure class="heroe__visual reveal" aria-label="Ilustración de una placa base con las cinco etapas del arranque">
+      <div class="placa-caja">
+        <svg id="placa" viewBox="0 0 600 440" role="img" aria-labelledby="placa-t placa-d">
+          <title id="placa-t">Placa base con las cinco etapas del arranque</title>
+          <desc id="placa-d">La CPU hace el autodiagnóstico (1), el firmware BIOS o UEFI elige de dónde arrancar (2), GRUB (3) carga el kernel (4) en la memoria y el sistema operativo aparece en pantalla (5).</desc>
+          <rect class="pl-placa" x="8" y="8" width="584" height="424" rx="34"/>
+          <g class="pl-ruido" fill="none"><path d="M40 60h60v26M560 380h-70v-30M30 220h20v40M570 200h-24v-44"/><circle cx="100" cy="86" r="4"/><circle cx="490" cy="350" r="4"/><circle cx="50" cy="260" r="4"/><circle cx="546" cy="156" r="4"/></g>
+          <g class="pl-trazas" fill="none">
+            <path data-paso="2" d="M196 112H232V176H250"/>
+            <path data-paso="3" d="M206 336H232V244H250"/>
+            <path data-paso="4" d="M350 176H378V156H408"/>
+            <path data-paso="5" d="M350 244H378V336H408"/>
+          </g>
+          <g class="pl-pines" fill="none"><path d="M250 172h-10m10 22h-10m10 22h-10m10 22h-10M350 172h10m-10 22h10m-10 22h10m-10 22h10M274 150v-10m26 10v-10m26 10v-10M274 270v10m26-10v10m26-10v10"/></g>
+          <g data-paso="1"><rect class="pl-cpu" x="250" y="150" width="100" height="120" rx="14"/><text class="pl-t pl-t--claro" x="300" y="206" text-anchor="middle">CPU</text><text class="pl-s pl-s--claro" x="300" y="228" text-anchor="middle">RUN_POST</text></g>
+          <g data-paso="2"><rect class="pl-pieza" x="66" y="76" width="130" height="72" rx="14"/><text class="pl-t" x="131" y="108" text-anchor="middle">BIOS / UEFI</text><text class="pl-s" x="131" y="130" text-anchor="middle">SELECT_BOOT</text></g>
+          <g data-paso="3"><rect class="pl-pieza" x="56" y="296" width="150" height="80" rx="16"/><text class="pl-t" x="131" y="333" text-anchor="middle">Disco · GRUB</text><text class="pl-s" x="131" y="355" text-anchor="middle">LOAD_BOOTLOADER</text></g>
+          <g data-paso="4"><rect class="pl-ram" x="420" y="96" width="24" height="120" rx="5"/><rect class="pl-ram" x="452" y="96" width="24" height="120" rx="5"/><rect class="pl-ram" x="484" y="96" width="24" height="120" rx="5"/><text class="pl-t" x="464" y="244" text-anchor="middle">RAM · Kernel</text><text class="pl-s" x="464" y="264" text-anchor="middle">LOAD_KERNEL</text></g>
+          <g data-paso="5"><rect class="pl-pieza" x="408" y="290" width="150" height="92" rx="14"/><rect class="pl-ventana" x="424" y="304" width="118" height="12" rx="4"/><text class="pl-t pl-t--medio" x="483" y="340" text-anchor="middle">Sistema operativo</text><text class="pl-s" x="483" y="362" text-anchor="middle">START_OS</text></g>
+          <g class="pl-insignias">
+            <g data-paso="1"><circle cx="250" cy="150" r="15"/><text x="250" y="155" text-anchor="middle">1</text></g>
+            <g data-paso="2"><circle cx="196" cy="76" r="15"/><text x="196" y="81" text-anchor="middle">2</text></g>
+            <g data-paso="3"><circle cx="206" cy="296" r="15"/><text x="206" y="301" text-anchor="middle">3</text></g>
+            <g data-paso="4"><circle cx="420" cy="96" r="15"/><text x="420" y="101" text-anchor="middle">4</text></g>
+            <g data-paso="5"><circle cx="558" cy="290" r="15"/><text x="558" y="295" text-anchor="middle">5</text></g>
+          </g>
+        </svg>
+        <ol class="secuencia" aria-label="Orden de las etapas">
+          <li data-paso="1"><b>1</b> POST</li><li data-paso="2"><b>2</b> BIOS / UEFI</li><li data-paso="3"><b>3</b> GRUB</li><li data-paso="4"><b>4</b> Kernel</li><li data-paso="5"><b>5</b> Sistema operativo</li>
+        </ol>
+      </div>
+      <div class="tarjeta-codigo" aria-label="Fragmento de un programa BootSim DSL">
+        <span class="tarjeta-codigo__tit">valido_01.dsl</span>
+        <code><span class="k">POWER_ON</span>;<br><span class="k">RUN_POST</span>;<br><span class="k">SELECT_BOOT</span> <span class="o">DISK</span>;<br><span class="k">START_OS</span>;</code>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<!-- proceso de arranque -->
+<section class="seccion" id="como-funciona" aria-labelledby="t-proceso">
+  <div class="contenedor">
+    <header class="cabeza cabeza--centro reveal">
+      <p class="eyebrow">Cómo funciona</p>
+      <h2 id="t-proceso">Del botón de encendido al sistema operativo</h2>
+      <p>Seis etapas, una detrás de otra. Toca una para ver qué hace y qué instrucción de BootSim la representa.</p>
+    </header>
+
+    <ol class="recorrido reveal" id="recorrido" aria-label="Etapas del arranque">
+      <li><button type="button" class="etapa" data-i="0" aria-pressed="true"><span class="etapa__icono"><svg viewBox="0 0 32 32" aria-hidden="true"><use href="#g-power"/></svg></span><span class="etapa__n">1</span><span class="etapa__nombre">Encendido</span></button></li>
+      <li><button type="button" class="etapa" data-i="1" aria-pressed="false"><span class="etapa__icono"><svg viewBox="0 0 32 32" aria-hidden="true"><use href="#g-post"/></svg></span><span class="etapa__n">2</span><span class="etapa__nombre">Autodiagnóstico</span></button></li>
+      <li><button type="button" class="etapa" data-i="2" aria-pressed="false"><span class="etapa__icono"><svg viewBox="0 0 32 32" aria-hidden="true"><use href="#g-firmware"/></svg></span><span class="etapa__n">3</span><span class="etapa__nombre">BIOS / UEFI</span></button></li>
+      <li><button type="button" class="etapa" data-i="3" aria-pressed="false"><span class="etapa__icono"><svg viewBox="0 0 32 32" aria-hidden="true"><use href="#g-grub"/></svg></span><span class="etapa__n">4</span><span class="etapa__nombre">Gestor GRUB</span></button></li>
+      <li><button type="button" class="etapa" data-i="4" aria-pressed="false"><span class="etapa__icono"><svg viewBox="0 0 32 32" aria-hidden="true"><use href="#g-kernel"/></svg></span><span class="etapa__n">5</span><span class="etapa__nombre">Kernel</span></button></li>
+      <li><button type="button" class="etapa" data-i="5" aria-pressed="false"><span class="etapa__icono"><svg viewBox="0 0 32 32" aria-hidden="true"><use href="#g-os"/></svg></span><span class="etapa__n">6</span><span class="etapa__nombre">Sistema operativo</span></button></li>
+    </ol>
+
+    <div class="detalle-etapa reveal" id="etapa-detalle" aria-live="polite">
+      <div class="detalle-etapa__texto">
+        <h3 id="etapa-titulo"></h3>
+        <p id="etapa-texto"></p>
+        <p class="detalle-etapa__estado">Estado del simulador: <span class="chip-estado" id="etapa-estado"></span></p>
+      </div>
+      <div class="detalle-etapa__codigo">
+        <span class="mini-etiqueta">Instrucciones de BootSim</span>
+        <div class="comandos" id="etapa-comandos"></div>
+        <button type="button" class="boton boton--primario" id="probar-arranque">Verlo en el simulador <svg viewBox="0 0 20 20" aria-hidden="true"><use href="#g-flecha"/></svg></button>
+      </div>
+    </div>
+
+    <p class="nota-fallos reveal">Si algo falla (memoria en cero, sin medio de arranque, un <em>kernel panic</em>), el simulador pasa a un estado de error: <span class="chip-estado chip-estado--error">ERROR_POST</span> <span class="chip-estado chip-estado--error">ERROR_ARRANQUE</span> <span class="chip-estado chip-estado--error">KERNEL_PANIC</span>. <code>RESET_SYSTEM</code> reinicia.</p>
+  </div>
+</section>
+
+<!-- laboratorio -->
+<section class="seccion seccion--laboratorio" id="simulador" aria-labelledby="t-lab">
+  <div class="contenedor">
+    <header class="cabeza reveal">
+      <p class="eyebrow">Simulador</p>
+      <h2 id="t-lab">Escribe un programa y ejecútalo</h2>
+      <p>Aquí corre el código Python original del proyecto dentro de tu navegador. Elige un ejemplo o cambia el texto; nada sale de tu computadora.</p>
+    </header>
+
+    <div class="lab reveal">
+      <div class="lab__barra">
+        <div class="ejemplos" id="ejemplos" role="group" aria-label="Programas de ejemplo">
+          <div class="ejemplos__grupo"><span class="ejemplos__titulo">Válidos</span><div class="ejemplos__chips" data-tipo="valido"></div></div>
+          <div class="ejemplos__grupo"><span class="ejemplos__titulo">Con errores</span><div class="ejemplos__chips" data-tipo="invalido"></div></div>
+        </div>
+        <div class="lab__acciones">
+          <label class="interruptor" title="Equivale a python codigo/main.py ARCHIVO --debug">
+            <input type="checkbox" id="opcion-debug"><span class="interruptor__pista" aria-hidden="true"></span><span>--debug</span>
+          </label>
+          <button class="boton boton--primario" id="boton-ejecutar" type="button" disabled><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 4.5v11l9-5.5-9-5.5Z" fill="currentColor"/></svg>Ejecutar <span class="atajo">Ctrl ⏎</span></button>
+        </div>
+      </div>
+      <p class="ejemplo-nombre" id="ejemplo-titulo" aria-live="polite"></p>
+
+      <div class="lab__cuerpo">
+        <div class="panel panel--editor">
+          <div class="editor-cabeza"><i></i><i></i><i></i><span id="editor-archivo">programa.dsl</span></div>
+          <div class="editor" id="editor">
+            <div class="editor__numeros" id="editor-numeros" aria-hidden="true"></div>
+            <div class="editor__area">
+              <pre class="editor__fondo" id="editor-fondo" aria-hidden="true"></pre>
+              <textarea id="editor-texto" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Programa en BootSim DSL" wrap="off"></textarea>
+            </div>
+          </div>
+          <div class="editor__pie"><span id="editor-posicion">línea 1, columna 1</span><span id="editor-estado" class="chip chip--neutro">sin ejecutar</span></div>
+          <div class="diagnosticos" id="diagnosticos" aria-live="polite"></div>
+        </div>
+
+        <div class="panel panel--resultado">
+          <div class="resultado__cabeza">
+            <div class="veredicto" id="veredicto" role="status" aria-live="polite">
+              <span class="veredicto__marca" id="veredicto-marca"></span>
+              <div><strong id="veredicto-titulo">Esperando un programa</strong><span id="veredicto-detalle">Pulsa Ejecutar para ver el resultado.</span></div>
+            </div>
+          </div>
+          <div class="pestanas" role="tablist" aria-label="Resultados del análisis">
+            <button role="tab" id="pestana-estados" aria-controls="vista-estados" aria-selected="true" type="button">Estados</button>
+            <button role="tab" id="pestana-salida" aria-controls="vista-salida" aria-selected="false" type="button" tabindex="-1">Salida</button>
+            <button role="tab" id="pestana-tokens" aria-controls="vista-tokens" aria-selected="false" type="button" tabindex="-1">Tokens</button>
+            <button role="tab" id="pestana-arbol" aria-controls="vista-arbol" aria-selected="false" type="button" tabindex="-1">Árbol</button>
+            <button role="tab" id="pestana-semantica" aria-controls="vista-semantica" aria-selected="false" type="button" tabindex="-1">Semántica</button>
+          </div>
+
+          <div class="vista" id="vista-estados" role="tabpanel" aria-labelledby="pestana-estados">
+            <div class="maquina" id="maquina"></div>
+            <div class="reproductor" id="reproductor" hidden>
+              <button class="boton-icono" id="rep-anterior" type="button" aria-label="Paso anterior"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M13 4.5v11L5 10l8-5.5Z" fill="currentColor"/></svg></button>
+              <button class="boton-icono boton-icono--grande" id="rep-play" type="button" aria-label="Reproducir"><svg viewBox="0 0 20 20" aria-hidden="true"><path id="rep-play-icono" d="M6 4.5v11l9-5.5-9-5.5Z" fill="currentColor"/></svg></button>
+              <button class="boton-icono" id="rep-siguiente" type="button" aria-label="Paso siguiente"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 4.5v11L15 10 7 4.5Z" fill="currentColor"/></svg></button>
+              <input type="range" id="rep-barra" min="0" max="0" value="0" aria-label="Paso de la simulación">
+              <span id="rep-contador" class="mono">0 / 0</span>
+            </div>
+            <div class="paso-actual" id="paso-actual" aria-live="polite"></div>
+            <ol class="linea-tiempo" id="linea-tiempo" aria-label="Comandos ejecutados"></ol>
+          </div>
+          <div class="vista" id="vista-salida" role="tabpanel" aria-labelledby="pestana-salida" hidden>
+            <p class="vista__nota" id="salida-nota"></p>
+            <div class="codigo-caja"><button class="copiar" type="button" id="copiar-salida">Copiar</button><pre class="codigo" id="salida-texto" tabindex="0"></pre></div>
+          </div>
+          <div class="vista" id="vista-tokens" role="tabpanel" aria-labelledby="pestana-tokens" hidden>
+            <p class="vista__nota">Un <strong>token</strong> es una pieza con nombre en la que el lexer corta el texto. Pulsa una fila para ir a esa posición.</p>
+            <div class="tabla-caja"><table class="tabla" id="tabla-tokens"><thead><tr><th>Posición</th><th>Token</th><th>Valor</th></tr></thead><tbody></tbody></table></div>
+          </div>
+          <div class="vista" id="vista-arbol" role="tabpanel" aria-labelledby="pestana-arbol" hidden>
+            <p class="vista__nota">El <strong>árbol sintáctico</strong> es el programa convertido en ramas; cada nodo guarda su posición <span class="mono">[línea:columna]</span>.</p>
+            <div class="arbol" id="arbol" tabindex="0"></div>
+          </div>
+          <div class="vista" id="vista-semantica" role="tabpanel" aria-labelledby="pestana-semantica" hidden>
+            <p class="vista__nota">La <strong>semántica</strong> revisa que lo bien escrito tenga sentido. Un <em>error</em> impide simular; un <em>aviso</em> solo advierte.</p>
+            <div id="semantica-contenido"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <details class="referencia reveal" id="referencia">
+      <summary><span>Referencia del lenguaje</span><small>12 comandos, estructuras y operadores</small></summary>
+      <div class="referencia__cuerpo">
+        <div class="tabla-caja tabla-caja--libre"><table class="tabla tabla--comandos" id="tabla-comandos"><thead><tr><th>Comando</th><th>Argumentos</th><th>Se usa en</th><th>Deja el equipo en</th><th>Límites</th></tr></thead><tbody><tr><td colspan="5" class="vacio">Disponible cuando el motor de Python termine de cargar.</td></tr></tbody></table></div>
+        <ul class="reglas-lista">
+          <li><b>Variables:</b> <code>SET n = 8;</code> con enteros, <code>TRUE</code>/<code>FALSE</code> y texto entre comillas. Comentarios con <code>#</code> o <code>//</code>.</li>
+          <li><b>Decisiones y repeticiones:</b> <code>IF … THEN … ELSE … ENDIF</code>, <code>REPEAT 3 TIMES … ENDREPEAT</code> y <code>BEGIN … END</code>.</li>
+          <li><b>Operadores,</b> de menor a mayor prioridad: <code>OR</code>, <code>AND</code>, <code>NOT</code>, <code>== !=</code>, <code>&lt; &gt; &lt;= &gt;=</code>, <code>+ -</code>, <code>* /</code> y el menos unario.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- arquitectura -->
+<section class="seccion" id="arquitectura" aria-labelledby="t-arq">
+  <div class="contenedor arq">
+    <header class="cabeza reveal">
+      <p class="eyebrow">Arquitectura</p>
+      <h2 id="t-arq">Del texto al arranque simulado</h2>
+      <p>Un programa pasa por piezas separadas, cada una en su archivo de Python. Si el lexer, el parser o la semántica encuentran un error, el programa se rechaza y no se simula nada.</p>
+      <dl class="glosario">
+        <div><dt>Lexer</dt><dd>corta el texto en piezas con nombre (<em>tokens</em>).</dd></div>
+        <div><dt>Parser</dt><dd>comprueba que las piezas sigan la gramática y arma el árbol.</dd></div>
+        <div><dt>Semántica</dt><dd>primera pasada sobre el árbol: valida sin ejecutar.</dd></div>
+        <div><dt>Simulador</dt><dd>segunda pasada: mueve la computadora de mentira entre estados.</dd></div>
+      </dl>
+    </header>
+
+    <div class="arq__visual reveal">
+      <div class="diagrama-caja">
+        <svg class="diagrama" viewBox="0 34 760 240" role="img" aria-labelledby="arq-t arq-d">
+          <title id="arq-t">Arquitectura de BootSim DSL</title>
+          <desc id="arq-d">El programa .dsl entra al lexer, luego al parser y se convierte en un árbol. Sobre el árbol corren dos pasadas: la semántica valida y, si no hay errores, el simulador ejecuta y produce el resultado.</desc>
+          <g class="ar-lineas" fill="none"><path d="M118 150H150M268 150H300M418 150H450M568 150H596V76H626M596 150V224H626"/><path class="ar-punteada" d="M693 108V192"/></g>
+          <g class="ar-nodo"><rect x="0" y="118" width="118" height="64" rx="14"/><text class="ar-t" x="59" y="146" text-anchor="middle">Programa</text><text class="ar-s" x="59" y="166" text-anchor="middle">.dsl</text></g>
+          <g class="ar-nodo"><rect x="150" y="118" width="118" height="64" rx="14"/><text class="ar-t" x="209" y="146" text-anchor="middle">Lexer</text><text class="ar-s" x="209" y="166" text-anchor="middle">lexer.py</text></g>
+          <g class="ar-nodo"><rect x="300" y="118" width="118" height="64" rx="14"/><text class="ar-t" x="359" y="146" text-anchor="middle">Parser</text><text class="ar-s" x="359" y="166" text-anchor="middle">parser.py</text></g>
+          <g class="ar-nodo ar-nodo--eje"><rect x="450" y="118" width="118" height="64" rx="14"/><text class="ar-t" x="509" y="146" text-anchor="middle">Árbol</text><text class="ar-s" x="509" y="166" text-anchor="middle">ast_nodos.py</text></g>
+          <g class="ar-nodo ar-nodo--p1"><rect x="626" y="44" width="134" height="64" rx="14"/><text class="ar-t" x="693" y="72" text-anchor="middle">1.ª Semántica</text><text class="ar-s" x="693" y="92" text-anchor="middle">semantica.py</text></g>
+          <g class="ar-nodo ar-nodo--p2"><rect x="626" y="192" width="134" height="64" rx="14"/><text class="ar-t" x="693" y="220" text-anchor="middle">2.ª Simulador</text><text class="ar-s" x="693" y="240" text-anchor="middle">simulador.py</text></g>
+          <text class="ar-n" x="684" y="156" text-anchor="end">sin errores</text>
+          <text class="ar-n" x="0" y="238">PLY 3.11 genera el lexer y el parser</text>
+          <text class="ar-n" x="0" y="260">a partir de reglas escritas en Python</text>
+        </svg>
+      </div>
+
+      <div class="navegador">
+        <p class="mini-etiqueta">Dentro de tu navegador</p>
+        <ol class="cadena">
+          <li><b>Tu navegador</b><span>la página</span></li>
+          <li><b>Worker</b><span>un hilo aparte</span></li>
+          <li><b>Pyodide</b><span>Python en WebAssembly</span></li>
+          <li><b>BootSim + PLY</b><span>el código original</span></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- equipo -->
+<section class="seccion" id="equipo" aria-labelledby="t-eq">
+  <div class="contenedor">
+    <header class="cabeza cabeza--centro reveal">
+      <p class="eyebrow">Equipo</p>
+      <h2 id="t-eq">Conoce al equipo que presenta BootSim DSL</h2>
+      <p>Seis estudiantes del grupo 1IL-143, Licenciatura en Ingeniería de Sistemas y Computación.</p>
+    </header>
+    <ul class="equipo reveal">
+      <li><span class="avatar" aria-hidden="true">RS</span><div><b>Richard Smith</b><span>Lexer y tokens</span></div></li>
+      <li><span class="avatar" aria-hidden="true">VS</span><div><b>Víctor Sánchez</b><span>Gramática y precedencia</span></div></li>
+      <li><span class="avatar" aria-hidden="true">JG</span><div><b>Juan González</b><span>AST y recorrido</span></div></li>
+      <li><span class="avatar" aria-hidden="true">JG</span><div><b>Jorge González</b><span>Semántica</span></div></li>
+      <li><span class="avatar" aria-hidden="true">MC</span><div><b>Marc Chavarría</b><span>Simulación y pruebas</span></div></li>
+      <li><span class="avatar" aria-hidden="true">AE</span><div><b>Alexandra Esteves</b><span>Bitácora e IA</span></div></li>
+    </ul>
+    <div class="instituciones reveal">
+      <img src="img/logo_utp.png" width="64" height="64" alt="Logo de la Universidad Tecnológica de Panamá">
+      <img src="img/logo_fisc.png" width="64" height="64" alt="Logo de la Facultad de Ingeniería de Sistemas Computacionales">
+      <p>Universidad Tecnológica de Panamá<br>Facultad de Ingeniería de Sistemas Computacionales<br>Lenguajes Formales, Autómatas y Compiladores · 2026</p>
+    </div>
+  </div>
+</section>
+
+<!-- resultados -->
+<section class="seccion seccion--resultados" id="resultados" aria-labelledby="t-res">
+  <div class="contenedor">
+    <header class="cabeza cabeza--centro reveal">
+      <p class="eyebrow">Resultados</p>
+      <h2 id="t-res">Lo que ves es lo que se probó</h2>
+      <p>Cada programa se ejecuta con la terminal de verdad y con el código del navegador. Los resultados se comparan letra por letra.</p>
+    </header>
+    <div class="res reveal">
+      <div class="res__principal" id="fidelidad-resultado"><p class="vacio">El informe de comparación se carga con la página.</p></div>
+      <div class="res__lateral">
+        <h3>Cómo se comprueba</h3>
+        <ol class="pasos-comprobar">
+          <li>Todos los <code>.dsl</code> del repositorio, variantes con errores hechas con azar repetible y archivos especiales (vacío, con BOM, inexistente).</li>
+          <li>Cada uno con y sin <code>--debug</code>, en una terminal y en Pyodide.</li>
+          <li>Se comparan el código de salida, la salida normal y la de errores.</li>
+        </ol>
+        <pre class="codigo codigo--corto">python sitio/construir.py
+node sitio/pruebas/paridad.mjs</pre>
+        <a class="enlace-flecha" href="https://github.com/charrixxz23/bootsim-dsl-lfac/actions" rel="noopener">Ver las pruebas automáticas en GitHub <svg viewBox="0 0 20 20" aria-hidden="true"><use href="#g-flecha"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- documentación -->
+<section class="seccion seccion--docs" id="documentacion" aria-labelledby="t-doc">
+  <div class="contenedor docs">
+    <header class="cabeza reveal">
+      <p class="eyebrow">Documentación</p>
+      <h2 id="t-doc">Todo es público y se puede revisar</h2>
+      <p>El código, los programas de prueba y las decisiones de diseño están en el repositorio.</p>
+    </header>
+    <ul class="docs__lista reveal">
+      <li><a href="https://github.com/charrixxz23/bootsim-dsl-lfac"><b>Repositorio</b><span>README, instalación y uso</span></a></li>
+      <li><a href="https://github.com/charrixxz23/bootsim-dsl-lfac/tree/main/codigo"><b>Código</b><span>lexer, parser, árbol, semántica y simulador</span></a></li>
+      <li><a href="https://github.com/charrixxz23/bootsim-dsl-lfac/tree/main/pruebas"><b>Programas de prueba</b><span>los diez ejemplos de esta página</span></a></li>
+      <li><a href="https://github.com/charrixxz23/bootsim-dsl-lfac/blob/main/docs/BITACORA_EN_CURSO.md"><b>Bitácora de decisiones</b><span>por qué el lenguaje es como es</span></a></li>
+      <li><a href="https://github.com/charrixxz23/bootsim-dsl-lfac/blob/main/docs/capitulos/02_post_bios_uefi.md"><b>POST, BIOS y UEFI</b><span>el arranque real, con fuentes</span></a></li>
+      <li><a href="https://github.com/charrixxz23/bootsim-dsl-lfac/blob/main/sitio/LEEME.md"><b>Esta página</b><span>cómo se construye y se comprueba</span></a></li>
+    </ul>
+  </div>
+</section>
+
+<section class="metodologia" aria-label="Metodología">
+  <div class="contenedor">
+    <details>
+      <summary>Metodología y transparencia</summary>
+      <div class="metodologia__cuerpo">
+        <p>BootSim DSL se desarrolló con apoyo de herramientas de inteligencia artificial: ChatGPT ayudó con el índice del proyecto, el diseño de la <em>Skill</em> de trabajo y la orquestación por fases; Claude Code desarrolló, bajo la dirección del equipo, el código, las pruebas y esta página. La revisión humana del código y de los textos está en curso, y las pruebas, aunque se pueden repetir, las diseñó la IA.</p>
+        <p>La demostración usa Python 3.13 en el navegador; la terminal se probó con Python 3.10 y 3.12. La primera visita descarga unos 13 MB (el motor de Python). No hay licencia elegida todavía. Las tipografías (Plus Jakarta Sans, DM Sans y JetBrains Mono) usan la licencia SIL Open Font 1.1.</p>
+      </div>
+    </details>
+  </div>
+</section>
+</main>
+
+<footer class="pie">
+  <div class="contenedor pie__fila">
+    <a class="marca marca--pie" href="#inicio"><span class="marca__icono" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M9 22V10l7 7 7-7v12" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="marca__texto">BootSim <b>DSL</b></span></a>
+    <p>Proyecto académico · UTP · 1IL-143 · 2026</p>
+    <p><a href="https://github.com/charrixxz23/bootsim-dsl-lfac" rel="noopener">GitHub</a> · <span id="pie-version" class="mono"></span></p>
+  </div>
+</footer>
+
+<script type="module" src="js/pagina.js"></script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

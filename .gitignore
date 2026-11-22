@@ -64,6 +64,28 @@ scripts/gestor.py
 scripts/orquestar_claude.py
 scripts/empaquetar.py
 
+# fases f10 y f11: informe completo, bitacora y declaracion en word, guias, evidencias y anexo c en word. son privados o de la entrega a teams: no se publican
+informe/
+informe_tecnico*.docx
+informe_tecnico*.pdf
+evidencias/capturas/informe/
+evidencias/f10_*
+evidencias/f11_*
+docs/capitulos/03_bootloader_gramatica.md
+docs/capitulos/04_implementacion.md
+docs/capitulos/06_cierre.md
+bitacora_ddr*.docx
+guias/
+docs/GUIA_VIDEO.md
+docs/GUIA_DEFENSA.md
+docs/PENDIENTES_HUMANOS.md
+docs/anexos/ANEXO_C_PLAN.docx
+
+# pagina web (sitio/): lo que genera la construccion y las capturas temporales de las pruebas del navegador
+sitio/dist/
+sitio/node_modules/
+.playwright-mcp/
+
 # archivos de apoyo del propio equipo que no deben subirse por error
 *.local
 settings.local.json
