@@ -10,6 +10,10 @@ Proyecto final de *Lenguajes Formales, Autómatas y Compiladores* · Grupo 1IL-1
   <img src="assets/logos/logo_fisc.png" alt="Logo de la Facultad de Ingeniería de Sistemas Computacionales" width="110">
 </p>
 
+> ### [Probar BootSim DSL en el navegador](https://charrixxz23.github.io/bootsim-dsl-lfac/)
+>
+> Demostración en vivo: elige uno de los diez programas o escribe el tuyo y mira la salida de la terminal, los tokens, el árbol, los errores con su línea y columna y la simulación del arranque. Ejecuta **este mismo código Python** (con PLY 3.11) dentro de tu navegador; no hay que instalar nada. Enlace: <https://charrixxz23.github.io/bootsim-dsl-lfac/>
+
 ## Qué es
 
 BootSim DSL es un lenguaje pequeño para **describir** cómo arranca una computadora (encendido, POST, BIOS o UEFI, gestor de arranque GRUB, kernel y sistema operativo) y un programa que **simula ese arranque en pantalla**, incluidos los fallos (memoria que no se detecta, firmware y disco incompatibles, *kernel panic*) y la recuperación con un reinicio.
